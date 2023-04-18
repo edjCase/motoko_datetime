@@ -29,7 +29,6 @@ module {
     };
 
     public func isValid(dateTime : DateTime) : Bool {
-        // Leap years are every 4 years, except for every 100 years, except for every 400 years.
         let leapYear = isLeapYear(dateTime.year);
 
         let daysInM = daysInMonth(dateTime.month, leapYear);
@@ -68,6 +67,7 @@ module {
     };
 
     public func isLeapYear(year : Nat) : Bool {
+        // Leap years are every 4 years, except for every 100 years, except for every 400 years.
         return (year % 4 == 0) and (
             (year % 100 != 0) or (year % 400 == 0)
         );
