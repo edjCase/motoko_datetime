@@ -1,6 +1,7 @@
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
+import Int "mo:base/Int";
 
 module {
     public type Duration = {
@@ -61,7 +62,7 @@ module {
         };
     };
 
-    public func daysInYear(year : Nat) : Time.Time {
+    public func daysInYear(year : Nat) : Nat {
         let leapYear = isLeapYear(year);
         return if (leapYear) 366 else 365;
     };
@@ -198,14 +199,91 @@ module {
         return totalNanoseconds;
     };
 
-    // public func toText(dt : Time.Time) : Text {
-    //     let (year, month, day) = Time.toGregorianDate(ts);
-    //     let (hour, minute, second) = Time.toClock(ts);
-    //     let ms = Time.toNanos(ts) / 1000000 % 1000;
+    public func fromEpochNanoseconds(epochNanoseconds : Int) : DateTime {
+        let nanosecondsInAMinute = 60 * 1000000000;
+        let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
+        let nanosecondsInADay = 24 * nanosecondsInAnHour;
 
-    //     Format.format(
-    //         "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}.{:03}Z",
-    //         [year, month, day, hour, minute, second, ms],
-    //     );
+        let pre1970 = epochNanoseconds < 0;
+        var year = if (pre1970) 1969 else 1970;
+        var remainingNanoseconds : Nat = Int.abs(epochNanoseconds);
+
+        // Remove years until cant remove any more
+        label l loop {
+            let daysInYearV = daysInYear(year);
+            let yearInNanoseconds = daysInYearV * nanosecondsInADay;
+            if (remainingNanoseconds <= yearInNanoseconds) {
+                if (not pre1970 and remainingNanoseconds == yearInNanoseconds) {
+                    // If exactly 1 year left, then we are on the first day of the next year
+                    year += 1;
+                    remainingNanoseconds := 0;
+                };
+                break l;
+            };
+            remainingNanoseconds -= yearInNanoseconds;
+            if (pre1970) {
+                year -= 1;
+            } else {
+                year += 1;
+            };
+        };
+
+        // Remove months until cant remove any more
+        var month = if (pre1970) 12 else 1;
+        let currentIsLeapYear = isLeapYear(year);
+        label l loop {
+            let daysInMonthV = daysInMonth(month, currentIsLeapYear);
+            let monthInNanoseconds : Nat = daysInMonthV * nanosecondsInADay;
+            if (remainingNanoseconds <= monthInNanoseconds) {
+                if (not pre1970 and remainingNanoseconds == monthInNanoseconds) {
+                    // If exactly 1 month left, then we are on the first day of the next month
+                    month += 1;
+                    remainingNanoseconds := 0;
+                };
+                break l;
+            };
+            remainingNanoseconds -= monthInNanoseconds;
+            if (pre1970) {
+                month -= 1;
+            } else {
+                month += 1;
+            };
+        };
+
+        let day : Nat = if (pre1970) {
+            let daysInMonthV = daysInMonth(month, currentIsLeapYear);
+            let days : Nat = (remainingNanoseconds / nanosecondsInADay);
+            remainingNanoseconds -= days * nanosecondsInADay;
+            if (remainingNanoseconds > 0) {
+                daysInMonthV - days;
+            } else {
+                daysInMonthV - days + 1; // If exactly on the day, dont go to 'next' day
+            };
+        } else {
+            let days = (remainingNanoseconds / nanosecondsInADay);
+            remainingNanoseconds -= days * nanosecondsInADay;
+            days + 1;
+        };
+
+        var hour = remainingNanoseconds / nanosecondsInAnHour;
+        remainingNanoseconds %= nanosecondsInAnHour;
+
+        let minute = remainingNanoseconds / nanosecondsInAMinute;
+        remainingNanoseconds %= nanosecondsInAMinute;
+
+        let nanosecond = remainingNanoseconds;
+
+        return {
+            year = year;
+            month = month;
+            day = day;
+            hour = if (pre1970 and hour > 0) 23 - hour else hour;
+            minute = if (pre1970 and minute > 0) 60 - minute else minute;
+            nanosecond = nanosecond;
+        };
+    };
+
+    // public func toText(dateTime : DateTime) : Text {
+    //     return "";
     // };
 };

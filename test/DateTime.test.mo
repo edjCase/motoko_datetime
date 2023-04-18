@@ -12,6 +12,10 @@ func testToEpochNanoseconds(dateTime : DateTime.DateTime, expectedNanoseconds : 
       if (actualNanoseconds != expectedNanoseconds) {
         Debug.trap("Expected " # Int.toText(expectedNanoseconds) # " but got " # Int.toText(actualNanoseconds));
       };
+      let actualDateTime = DateTime.fromEpochNanoseconds(expectedNanoseconds);
+      if (actualDateTime != dateTime) {
+        Debug.trap("\nExpected:\n" # debug_show (dateTime) # "\n\nActual\n" # debug_show (actualDateTime));
+      };
     },
   );
 };
