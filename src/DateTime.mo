@@ -2,6 +2,9 @@ import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 import Int "mo:base/Int";
+import Iter "mo:base/Iter";
+import Text "mo:base/Text";
+import Prelude "mo:base/Prelude";
 
 module {
     public type Duration = {
@@ -22,6 +25,10 @@ module {
         hour : Nat;
         minute : Nat;
         nanosecond : Nat;
+    };
+
+    public type TextFormat = {
+        #iso8601;
     };
 
     public func now() : Time.Time {
@@ -283,7 +290,123 @@ module {
         };
     };
 
-    // public func toText(dateTime : DateTime) : Text {
-    //     return "";
-    // };
+    public func toText(dateTime : DateTime) : Text {
+        return toTextFormatted(dateTime, #iso8601);
+    };
+
+    public func toTextFormatted(dateTime : DateTime, format : TextFormat) : Text {
+        switch (format) {
+            case (#iso8601) {
+                let seconds = dateTime.nanosecond / 1_000_000_000;
+                let milliseconds : Nat = (dateTime.nanosecond - (seconds * 1_000_000_000)) / 1_000_000;
+                toTextPadded(dateTime.year, 4)
+                # "-" #
+                toTextPadded(dateTime.month, 2)
+                # "-" #
+                toTextPadded(dateTime.day, 2)
+                # "T" #
+                toTextPadded(dateTime.hour, 2)
+                # ":" #
+                toTextPadded(dateTime.minute, 2)
+                # ":" #
+                toTextPadded(seconds, 2)
+                # "." #
+                toTextPadded(milliseconds, 3)
+                # "Z";
+            };
+        };
+    };
+
+    public func fromTextFormatted(text : Text, format : TextFormat) : ?DateTime {
+        switch (format) {
+            case (#iso8601) {
+                let iter = Text.toIter(text);
+                let ?year = parseNat(iter, 4) else return null;
+
+                if (iter.next() != ?'-') return null;
+
+                let ?month = parseNat(iter, 2) else return null;
+
+                if (iter.next() != ?'-') return null;
+
+                let ?day = parseNat(iter, 2) else return null;
+
+                if (iter.next() != ?'T') return null;
+
+                let ?hour = parseNat(iter, 2) else return null;
+
+                if (iter.next() != ?':') return null;
+
+                let ?minute = parseNat(iter, 2) else return null;
+
+                if (iter.next() != ?':') return null;
+
+                let ?seconds = parseNat(iter, 2) else return null;
+
+                let (milliseconds : Nat, timezone : ?Text) = switch (iter.next()) {
+                    case (?'.') {
+                        let ?ms = parseNat(iter, 3) else return null;
+                        let tz = readTillEnd(iter, null);
+                        (ms, tz);
+                    };
+                    case (?tzChar) {
+                        let tz = readTillEnd(iter, ?tzChar);
+                        (0, tz);
+                    };
+                    case (null)(0, null);
+                };
+                // TODO toupper
+                switch (timezone) {
+                    case (?"Z" or null) {
+                        // No change
+                    };
+                    case (?tz) {
+                        // TODO timezone
+                        Prelude.nyi();
+                    };
+                };
+
+                return ?{
+                    year = year;
+                    month = month;
+                    day = day;
+                    hour = hour;
+                    minute = minute;
+                    nanosecond = (seconds * 1_000_000_000) + (milliseconds * 1_000_000);
+                };
+            };
+        };
+    };
+
+    private func readTillEnd(iter : Iter.Iter<Char>, startChar : ?Char) : ?Text {
+        var text : Text = switch (startChar) {
+            case (null) "";
+            case (?char) Text.fromChar(char);
+        };
+        label l loop {
+            let ?char = iter.next() else break l;
+            text #= Text.fromChar(char);
+        };
+        return if (text == "") null else ?text;
+    };
+
+    private func parseNat(iter : Iter.Iter<Char>, length : Nat) : ?Nat {
+        var value : Text = "";
+        for (a in Iter.range(0, length - 1)) {
+            let ?char = iter.next() else return null;
+            value #= Text.fromChar(char);
+        };
+        return Nat.fromText(value);
+    };
+
+    private func toTextPadded(value : Nat, length : Nat) : Text {
+        var text = Nat.toText(value);
+        if (text.size() < length) {
+            // Pad with leading zeros
+            for (a in Iter.range(0, length - text.size() - 1)) {
+                text := "0" # text;
+            };
+        };
+        return text;
+    };
 };
