@@ -3,101 +3,202 @@ import { test } "mo:test";
 import DateTime "../src/DateTime";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
+import Text "mo:base/Text";
 
-func testToEpochNanoseconds(
-  dateTime : DateTime.DateTime,
-  expectedNanoseconds : Int,
-  expectedIso8601 : Text,
+type TestCase = {
+  dateTime : DateTime.Components;
+  nanoseconds : Int;
+  textIso8061 : Text;
+};
+
+let testCases : [TestCase] = [
+  {
+    dateTime = {
+      year = 1950;
+      month = 1;
+      day = 1;
+      hour = 0;
+      minute = 0;
+      nanosecond = 0;
+    };
+    nanoseconds = -631_152_000_000_000_000;
+    textIso8061 = "1950-01-01T00:00:00.000Z";
+  },
+  {
+    dateTime = {
+      year = 1950;
+      month = 11;
+      day = 12;
+      hour = 4;
+      minute = 33;
+      nanosecond = 0;
+    };
+    nanoseconds = -603_919_620_000_000_000;
+    textIso8061 = "1950-11-12T04:33:00.000Z";
+  },
+  {
+    dateTime = {
+      year = 1970;
+      month = 1;
+      day = 1;
+      hour = 0;
+      minute = 0;
+      nanosecond = 0;
+    };
+    nanoseconds = 0;
+    textIso8061 = "1970-01-01T00:00:00.000Z";
+  },
+  {
+    dateTime = {
+      year = 1970;
+      month = 1;
+      day = 1;
+      hour = 0;
+      minute = 1;
+      nanosecond = 0;
+    };
+    nanoseconds = 60_000_000_000;
+    textIso8061 = "1970-01-01T00:01:00.000Z";
+  },
+  {
+    dateTime = {
+      year = 1970;
+      month = 1;
+      day = 2;
+      hour = 0;
+      minute = 0;
+      nanosecond = 0;
+    };
+    nanoseconds = 86_400_000_000_000;
+    textIso8061 = "1970-01-02T00:00:00.000Z";
+  },
+  {
+    dateTime = {
+      year = 1972;
+      month = 2;
+      day = 29;
+      hour = 0;
+      minute = 0;
+      nanosecond = 0;
+    };
+    nanoseconds = 68_169_600_000_000_000;
+    textIso8061 = "1972-02-29T00:00:00.000Z";
+  },
+  {
+    dateTime = {
+      year = 2000;
+      month = 1;
+      day = 1;
+      hour = 0;
+      minute = 0;
+      nanosecond = 0;
+    };
+    nanoseconds = 946_684_800_000_000_000;
+    textIso8061 = "2000-01-01T00:00:00.000Z";
+  },
+  {
+    dateTime = {
+      year = 2000;
+      month = 12;
+      day = 31;
+      hour = 23;
+      minute = 59;
+      nanosecond = 59_000_000_000;
+    };
+    nanoseconds = 978_307_199_000_000_000;
+    textIso8061 = "2000-12-31T23:59:59.000Z";
+  },
+  {
+    dateTime = {
+      year = 2020;
+      month = 5;
+      day = 20;
+      hour = 15;
+      minute = 30;
+      nanosecond = 0;
+    };
+    nanoseconds = 1_589_988_600_000_000_000;
+    textIso8061 = "2020-05-20T15:30:00.000Z";
+  },
+];
+
+func assertT<T>(
+  actual : T,
+  expected : T,
+  eval : (T, T) -> Bool,
+  debugShow : (T) -> Text,
 ) {
+  if (not eval(actual, expected)) {
+    Debug.print("Expected\n" # debugShow(expected) # "\n\nActual:\n" # debugShow(actual));
+    assert (false);
+  };
+};
+
+func assertDateTime(
+  actual : DateTime.DateTime,
+  expected : DateTime.DateTime,
+) {
+  return assertT<DateTime.DateTime>(actual, expected, DateTime.equal, DateTime.toText);
+};
+func assertComponents(
+  actual : DateTime.Components,
+  expected : DateTime.Components,
+) {
+  return assertT<DateTime.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
+};
+
+for (testCase in Iter.fromArray(testCases)) {
+  let expectedDateTime = DateTime.DateTime(?testCase.nanoseconds);
   test(
-    "toEpochNanoseconds: " # debug_show (dateTime),
+    "fromComponents: " # debug_show (testCase.dateTime),
     func() {
-      // To nanoseconds
-      let actualNanoseconds : Int = DateTime.toEpochNanoseconds(dateTime);
-      if (actualNanoseconds != expectedNanoseconds) {
-        Debug.trap("Expected " # Int.toText(expectedNanoseconds) # " but got " # Int.toText(actualNanoseconds));
-      };
+      // From date components
+      let ?dateTime = DateTime.fromComponents(testCase.dateTime) else Debug.trap("Could not parse date time components to a datetime");
+      assertDateTime(dateTime, expectedDateTime);
+    },
+  );
 
+  test(
+    "toComponents: " # debug_show (testCase.nanoseconds),
+    func() {
       // From nanoseconds
-      let actualDateTime = DateTime.fromEpochNanoseconds(expectedNanoseconds);
-      if (actualDateTime != dateTime) {
-        Debug.trap("\nExpected:\n" # debug_show (dateTime) # "\n\nActual\n" # debug_show (actualDateTime));
-      };
+      assertComponents(expectedDateTime.toComponents(), testCase.dateTime);
+    },
+  );
 
+  test(
+    "fromTime: " # debug_show (testCase.nanoseconds),
+    func() {
+      // From nanoseconds
+      let dateTime = DateTime.fromTime(testCase.nanoseconds);
+      assertDateTime(dateTime, expectedDateTime);
+    },
+  );
+
+  test(
+    "toTime: " # debug_show (testCase.dateTime),
+    func() {
+      // From nanoseconds
+      assertT(expectedDateTime.toTime(), testCase.nanoseconds, Int.equal, Int.toText);
+    },
+  );
+
+  test(
+    "toTextFormatted iso8601: " # debug_show (testCase.textIso8061),
+    func() {
       // To Iso8601 text
-      let actualIso8601 = DateTime.toTextFormatted(dateTime, #iso8601);
-      if (actualIso8601 != expectedIso8601) {
-        Debug.trap("\nExpected:\n" # debug_show (expectedIso8601) # "\n\nActual\n" # debug_show (actualIso8601));
-      };
+      let actualIso8601 : Text = expectedDateTime.toTextFormatted(#iso8601);
+      assertT(actualIso8601, testCase.textIso8061, Text.equal, func(t : Text) : Text = t);
 
+    },
+  );
+
+  test(
+    "fromTextFormatted iso8601: " # debug_show (testCase.textIso8061),
+    func() {
       // From Iso8601 text
-      let actualIso8601DateTime = switch (DateTime.fromTextFormatted(expectedIso8601, #iso8601)) {
-        case (?d) d;
-        case (null) Debug.trap("Expected to parse " # debug_show (expectedIso8601));
-      };
-      if (actualIso8601DateTime != dateTime) {
-        Debug.trap("\nExpected:\n" # debug_show (dateTime) # "\n\nActual\n" # debug_show (actualIso8601DateTime));
-      };
+      let ?actualIso8601DateTime = DateTime.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");
+      assertDateTime(actualIso8601DateTime, expectedDateTime);
     },
   );
 };
-
-testToEpochNanoseconds(
-  { year = 1950; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0 },
-  -631_152_000_000_000_000,
-  "1950-01-01T00:00:00.000Z",
-);
-testToEpochNanoseconds(
-  { year = 1950; month = 11; day = 12; hour = 4; minute = 33; nanosecond = 0 },
-  -603_919_620_000_000_000,
-  "1950-11-12T04:33:00.000Z",
-);
-
-testToEpochNanoseconds(
-  { year = 1970; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0 },
-  0,
-  "1970-01-01T00:00:00.000Z",
-);
-
-testToEpochNanoseconds(
-  { year = 1970; month = 1; day = 1; hour = 0; minute = 1; nanosecond = 0 },
-  60_000_000_000,
-  "1970-01-01T00:01:00.000Z",
-);
-
-testToEpochNanoseconds(
-  { year = 1970; month = 1; day = 2; hour = 0; minute = 0; nanosecond = 0 },
-  86_400_000_000_000,
-  "1970-01-02T00:00:00.000Z",
-);
-
-testToEpochNanoseconds(
-  { year = 1972; month = 2; day = 29; hour = 0; minute = 0; nanosecond = 0 },
-  68_169_600_000_000_000,
-  "1972-02-29T00:00:00.000Z",
-);
-
-testToEpochNanoseconds(
-  { year = 2000; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0 },
-  946_684_800_000_000_000,
-  "2000-01-01T00:00:00.000Z",
-);
-
-testToEpochNanoseconds(
-  {
-    year = 2000;
-    month = 12;
-    day = 31;
-    hour = 23;
-    minute = 59;
-    nanosecond = 59_000_000_000;
-  },
-  978_307_199_000_000_000,
-  "2000-12-31T23:59:59.000Z",
-);
-
-testToEpochNanoseconds(
-  { year = 2020; month = 5; day = 20; hour = 15; minute = 30; nanosecond = 0 },
-  1_589_988_600_000_000_000,
-  "2020-05-20T15:30:00.000Z",
-);
