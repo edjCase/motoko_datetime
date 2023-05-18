@@ -1,11 +1,13 @@
 import Iter "mo:base/Iter";
 import { test } "mo:test";
-import DateTime "../src/DateTime";
+import DateTimeWithTZ "../src/DateTimeWithTZ";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
+import DateTime "../src/DateTime";
 
 type TestCase = {
+  timeZone: DateTimeWithTZ.TimeZone;
   dateTime : DateTime.Components;
   nanoseconds : Int;
   textIso8061 : Text;
@@ -13,6 +15,7 @@ type TestCase = {
 
 let testCases : [TestCase] = [
   {
+    timeZone = #fixed(#hoursAndMinutes((-7, 0)));
     dateTime = {
       year = 1950;
       month = 1;
@@ -25,6 +28,7 @@ let testCases : [TestCase] = [
     textIso8061 = "1950-01-01T00:00:00.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((-5, 0)));
     dateTime = {
       year = 1950;
       month = 11;
@@ -37,6 +41,7 @@ let testCases : [TestCase] = [
     textIso8061 = "1950-11-12T04:33:00.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((9, 0)));
     dateTime = {
       year = 1970;
       month = 1;
@@ -49,6 +54,7 @@ let testCases : [TestCase] = [
     textIso8061 = "1970-01-01T00:00:00.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((13, 0)));
     dateTime = {
       year = 1970;
       month = 1;
@@ -61,6 +67,7 @@ let testCases : [TestCase] = [
     textIso8061 = "1970-01-01T00:01:00.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((-1, 0)));
     dateTime = {
       year = 1970;
       month = 1;
@@ -73,6 +80,7 @@ let testCases : [TestCase] = [
     textIso8061 = "1970-01-02T00:00:00.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((-7, 34)));
     dateTime = {
       year = 1972;
       month = 2;
@@ -85,6 +93,7 @@ let testCases : [TestCase] = [
     textIso8061 = "1972-02-29T00:00:00.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((-7, 2)));
     dateTime = {
       year = 2000;
       month = 1;
@@ -97,6 +106,7 @@ let testCases : [TestCase] = [
     textIso8061 = "2000-01-01T00:00:00.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((0, 2)));
     dateTime = {
       year = 2000;
       month = 12;
@@ -109,6 +119,7 @@ let testCases : [TestCase] = [
     textIso8061 = "2000-12-31T23:59:59.000Z";
   },
   {
+    timeZone = #fixed(#hoursAndMinutes((4, 3)));
     dateTime = {
       year = 2020;
       month = 5;
@@ -135,10 +146,10 @@ func assertT<T>(
 };
 
 func assertDateTime(
-  actual : DateTime.DateTime,
-  expected : DateTime.DateTime,
+  actual : DateTimeWithTZ.DateTimeWithTZ,
+  expected : DateTimeWithTZ.DateTimeWithTZ,
 ) {
-  return assertT<DateTime.DateTime>(actual, expected, DateTime.equal, DateTime.toText);
+  return assertT<DateTimeWithTZ.DateTimeWithTZ>(actual, expected, DateTimeWithTZ.equal, DateTimeWithTZ.toText);
 };
 func assertComponents(
   actual : DateTime.Components,
@@ -148,12 +159,12 @@ func assertComponents(
 };
 
 for (testCase in Iter.fromArray(testCases)) {
-  let expectedDateTime = DateTime.DateTime(testCase.nanoseconds);
+  let expectedDateTime = DateTimeWithTZ.DateTimeWithTZ(testCase.dateTime, testCase.timeZone);
   test(
     "fromComponents: " # debug_show (testCase.dateTime),
     func() {
       // From date components
-      let ?dateTime = DateTime.fromComponents(testCase.dateTime) else Debug.trap("Could not parse date time components to a datetime");
+      let ?dateTime = DateTimeWithTZ.fromComponents(testCase.dateTime, testCase.timeZone) else Debug.trap("Could not parse date time components to a datetime");
       assertDateTime(dateTime, expectedDateTime);
     },
   );
@@ -170,7 +181,7 @@ for (testCase in Iter.fromArray(testCases)) {
     "fromTime: " # debug_show (testCase.nanoseconds),
     func() {
       // From nanoseconds
-      let dateTime = DateTime.fromTime(testCase.nanoseconds);
+      let dateTime = DateTimeWithTZ.fromTime(testCase.nanoseconds, testCase.timeZone);
       assertDateTime(dateTime, expectedDateTime);
     },
   );
@@ -197,7 +208,7 @@ for (testCase in Iter.fromArray(testCases)) {
     "fromTextFormatted iso8601: " # debug_show (testCase.textIso8061),
     func() {
       // From Iso8601 text
-      let ?actualIso8601DateTime = DateTime.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");
+      let ?actualIso8601DateTime = DateTimeWithTZ.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");
       assertDateTime(actualIso8601DateTime, expectedDateTime);
     },
   );

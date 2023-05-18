@@ -6,38 +6,19 @@ import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Prelude "mo:base/Prelude";
 import Order "mo:base/Order";
+import InternalTypes "../internal/Types";
+import InternalTextUtil "../internal/TextUtil";
+import InternalComponents "../internal/Components";
+import Components "Components";
 
 module D {
 
-    public type Duration = {
-        #nanoseconds : Int;
-        #milliseconds : Int;
-        #seconds : Int;
-        #hours : Int;
-        #days : Int;
-        #weeks : Int;
-        #months : Int;
-        #years : Int;
-    };
+    public type Duration = InternalTypes.Duration;
+    public type TextFormat = InternalTypes.TextFormat;
+    public type DateTime = InternalTypes.DateTime;
+    public type Components = InternalTypes.Components;
 
-    public type Components = {
-        year : Int;
-        month : Nat;
-        day : Nat;
-        hour : Nat;
-        minute : Nat;
-        nanosecond : Nat;
-    };
-
-    public type TextFormat = {
-        #iso8601;
-    };
-
-    public class DateTime(nanoseconds : ?Int) {
-        let time = switch (nanoseconds) {
-            case (?nanoseconds) nanoseconds;
-            case (_) Time.now();
-        };
+    public func DateTime(time : Int) : DateTime = object {
         var componentsCache : ?Components = null;
 
         public func equal(other : DateTime) : Bool {
@@ -45,56 +26,14 @@ module D {
         };
 
         public func add(duration : Duration) : DateTime {
-            switch (duration) {
-                case (#nanoseconds(nanoseconds)) {
-                    DateTime(?(time + nanoseconds));
+            switch(InternalComponents.resolveDuration(duration)) {
+                case (#absoluteTime(newTime)) {
+                    DateTime(newTime);
                 };
-                case (#milliseconds(milliseconds)) {
-                    DateTime(?(time + milliseconds * 1_000_000));
-                };
-                case (#seconds(seconds)) {
-                    DateTime(?(time + seconds * 1_000_000_000));
-                };
-                case (#hours(hours)) {
-                    DateTime(?(time + hours * 60 * 60 * 1_000_000_000));
-                };
-                case (#days(days)) {
-                    DateTime(?(time + days * 24 * 60 * 60 * 1_000_000_000));
-                };
-                case (#weeks(weeks)) {
-                    DateTime(?(time + weeks * 7 * 24 * 60 * 60 * 1_000_000_000));
-                };
-                case (#months(months)) {
+                case (#adder(adder)) {
+                    // Convert the current datetime components to
                     let components = toComponents();
-                    let newMonth : Int = components.month + months;
-                    let newYear : Int = components.year + newMonth / 12;
-                    let newMonthInYear : Nat = Int.abs(newMonth % 12);
-                    let newDay = components.day;
-                    let newHour = components.hour;
-                    let newMinute = components.minute;
-                    let newNanosecond = components.nanosecond;
-                    let newComponents : Components = {
-                        year = newYear;
-                        month = newMonthInYear;
-                        day = newDay;
-                        hour = newHour;
-                        minute = newMinute;
-                        nanosecond = newNanosecond;
-                    };
-                    let ?newDateTime = fromComponents(newComponents) else Prelude.unreachable();
-                    newDateTime;
-                };
-                case (#years(years)) {
-                    let components : Components = toComponents();
-                    let newYear : Int = components.year + years;
-                    let newComponents = {
-                        year = newYear;
-                        month = components.month;
-                        day = components.day;
-                        hour = components.hour;
-                        minute = components.minute;
-                        nanosecond = components.nanosecond;
-                    };
+                    let newComponents = adder(components);
                     let ?newDateTime = fromComponents(newComponents) else Prelude.unreachable();
                     newDateTime;
                 };
@@ -169,27 +108,8 @@ module D {
         };
 
         public func toTextFormatted(format : TextFormat) : Text {
-            let dateTime : Components = toComponents();
-            switch (format) {
-                case (#iso8601) {
-                    let seconds = dateTime.nanosecond / 1_000_000_000;
-                    let milliseconds : Nat = (dateTime.nanosecond - (seconds * 1_000_000_000)) / 1_000_000;
-                    toTextPadded(dateTime.year, 4)
-                    # "-" #
-                    toTextPadded(dateTime.month, 2)
-                    # "-" #
-                    toTextPadded(dateTime.day, 2)
-                    # "T" #
-                    toTextPadded(dateTime.hour, 2)
-                    # ":" #
-                    toTextPadded(dateTime.minute, 2)
-                    # ":" #
-                    toTextPadded(seconds, 2)
-                    # "." #
-                    toTextPadded(milliseconds, 3)
-                    # "Z";
-                };
-            };
+            let components : Components = toComponents();
+            InternalComponents.toTextFormatted(components, format, "Z");
         };
 
         public func toComponents() : Components {
@@ -204,7 +124,7 @@ module D {
                         minute = 0;
                         nanosecond = 0;
                     };
-                    let components = addTime(epoch, time);
+                    let components = Components.addTime(epoch, time);
                     componentsCache := ?components;
                     components;
                 };
@@ -213,7 +133,7 @@ module D {
 
         public func isLeapYear() : Bool {
             let year = toComponents().year;
-            D.isLeapYear(year);
+            InternalComponents.isLeapYear(year);
         };
 
         public func compare(other : DateTime) : Order.Order {
@@ -224,106 +144,19 @@ module D {
     public func equal(a : DateTime, b : DateTime) : Bool {
         return a.equal(b);
     };
-
-    public func daysInMonth(month : Nat, isLeapYear : Bool) : Nat {
-        switch (month) {
-            case (2) if (isLeapYear) 29 else 28;
-            case (4 or 6 or 9 or 11) 30;
-            case (1 or 3 or 5 or 7 or 8 or 10 or 12) 31;
-            case _ Debug.trap("Invalid month: " # Nat.toText(month));
-        };
-    };
-
-    public func daysInYear(year : Int) : Nat {
-        let leapYear = isLeapYear(year);
-        return if (leapYear) 366 else 365;
-    };
-
-    public func isLeapYear(year : Int) : Bool {
-        // Leap years are every 4 years, except for every 100 years, except for every 400 years.
-        return (year % 4 == 0) and (
-            (year % 100 != 0) or (year % 400 == 0)
-        );
-    };
-
     public func now() : DateTime {
         return fromTime(Time.now());
     };
 
     public func fromTime(nanoseconds : Time.Time) : DateTime {
-        DateTime(?nanoseconds);
+        DateTime(nanoseconds);
     };
 
     public func fromComponents(components : Components) : ?DateTime {
-        let totalNanoseconds = timeFromComponents(components);
-        return ?DateTime(totalNanoseconds);
-    };
-
-    public func timeFromComponents(components : Components) : ?Time.Time {
-        if (not isValid(components)) {
-            return null;
+        do ? {
+            let totalNanoseconds = Components.toTime(components)!;
+            DateTime(totalNanoseconds);
         };
-        let nanosecondsInAMinute = 60 * 1000000000;
-        let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
-        let nanosecondsInADay = 24 * nanosecondsInAnHour;
-        var totalNanoseconds : Int = 0;
-
-        if (components.year < 1970) {
-            // For dates before the epoch, need to do the inverse
-            var currentYear = 1969;
-            while (currentYear > components.year) {
-                totalNanoseconds -= daysInYear(currentYear) * nanosecondsInADay;
-                currentYear -= 1;
-            };
-
-            // Month
-            let currentIsLeapYear = isLeapYear(components.year);
-            var currentMonth = 12;
-            while (currentMonth > components.month) {
-                totalNanoseconds -= daysInMonth(currentMonth, currentIsLeapYear) * nanosecondsInADay;
-                currentMonth -= 1;
-            };
-            let daysInMonthV = daysInMonth(components.month, currentIsLeapYear);
-            // Day
-            totalNanoseconds -= (daysInMonthV - components.day) * nanosecondsInADay;
-
-            // Hour
-            totalNanoseconds -= (23 - components.hour) * nanosecondsInAnHour;
-
-            // Minute
-            totalNanoseconds -= (59 - components.minute) * nanosecondsInAMinute;
-
-            // Nanosecond
-            totalNanoseconds -= 60_000_000_000 - components.nanosecond;
-        } else {
-
-            var currentYear = 1970;
-            while (currentYear < components.year) {
-                totalNanoseconds += daysInYear(currentYear) * nanosecondsInADay;
-                currentYear += 1;
-            };
-
-            // Month
-            let currentIsLeapYear = isLeapYear(components.year);
-            var currentMonth = 1;
-            while (currentMonth < components.month) {
-                totalNanoseconds += daysInMonth(currentMonth, currentIsLeapYear) * nanosecondsInADay;
-                currentMonth += 1;
-            };
-
-            // Day
-            totalNanoseconds += (components.day - 1) * nanosecondsInADay;
-
-            // Hour
-            totalNanoseconds += components.hour * nanosecondsInAnHour;
-
-            // Minute
-            totalNanoseconds += components.minute * nanosecondsInAMinute;
-
-            // Nanosecond
-            totalNanoseconds += components.nanosecond;
-        };
-        ?totalNanoseconds;
     };
 
     public func toText(dateTime : DateTime) : Text {
@@ -338,36 +171,36 @@ module D {
         switch (format) {
             case (#iso8601) {
                 let iter = Text.toIter(text);
-                let ?year = parseNat(iter, 4) else return null;
+                let ?year = InternalTextUtil.parseNat(iter, 4) else return null;
 
                 if (iter.next() != ?'-') return null;
 
-                let ?month = parseNat(iter, 2) else return null;
+                let ?month = InternalTextUtil.parseNat(iter, 2) else return null;
 
                 if (iter.next() != ?'-') return null;
 
-                let ?day = parseNat(iter, 2) else return null;
+                let ?day = InternalTextUtil.parseNat(iter, 2) else return null;
 
                 if (iter.next() != ?'T') return null;
 
-                let ?hour = parseNat(iter, 2) else return null;
+                let ?hour = InternalTextUtil.parseNat(iter, 2) else return null;
 
                 if (iter.next() != ?':') return null;
 
-                let ?minute = parseNat(iter, 2) else return null;
+                let ?minute = InternalTextUtil.parseNat(iter, 2) else return null;
 
                 if (iter.next() != ?':') return null;
 
-                let ?seconds = parseNat(iter, 2) else return null;
+                let ?seconds = InternalTextUtil.parseNat(iter, 2) else return null;
 
                 let (milliseconds : Nat, timezone : ?Text) = switch (iter.next()) {
                     case (?'.') {
-                        let ?ms = parseNat(iter, 3) else return null;
-                        let tz = readTillEnd(iter, null);
+                        let ?ms = InternalTextUtil.parseNat(iter, 3) else return null;
+                        let tz = InternalTextUtil.readTillEnd(iter, null);
                         (ms, tz);
                     };
                     case (?tzChar) {
-                        let tz = readTillEnd(iter, ?tzChar);
+                        let tz = InternalTextUtil.readTillEnd(iter, ?tzChar);
                         (0, tz);
                     };
                     case (null)(0, null);
@@ -395,209 +228,4 @@ module D {
         };
     };
 
-    public func isValid(dateTime : Components) : Bool {
-        let leapYear = isLeapYear(dateTime.year);
-
-        let daysInM = daysInMonth(dateTime.month, leapYear);
-
-        if (dateTime.day == 0 or dateTime.day > daysInM) {
-            return false;
-        };
-
-        if (dateTime.hour >= 24) {
-            return false;
-        };
-
-        if (dateTime.minute >= 60) {
-            return false;
-        };
-
-        if (dateTime.nanosecond >= 60_000_000_000) {
-            return false;
-        };
-
-        return true;
-    };
-
-    public func addTime(startDateTime : Components, nanoseconds : Time.Time) : Components {
-
-        if (nanoseconds < 0) {
-            subtractNanoseconds(startDateTime, Int.abs(nanoseconds));
-        } else if (nanoseconds > 0) {
-            addNanoseconds(startDateTime, Int.abs(nanoseconds));
-        } else {
-            return startDateTime;
-        };
-    };
-
-    private func subtractNanoseconds(startDateTime : Components, nanoseconds : Nat) : Components {
-        let nanosecondsInAMinute = 60 * 1000000000;
-        let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
-        let nanosecondsInADay = 24 * nanosecondsInAnHour;
-
-        var year : Int = startDateTime.year - 1;
-        var remainingNanoseconds : Nat = nanoseconds;
-
-        // Remove years until cant remove any more
-        label l loop {
-            let daysInYearV = daysInYear(year);
-            let yearInNanoseconds = daysInYearV * nanosecondsInADay;
-            if (remainingNanoseconds <= yearInNanoseconds) {
-                break l;
-            };
-            remainingNanoseconds -= yearInNanoseconds;
-            year -= 1;
-        };
-        var month : Nat = wrapInt(startDateTime.month - 1, 1, 12);
-        let currentIsLeapYear = isLeapYear(year);
-        label l loop {
-            let daysInMonthV = daysInMonth(month, currentIsLeapYear);
-            let monthInNanoseconds : Nat = daysInMonthV * nanosecondsInADay;
-            if (remainingNanoseconds <= monthInNanoseconds) {
-                break l;
-            };
-            remainingNanoseconds -= monthInNanoseconds;
-            month := wrapInt(month - 1, 1, 12);
-        };
-
-        let daysInMonthV = daysInMonth(month, currentIsLeapYear);
-        let days : Nat = (remainingNanoseconds / nanosecondsInADay);
-        remainingNanoseconds -= days * nanosecondsInADay;
-        let day : Nat = if (remainingNanoseconds > 0) {
-            daysInMonthV - days;
-        } else {
-            daysInMonthV - days + 1; // If exactly on the day, dont go to 'next' day
-        };
-
-        let hour = remainingNanoseconds / nanosecondsInAnHour;
-        remainingNanoseconds %= nanosecondsInAnHour;
-
-        let minute = remainingNanoseconds / nanosecondsInAMinute;
-        remainingNanoseconds %= nanosecondsInAMinute;
-
-        let nanosecond = remainingNanoseconds;
-
-        return {
-            year = year;
-            month = month;
-            day = day;
-            hour = if (hour > 0) 23 - hour else hour;
-            minute = if (minute > 0) 60 - minute else minute;
-            nanosecond = nanosecond;
-        };
-    };
-
-    private func addNanoseconds(startDateTime : Components, nanoseconds : Nat) : Components {
-        let nanosecondsInAMinute = 60 * 1000000000;
-        let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
-        let nanosecondsInADay = 24 * nanosecondsInAnHour;
-
-        var year : Int = startDateTime.year;
-        var remainingNanoseconds : Nat = nanoseconds;
-
-        // Remove years until cant remove any more
-        label l loop {
-            let daysInYearV = daysInYear(year);
-            let yearInNanoseconds = daysInYearV * nanosecondsInADay;
-            if (remainingNanoseconds <= yearInNanoseconds) {
-                if (remainingNanoseconds == yearInNanoseconds) {
-                    // If exactly 1 year left, then we are on the first day of the next year
-                    year += 1;
-                    remainingNanoseconds := 0;
-                };
-                break l;
-            };
-            remainingNanoseconds -= yearInNanoseconds;
-            year += 1;
-        };
-
-        // Remove months until cant remove any more
-        var month : Nat = startDateTime.month;
-        let currentIsLeapYear = isLeapYear(year);
-        label l loop {
-            let daysInMonthV = daysInMonth(month, currentIsLeapYear);
-            let monthInNanoseconds : Nat = daysInMonthV * nanosecondsInADay;
-            if (remainingNanoseconds <= monthInNanoseconds) {
-                if (remainingNanoseconds == monthInNanoseconds) {
-                    // If exactly 1 month left, then we are on the first day of the next month
-                    month += 1;
-                    remainingNanoseconds := 0;
-                };
-                break l;
-            };
-            remainingNanoseconds -= monthInNanoseconds;
-            month += 1;
-        };
-
-        let days = (remainingNanoseconds / nanosecondsInADay);
-        remainingNanoseconds -= days * nanosecondsInADay;
-        let day : Nat = days + 1;
-
-        let hour = remainingNanoseconds / nanosecondsInAnHour;
-        remainingNanoseconds %= nanosecondsInAnHour;
-
-        let minute = remainingNanoseconds / nanosecondsInAMinute;
-        remainingNanoseconds %= nanosecondsInAMinute;
-
-        let nanosecond = remainingNanoseconds;
-
-        return {
-            year = year;
-            month = month;
-            day = day;
-            hour = hour;
-            minute = minute;
-            nanosecond = nanosecond;
-        };
-    };
-
-    private func wrapInt(value : Int, min : Nat, max : Nat) : Nat {
-        if (value < min) {
-            let difference : Nat = Int.abs(min - value);
-            return max - (difference - 1);
-        } else if (value > max) {
-            let difference : Nat = Int.abs(value - max);
-            return min + (difference + 1);
-        } else {
-            return Int.abs(value);
-        };
-    };
-
-    private func readTillEnd(iter : Iter.Iter<Char>, startChar : ?Char) : ?Text {
-        var text : Text = switch (startChar) {
-            case (null) "";
-            case (?char) Text.fromChar(char);
-        };
-        label l loop {
-            let ?char = iter.next() else break l;
-            text #= Text.fromChar(char);
-        };
-        return if (text == "") null else ?text;
-    };
-
-    private func parseNat(iter : Iter.Iter<Char>, length : Nat) : ?Nat {
-        var value : Text = "";
-        for (a in Iter.range(0, length - 1)) {
-            let ?char = iter.next() else return null;
-            value #= Text.fromChar(char);
-        };
-        return Nat.fromText(value);
-    };
-
-    private func toTextPadded(value : Int, length : Nat) : Text {
-        let isNegative = value < 0;
-        let natValue = Int.abs(value);
-        var text = Nat.toText(natValue);
-        if (text.size() < length) {
-            // Pad with leading zeros
-            for (a in Iter.range(0, length - text.size() - 1)) {
-                text := "0" # text;
-            };
-        };
-        if (isNegative) {
-            "-" # text;
-        } else {
-            text;
-        };
-    };
 };
