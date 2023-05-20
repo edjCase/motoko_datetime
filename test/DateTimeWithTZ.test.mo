@@ -15,7 +15,7 @@ type TestCase = {
 
 let testCases : [TestCase] = [
   {
-    timeZone = #fixed(#hoursAndMinutes((-7, 0)));
+    timeZone = #fixed(#hoursAndMinutes((-8, 0)));
     dateTime = {
       year = 1950;
       month = 1;
@@ -24,8 +24,8 @@ let testCases : [TestCase] = [
       minute = 0;
       nanosecond = 0;
     };
-    nanoseconds = -631_152_000_000_000_000;
-    textIso8061 = "1950-01-01T00:00:00.000Z";
+    nanoseconds = -631_123_200_000_000_000;
+    textIso8061 = "1950-01-01T00:00:00.000-08:00";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((-5, 0)));
@@ -37,8 +37,8 @@ let testCases : [TestCase] = [
       minute = 33;
       nanosecond = 0;
     };
-    nanoseconds = -603_919_620_000_000_000;
-    textIso8061 = "1950-11-12T04:33:00.000Z";
+    nanoseconds = -603_901_620_000_000_000;
+    textIso8061 = "1950-11-12T04:33:00.000-05:00";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((9, 0)));
@@ -50,8 +50,8 @@ let testCases : [TestCase] = [
       minute = 0;
       nanosecond = 0;
     };
-    nanoseconds = 0;
-    textIso8061 = "1970-01-01T00:00:00.000Z";
+    nanoseconds = -32_400_000_000_000_000;
+    textIso8061 = "1970-01-01T00:00:00.000+09:00";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((13, 0)));
@@ -64,7 +64,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 60_000_000_000;
-    textIso8061 = "1970-01-01T00:01:00.000Z";
+    textIso8061 = "1970-01-01T00:01:00.000+13:00";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((-1, 0)));
@@ -77,7 +77,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 86_400_000_000_000;
-    textIso8061 = "1970-01-02T00:00:00.000Z";
+    textIso8061 = "1970-01-02T00:00:00.000-01:00";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((-7, 34)));
@@ -90,7 +90,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 68_169_600_000_000_000;
-    textIso8061 = "1972-02-29T00:00:00.000Z";
+    textIso8061 = "1972-02-29T00:00:00.000-07:34";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((-7, 2)));
@@ -103,7 +103,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 946_684_800_000_000_000;
-    textIso8061 = "2000-01-01T00:00:00.000Z";
+    textIso8061 = "2000-01-01T00:00:00.000-07:02";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((0, 2)));
@@ -116,7 +116,7 @@ let testCases : [TestCase] = [
       nanosecond = 59_000_000_000;
     };
     nanoseconds = 978_307_199_000_000_000;
-    textIso8061 = "2000-12-31T23:59:59.000Z";
+    textIso8061 = "2000-12-31T23:59:59.000+00:02";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((4, 3)));
@@ -129,7 +129,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 1_589_988_600_000_000_000;
-    textIso8061 = "2020-05-20T15:30:00.000Z";
+    textIso8061 = "2020-05-20T15:30:00.000+04:03";
   },
 ];
 

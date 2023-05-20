@@ -8,6 +8,7 @@ import Int "mo:base/Int";
 import Nat "mo:base/Nat";
 import NumberUtil "../internal/NumberUtil";
 import InternalTextUtil "../internal/TextUtil";
+import Debug "mo:base/Debug";
 
 module {
 
@@ -40,7 +41,8 @@ module {
 
         if (components.year < 1970) {
             // For dates before the epoch, need to do the inverse
-            var currentYear = 1969;
+            var currentYear : Int = 1969;
+            Debug.print("components.year: " # debug_show components.year);
             while (currentYear > components.year) {
                 totalNanoseconds -= InternalComponents.daysInYear(currentYear) * nanosecondsInADay;
                 currentYear -= 1;

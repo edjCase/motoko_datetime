@@ -129,8 +129,11 @@ module  {
 
     public func fromTime(nanoseconds : Time.Time, timeZone: TimeZone) : DateTimeWithTZ {
         let components = Components.fromTime(nanoseconds);
+        Debug.print(debug_show(components));
         let offset = Components.getOffsetSeconds(components, timeZone);
-        let localizedComponents = Components.addTime(components, offset);
+        Debug.print(debug_show(offset * 1000_000_000));
+        let localizedComponents = Components.addTime(components, offset * 1000_000_000);
+        Debug.print(debug_show(localizedComponents));
         DateTimeWithTZ(localizedComponents, timeZone);
     };
 
