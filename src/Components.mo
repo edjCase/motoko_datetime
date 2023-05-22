@@ -14,7 +14,7 @@ module {
 
     public type Components = InternalTypes.Components;
     public type DateTime = InternalTypes.DateTime;
-    public type DateTimeWithTZ = InternalTypes.DateTimeWithTZ;
+    public type LocalDateTime = InternalTypes.LocalDateTime;
     public type TimeZone = InternalTypes.TimeZone;
     public type Duration = InternalTypes.Duration;
     public type TextFormat = InternalTypes.TextFormat;
@@ -216,7 +216,7 @@ module {
         let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
         let nanosecondsInADay = 24 * nanosecondsInAnHour;
 
-        var year : Int = startDateTime.year - 1;
+        var year : Int = startDateTime.year;
         var remainingNanoseconds : Nat = nanoseconds;
 
         // Remove years until cant remove any more

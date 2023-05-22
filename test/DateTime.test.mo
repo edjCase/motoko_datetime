@@ -1,12 +1,13 @@
 import Iter "mo:base/Iter";
 import { test } "mo:test";
 import DateTime "../src/DateTime";
+import Components "../src/Components";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
 
 type TestCase = {
-  dateTime : DateTime.Components;
+  dateTime : Components.Components;
   nanoseconds : Int;
   textIso8061 : Text;
 };
@@ -141,10 +142,10 @@ func assertDateTime(
   return assertT<DateTime.DateTime>(actual, expected, DateTime.equal, DateTime.toText);
 };
 func assertComponents(
-  actual : DateTime.Components,
-  expected : DateTime.Components,
+  actual : Components.Components,
+  expected : Components.Components,
 ) {
-  return assertT<DateTime.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
+  return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
 };
 
 for (testCase in Iter.fromArray(testCases)) {

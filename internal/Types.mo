@@ -26,6 +26,11 @@ module {
         #iso8601;
     };
 
+    public type TimeZone = {
+        #fixed : FixedTimeZone;
+        #dynamic : DynamicTimeZone;
+    };
+
     public type DynamicTimeZone = {
         getOffsetSeconds : (components : Components) -> Int;
     };
@@ -35,17 +40,12 @@ module {
         #hoursAndMinutes : (Int, Nat);
     };
 
-    public type TimeZone = {
-        #fixed : FixedTimeZone;
-        #dynamic : DynamicTimeZone;
-    };
-
     public type DateTime = {
         equal : (other : DateTime) -> Bool;
 
         add : (duration : Duration) -> DateTime;
 
-        nanosecondsSince : (other : DateTime) -> Int;
+        timeSince : (other : DateTime) -> Int;
 
         toTime : () -> Time.Time;
 
@@ -60,12 +60,12 @@ module {
         compare : (other : DateTime) -> Order.Order;
     };
 
-    public type DateTimeWithTZ = {
-        equal : (other : DateTimeWithTZ) -> Bool;
+    public type LocalDateTime = {
+        equal : (other : LocalDateTime) -> Bool;
 
-        add : (duration : Duration) -> DateTimeWithTZ;
+        add : (duration : Duration) -> LocalDateTime;
 
-        nanosecondsSince : (other : DateTimeWithTZ) -> Int;
+        nanosecondsSince : (other : LocalDateTime) -> Int;
 
         toTime : () -> Time.Time;
 
@@ -77,6 +77,6 @@ module {
 
         isLeapYear : () -> Bool;
 
-        compare : (other : DateTimeWithTZ) -> Order.Order;
+        compare : (other : LocalDateTime) -> Order.Order;
     };
 };

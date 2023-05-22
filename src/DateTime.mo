@@ -16,7 +16,7 @@ module D {
     public type Duration = InternalTypes.Duration;
     public type TextFormat = InternalTypes.TextFormat;
     public type DateTime = InternalTypes.DateTime;
-    public type Components = InternalTypes.Components;
+    type Components = InternalTypes.Components;
 
     public func DateTime(time : Int) : DateTime = object {
         var componentsCache : ?Components = null;
@@ -94,7 +94,7 @@ module D {
         //     return weekOfMonth;
         // };
 
-        public func nanosecondsSince(other : DateTime) : Int {
+        public func timeSince(other : DateTime) : Int {
             let otherTime = other.toTime();
             return time - otherTime;
         };

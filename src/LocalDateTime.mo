@@ -22,34 +22,34 @@ module  {
 
     public type Components = InternalTypes.Components;
 
-    public type DateTimeWithTZ = InternalTypes.DateTimeWithTZ;
+    public type LocalDateTime = InternalTypes.LocalDateTime;
 
     public type TextFormat = InternalTypes.TextFormat;
 
-    public func DateTimeWithTZ(components : Components, timeZone : TimeZone) : DateTimeWithTZ = object {
+    public func LocalDateTime(components : Components, timeZone : TimeZone) : LocalDateTime = object {
         if(not Components.isValid(components)){
             Debug.trap("Invalid components");
         };
 
-        public func equal(other : DateTimeWithTZ) : Bool {
+        public func equal(other : LocalDateTime) : Bool {
             return compare(other) == #equal;
         };
 
-        public func add(duration : DateTime.Duration) : DateTimeWithTZ {
+        public func add(duration : DateTime.Duration) : LocalDateTime {
             switch(InternalComponents.resolveDuration(duration)) {
                 case (#absoluteTime(nanoseconds)) {
                     let newComponents = Components.addTime(components, nanoseconds);
-                    DateTimeWithTZ(newComponents, timeZone);
+                    LocalDateTime(newComponents, timeZone);
                 };
                 case (#adder(adder)) {
                     // Convert the current datetime components to
                     let newComponents = adder(components);
-                    DateTimeWithTZ(newComponents, timeZone);
+                    LocalDateTime(newComponents, timeZone);
                 };
             };
         };
 
-        public func nanosecondsSince(other : DateTimeWithTZ) : Int {
+        public func nanosecondsSince(other : LocalDateTime) : Int {
             let otherTime = other.toTime();
             return toTime() - otherTime;
         };
@@ -71,7 +71,7 @@ module  {
             InternalComponents.toTextFormatted(components, format, timeZone);
         };
 
-        public func toComponents() : DateTime.Components {
+        public func toComponents() : Components.Components {
             components;
         };
 
@@ -80,7 +80,7 @@ module  {
             InternalComponents.isLeapYear(year);
         };
 
-        public func compare(other : DateTimeWithTZ) : Order.Order {
+        public func compare(other : LocalDateTime) : Order.Order {
             Int.compare(toTime(), other.toTime());
         };
 
@@ -115,44 +115,44 @@ module  {
         };
     };
     
-    public func fromComponents(components : Components, timeZone: TimeZone) : ?DateTimeWithTZ {
-        return ?DateTimeWithTZ(components, timeZone);
+    public func fromComponents(components : Components, timeZone: TimeZone) : ?LocalDateTime {
+        return ?LocalDateTime(components, timeZone);
     };
 
-    public func equal(a : DateTimeWithTZ, b : DateTimeWithTZ) : Bool {
+    public func equal(a : LocalDateTime, b : LocalDateTime) : Bool {
         return a.equal(b);
     };
 
-    public func now(timeZone : TimeZone) : DateTimeWithTZ {
+    public func now(timeZone : TimeZone) : LocalDateTime {
         return fromTime(Time.now(), timeZone);
     };
 
-    public func fromTime(nanoseconds : Time.Time, timeZone: TimeZone) : DateTimeWithTZ {
-        let components = Components.fromTime(nanoseconds);
-        Debug.print(debug_show(components));
-        let offset = Components.getOffsetSeconds(components, timeZone);
-        Debug.print(debug_show(offset * 1000_000_000));
-        let localizedComponents = Components.addTime(components, offset * 1000_000_000);
+    public func fromTime(nanoseconds : Time.Time, timeZone: TimeZone) : LocalDateTime {
+        let utcComponents = Components.fromTime(nanoseconds);
+        Debug.print(debug_show(utcComponents));
+        let offset = Components.getOffsetSeconds(utcComponents, timeZone);
+        Debug.print(debug_show(offset / 3600));
+        let localizedComponents = Components.addTime(utcComponents, offset * 1_000_000_000);
         Debug.print(debug_show(localizedComponents));
-        DateTimeWithTZ(localizedComponents, timeZone);
+        LocalDateTime(localizedComponents, timeZone);
     };
 
-    public func toText(dateTime : DateTimeWithTZ) : Text {
+    public func toText(dateTime : LocalDateTime) : Text {
         dateTime.toText();
     };
 
-    public func toTextFormatted(dateTime : DateTimeWithTZ, format : TextFormat) : Text {
+    public func toTextFormatted(dateTime : LocalDateTime, format : TextFormat) : Text {
         dateTime.toTextFormatted(format);
     };
 
-    public func fromTextFormatted(text : Text, format : TextFormat) : ?DateTimeWithTZ {
+    public func fromTextFormatted(text : Text, format : TextFormat) : ?LocalDateTime {
         do ? {
             let result = Components.fromTextFormatted(text, format)!;
             let timeZone : TimeZone = switch(result.timeZoneDescriptor){
                 case (?d) TimeZone.fromDescriptor(d);
                 case (null) TimeZone.utc();
             };
-            DateTimeWithTZ(result.components, timeZone);
+            LocalDateTime(result.components, timeZone);
         }
     };
 
