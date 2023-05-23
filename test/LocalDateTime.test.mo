@@ -26,7 +26,7 @@ let testCases : [TestCase] = [
       minute = 0;
       nanosecond = 0;
     };
-    nanoseconds = -631_123_200_000_000_000;
+    nanoseconds = -631_126_800_000_000_000;
     textIso8061 = "1950-01-01T00:00:00.000-07:00";
   },
   {
@@ -52,7 +52,7 @@ let testCases : [TestCase] = [
       minute = 0;
       nanosecond = 0;
     };
-    nanoseconds = -32_400_000_000_000_000;
+    nanoseconds = -32_400_000_000_000;
     textIso8061 = "1970-01-01T00:00:00.000+09:00";
   },
   {
@@ -65,7 +65,7 @@ let testCases : [TestCase] = [
       minute = 1;
       nanosecond = 0;
     };
-    nanoseconds = 60_000_000_000;
+    nanoseconds = -46_740_000_000_000;
     textIso8061 = "1970-01-01T00:01:00.000+13:00";
   },
   {
@@ -78,21 +78,21 @@ let testCases : [TestCase] = [
       minute = 0;
       nanosecond = 0;
     };
-    nanoseconds = 86_400_000_000_000;
+    nanoseconds = 90_000_000_000_000;
     textIso8061 = "1970-01-02T00:00:00.000-01:00";
   },
   {
-    timeZone = #fixed(#hoursAndMinutes((-7, 34)));
+    timeZone = #fixed(#hoursAndMinutes((7, 34)));
     dateTime = {
       year = 1972;
       month = 2;
       day = 29;
-      hour = 0;
-      minute = 0;
+      hour = 7;
+      minute = 34;
       nanosecond = 0;
     };
-    nanoseconds = 68_169_600_000_000_000;
-    textIso8061 = "1972-02-29T00:00:00.000-07:34";
+    nanoseconds = 68_169_540_000_000_000;
+    textIso8061 = "1972-02-29T07:34:00.000+07:34";
   },
   {
     timeZone = #fixed(#hoursAndMinutes((-7, 2)));
@@ -104,7 +104,7 @@ let testCases : [TestCase] = [
       minute = 0;
       nanosecond = 0;
     };
-    nanoseconds = 946_684_800_000_000_000;
+    nanoseconds = 946_710_120_000_000_000;
     textIso8061 = "2000-01-01T00:00:00.000-07:02";
   },
   {
@@ -188,6 +188,7 @@ for (testCase in Iter.fromArray(testCases)) {
     func() {
       // From nanoseconds
       let dateTime = LocalDateTime.fromTime(testCase.nanoseconds, testCase.timeZone);
+      Debug.print("ACtional: " # debug_show (dateTime.toComponents()));
       assertDateTime(dateTime, expectedDateTime);
     },
   );

@@ -9,6 +9,8 @@ import Nat "mo:base/Nat";
 import NumberUtil "../internal/NumberUtil";
 import InternalTextUtil "../internal/TextUtil";
 import Debug "mo:base/Debug";
+import Components "../internal/Components";
+import Order "mo:base/Order";
 
 module {
 
@@ -27,9 +29,23 @@ module {
             hour = 0;
             minute = 0;
             nanosecond = 0;
-        }
+        };
     };
     
+    public func compare(c1 : Components, c2 : Components) : Order.Order {
+        switch(Int.compare(c1.year, c2.year)){
+            case (#greater) #greater;
+            case (#less) #less;
+            case (#equal) {
+                switch (Int.compare(c1.month, c2.month)) {
+                    case (#greater) #greater;
+                    case (#less) #less;                    
+                    case (#equal) Int.compare(c1.day, c2.day);
+                };
+            }
+        };
+    };
+
     public func toTime(components : Components) : ?Time.Time {
         if (not isValid(components)) {
             return null;
@@ -42,7 +58,6 @@ module {
         if (components.year < 1970) {
             // For dates before the epoch, need to do the inverse
             var currentYear : Int = 1969;
-            Debug.print("components.year: " # debug_show components.year);
             while (currentYear > components.year) {
                 totalNanoseconds -= InternalComponents.daysInYear(currentYear) * nanosecondsInADay;
                 currentYear -= 1;
@@ -58,7 +73,6 @@ module {
             let daysInMonthV = InternalComponents.daysInMonth(components.month, currentIsLeapYear);
             // Day
             totalNanoseconds -= (daysInMonthV - components.day) * nanosecondsInADay;
-
             // Hour
             totalNanoseconds -= (23 - components.hour) * nanosecondsInAnHour;
 
@@ -101,7 +115,7 @@ module {
     public func fromTime(nanoseconds : Int) : Components {
         addTime(epoch(), nanoseconds);
     };
-    
+
     public func isValid(dateTime : Components) : Bool {
         let leapYear = InternalComponents.isLeapYear(dateTime.year);
 
@@ -144,7 +158,6 @@ module {
         components : Components;
         timeZoneDescriptor : ?Text;
     };
-
 
     public func fromTextFormatted(text : Text, format : TextFormat) : ?FromTextResult {
         switch (format) {
@@ -200,71 +213,219 @@ module {
         };
     };
 
-    
-    public func addTime(startDateTime : Components, nanoseconds : Time.Time) : Components {
+    public func addTime(components : Components, nanoseconds : Time.Time) : Components {
+        if (not isValid(components)) {
+            return Debug.trap("Invalid components: " # debug_show (components));
+        };
         if (nanoseconds < 0) {
-            subtractNanoseconds(startDateTime, Int.abs(nanoseconds));
+            subtractNanoseconds(components, Int.abs(nanoseconds));
         } else if (nanoseconds > 0) {
-            addNanoseconds(startDateTime, Int.abs(nanoseconds));
+            addNanoseconds(components, Int.abs(nanoseconds));
         } else {
-            return startDateTime;
+            return components;
         };
     };
 
-    private func subtractNanoseconds(startDateTime : Components, nanoseconds : Nat) : Components {
+    private func subtractNanoseconds(components : Components, nanoseconds : Nat) : Components {
         let nanosecondsInAMinute = 60 * 1000000000;
         let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
         let nanosecondsInADay = 24 * nanosecondsInAnHour;
 
-        var year : Int = startDateTime.year;
         var remainingNanoseconds : Nat = nanoseconds;
 
-        // Remove years until cant remove any more
-        label l loop {
-            let daysInYearV = InternalComponents.daysInYear(year);
-            let yearInNanoseconds = daysInYearV * nanosecondsInADay;
-            if (remainingNanoseconds <= yearInNanoseconds) {
-                break l;
-            };
-            remainingNanoseconds -= yearInNanoseconds;
-            year -= 1;
-        };
-        var month : Nat = NumberUtil.wrapInt(startDateTime.month - 1, 1, 12);
-        let currentIsLeapYear = InternalComponents.isLeapYear(year);
-        label l loop {
-            let daysInMonthV = InternalComponents.daysInMonth(month, currentIsLeapYear);
-            let monthInNanoseconds : Nat = daysInMonthV * nanosecondsInADay;
-            if (remainingNanoseconds <= monthInNanoseconds) {
-                break l;
-            };
-            remainingNanoseconds -= monthInNanoseconds;
-            month := NumberUtil.wrapInt(month - 1, 1, 12);
+        var remainingDays : Nat = remainingNanoseconds / nanosecondsInADay;
+
+        let date = subtractDays(components, remainingDays);
+        var newComponents = {
+            components with
+            year = date.year;
+            month = date.month;
+            day = date.day;
         };
 
-        let daysInMonthV = InternalComponents.daysInMonth(month, currentIsLeapYear);
-        let days : Nat = (remainingNanoseconds / nanosecondsInADay);
-        remainingNanoseconds -= days * nanosecondsInADay;
-        let day : Nat = if (remainingNanoseconds > 0) {
-            daysInMonthV - days;
-        } else {
-            daysInMonthV - days + 1; // If exactly on the day, dont go to 'next' day
-        };
+        remainingNanoseconds -= remainingDays * nanosecondsInADay;
 
-        let hour = remainingNanoseconds / nanosecondsInAnHour;
+        let removeHours = remainingNanoseconds / nanosecondsInAnHour;
         remainingNanoseconds %= nanosecondsInAnHour;
 
-        let minute = remainingNanoseconds / nanosecondsInAMinute;
+        newComponents := subtractHours(newComponents, removeHours);
+
+        let removeMinutes = remainingNanoseconds / nanosecondsInAMinute;
         remainingNanoseconds %= nanosecondsInAMinute;
+
+        newComponents := subtractMinutes(newComponents, removeMinutes);
 
         let nanosecond = remainingNanoseconds;
 
-        return {
+        return {newComponents with nanosecond=nanosecond};
+    };
+
+    type DateComponents = {
+        year : Int;
+        month : Nat;
+        day : Nat;
+    };
+
+    private func subtractMinutes(components : Components, removeMinutes : Nat) : Components {
+        if (removeMinutes == 0) {
+            return components;
+        };
+        Debug.print("Components: " # debug_show (components));
+        Debug.print("subtractMinutes: " # debug_show (removeMinutes));
+
+        var year = components.year;
+        var month = components.month;
+        var day = components.day;
+        var hour = components.hour;
+        // TODO remove redundancy with this method and subtractHours
+        let minute : Nat = if (removeMinutes >= components.minute) {
+            if (hour == 0) {
+                if (day == 1) {
+                    if (month == 1) {
+                        year -= 1;
+                        month := 12;
+                    } else {
+                        month -= 1;
+                    };
+                    day := InternalComponents.daysInMonth(month, InternalComponents.isLeapYear(year));
+                } else {
+                    day -= 1;
+                };
+                hour := 23;
+            } else {
+                hour -= 1;
+            };            
+            59 - (removeMinutes - components.minute);
+        } else {
+            components.minute - removeMinutes;
+        };
+        {
             year = year;
             month = month;
             day = day;
-            hour = if (hour > 0) 23 - hour else hour;
-            minute = if (minute > 0) 60 - minute else minute;
-            nanosecond = nanosecond;
+            hour = hour;
+            minute = minute;
+            nanosecond = components.nanosecond;
+        }
+    };
+
+    private func subtractHours(components : Components, removeHours : Nat) : Components {
+        if (removeHours == 0) {
+            return components;
+        };
+        var year = components.year;
+        var month = components.month;
+        var day = components.day;
+        let hour : Nat = if (removeHours > components.hour) {
+            if (day == 1) {
+                if (month == 1) {
+                    year -= 1;
+                    month := 12;
+                } else {
+                    month -= 1;
+                };
+                day := InternalComponents.daysInMonth(month, InternalComponents.isLeapYear(year));
+            } else {
+                day -= 1;
+            };
+            24 - (removeHours - components.hour);
+        } else {
+            components.hour - removeHours;
+        };
+        {
+            year = year;
+            month = month;
+            day = day;
+            hour = hour;
+            minute = components.minute;
+            nanosecond = components.nanosecond;
+        }
+    };
+
+    private func subtractDays(components : DateComponents, days : Nat) : DateComponents {
+        if (days == 0) {
+            return components;
+        };
+        var remainingDays : Nat = days;
+        var year : Int = components.year;
+        var month : Nat = components.month;
+        var day : Nat = components.day;
+
+        let beforeLeapDay = month < 2 or (month == 2 and day < 29);
+
+        // Subtract years from total days
+        label l loop {
+            let newYear = year - 1;
+            let daysInYear = if (beforeLeapDay) {
+                InternalComponents.daysInYear(newYear);
+            } else {
+                InternalComponents.daysInYear(newYear + 1) ;
+            };
+            if (remainingDays < InternalComponents.daysInYear(newYear)) {
+                break l;
+            };
+            if (remainingDays < daysInYear) {
+                break l;
+            };
+            remainingDays -= daysInYear;
+            year := newYear;
+        };
+
+
+        // Subtract months from total days
+        label l loop {
+            var newYear : Int = year;
+            var newMonth : Nat = month - 1;
+            if (newMonth == 0) {
+                newMonth := 12;
+                newYear := newYear - 1;
+            };
+            let isLeapYear = InternalComponents.isLeapYear(newYear);
+            let daysInMonth = InternalComponents.daysInMonth(newMonth, isLeapYear);
+            if (remainingDays < daysInMonth) {
+                break l;
+            };
+            remainingDays -= daysInMonth;
+            month := newMonth;
+            year := newYear;
+        };
+
+        // Subtract days from total days
+        while (remainingDays > 0) {
+            var newYear : Int = year;
+            var newMonth : Nat = month;
+            var newDay : Nat = day;
+
+            if (newDay == 1) {
+                if (newMonth == 1) {
+                    newMonth := 12;
+                    newYear := newYear - 1;
+                } else {
+                    newMonth := newMonth - 1;
+                };
+                let isLeapYear = InternalComponents.isLeapYear(newYear);
+                newDay := InternalComponents.daysInMonth(newMonth, isLeapYear);
+            } else {
+                newDay := newDay - 1;
+            };
+            remainingDays -= 1;
+            year := newYear;
+            month := newMonth;
+            day := newDay;
+        };
+
+        // Fix potential overflow of days in a month
+        let daysInMonth = InternalComponents.daysInMonth(month, InternalComponents.isLeapYear(year));
+        if (day > daysInMonth) {
+            let diff : Nat = day - daysInMonth;
+            day := diff;
+            month := month + 1;
+        };
+
+        {
+            year = year;
+            month = month;
+            day = day;
         };
     };
 
@@ -312,13 +473,34 @@ module {
 
         let days = (remainingNanoseconds / nanosecondsInADay);
         remainingNanoseconds -= days * nanosecondsInADay;
-        let day : Nat = days + 1;
+        var day : Nat = startDateTime.day + days;
 
-        let hour = remainingNanoseconds / nanosecondsInAnHour;
+        let hours = remainingNanoseconds / nanosecondsInAnHour;
         remainingNanoseconds %= nanosecondsInAnHour;
+        var hour : Nat = startDateTime.hour + hours;
 
-        let minute = remainingNanoseconds / nanosecondsInAMinute;
+        let minutes = remainingNanoseconds / nanosecondsInAMinute;
         remainingNanoseconds %= nanosecondsInAMinute;
+        var minute : Nat = startDateTime.minute + minutes;
+        if(minute >= 60) {
+            minute -= 60;
+            hour += 1;
+        };
+        if(hour >= 24) {
+            hour -= 24;
+            day += 1;
+        };
+        let daysInMonth = InternalComponents.daysInMonth(month, InternalComponents.isLeapYear(year));
+        if(day > daysInMonth)
+        {
+            day -= daysInMonth;
+            month += 1;
+        };
+        if(month > 12)
+        {
+            month -= 12;
+            year += 1;
+        };
 
         let nanosecond = remainingNanoseconds;
 
@@ -331,4 +513,4 @@ module {
             nanosecond = nanosecond;
         };
     };
-}
+};

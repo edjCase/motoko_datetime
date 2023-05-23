@@ -11,7 +11,11 @@ module {
         if (isNegative) {
             "-" # text;
         } else {
-            text;
+            if (includePositiveSign) {
+                "+" # text;
+            } else {
+                text;
+            };
         };
     };
 
