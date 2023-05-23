@@ -147,11 +147,15 @@ func assertComponents(
 ) {
   return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
 };
+func testCaseToText(testCase : TestCase) : Text {
+  return testCase.textIso8061;
+};
 
 for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = DateTime.DateTime(testCase.nanoseconds);
+  Debug.print("Test case: " # testCaseToText(testCase));
   test(
-    "fromComponents: " # debug_show (testCase.dateTime),
+    "fromComponents (Components -> LocalDateTime)",
     func() {
       // From date components
       let ?dateTime = DateTime.fromComponents(testCase.dateTime) else Debug.trap("Could not parse date time components to a datetime");
@@ -160,7 +164,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toComponents: " # debug_show (testCase.nanoseconds),
+    "toComponents (LocalDateTime -> Components)",
     func() {
       // From nanoseconds
       assertComponents(expectedDateTime.toComponents(), testCase.dateTime);
@@ -168,7 +172,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTime: " # debug_show (testCase.nanoseconds),
+    "fromTime (Time -> LocalDateTime)",
     func() {
       // From nanoseconds
       let dateTime = DateTime.fromTime(testCase.nanoseconds);
@@ -177,7 +181,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTime: " # debug_show (testCase.dateTime),
+    "toTime (LocalDateTime -> Time)",
     func() {
       // From nanoseconds
       assertT(expectedDateTime.toTime(), testCase.nanoseconds, Int.equal, Int.toText);
@@ -185,7 +189,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTextFormatted iso8601: " # debug_show (testCase.textIso8061),
+    "toTextFormatted iso8601 (LocalDateTime -> Text)",
     func() {
       // To Iso8601 text
       let actualIso8601 : Text = expectedDateTime.toTextFormatted(#iso8601);
@@ -195,7 +199,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTextFormatted iso8601: " # debug_show (testCase.textIso8061),
+    "fromTextFormatted iso8601 (Text -> LocalDateTime)",
     func() {
       // From Iso8601 text
       let ?actualIso8601DateTime = DateTime.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");

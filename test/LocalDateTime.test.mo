@@ -91,7 +91,7 @@ let testCases : [TestCase] = [
       minute = 34;
       nanosecond = 0;
     };
-    nanoseconds = 68_169_540_000_000_000;
+    nanoseconds = 68_169_600_000_000_000;
     textIso8061 = "1972-02-29T07:34:00.000+07:34";
   },
   {
@@ -117,7 +117,7 @@ let testCases : [TestCase] = [
       minute = 59;
       nanosecond = 59_000_000_000;
     };
-    nanoseconds = 978_307_199_000_000_000;
+    nanoseconds = 978_307_079_000_000_000;
     textIso8061 = "2000-12-31T23:59:59.000+00:02";
   },
   {
@@ -130,7 +130,7 @@ let testCases : [TestCase] = [
       minute = 30;
       nanosecond = 0;
     };
-    nanoseconds = 1_589_988_600_000_000_000;
+    nanoseconds = 1_589_974_020_000_000_000;
     textIso8061 = "2020-05-20T15:30:00.000+04:03";
   },
 ];
@@ -166,8 +166,9 @@ func testCaseToText(testCase : TestCase) : Text {
 
 for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = LocalDateTime.LocalDateTime(testCase.dateTime, testCase.timeZone);
+  Debug.print("Test case: " # testCaseToText(testCase));
   test(
-    "fromComponents (Components -> LocalDateTime): " # testCaseToText(testCase),
+    "fromComponents (Components -> LocalDateTime)",
     func() {
       // From date components
       let ?dateTime = LocalDateTime.fromComponents(testCase.dateTime, testCase.timeZone) else Debug.trap("Could not parse date time components to a datetime");
@@ -176,7 +177,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toComponents (LocalDateTime -> Components): " # testCaseToText(testCase),
+    "toComponents (LocalDateTime -> Components)",
     func() {
       // From nanoseconds
       assertComponents(expectedDateTime.toComponents(), testCase.dateTime);
@@ -184,17 +185,16 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTime (Time -> LocalDateTime): " # testCaseToText(testCase),
+    "fromTime (Time -> LocalDateTime)",
     func() {
       // From nanoseconds
       let dateTime = LocalDateTime.fromTime(testCase.nanoseconds, testCase.timeZone);
-      Debug.print("ACtional: " # debug_show (dateTime.toComponents()));
       assertDateTime(dateTime, expectedDateTime);
     },
   );
 
   test(
-    "toTime (LocalDateTime -> Time): " # testCaseToText(testCase),
+    "toTime (LocalDateTime -> Time)",
     func() {
       // From nanoseconds
       assertT(expectedDateTime.toTime(), testCase.nanoseconds, Int.equal, Int.toText);
@@ -202,7 +202,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTextFormatted iso8601 (LocalDateTime -> Text): " # testCaseToText(testCase),
+    "toTextFormatted iso8601 (LocalDateTime -> Text)",
     func() {
       // To Iso8601 text
       let actualIso8601 : Text = expectedDateTime.toTextFormatted(#iso8601);
@@ -212,7 +212,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTextFormatted iso8601 (Text -> LocalDateTime): " # testCaseToText(testCase),
+    "fromTextFormatted iso8601 (Text -> LocalDateTime)",
     func() {
       // From Iso8601 text
       let ?actualIso8601DateTime = LocalDateTime.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");

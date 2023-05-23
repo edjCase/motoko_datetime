@@ -116,15 +116,7 @@ module D {
             switch (componentsCache) {
                 case (?components) components;
                 case (null) {
-                    let epoch = {
-                        year = 1970;
-                        month = 1;
-                        day = 1;
-                        hour = 0;
-                        minute = 0;
-                        nanosecond = 0;
-                    };
-                    let components = Components.addTime(epoch, time);
+                    let components = Components.fromTime(time);
                     componentsCache := ?components;
                     components;
                 };

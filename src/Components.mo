@@ -218,15 +218,15 @@ module {
             return Debug.trap("Invalid components: " # debug_show (components));
         };
         if (nanoseconds < 0) {
-            subtractNanoseconds(components, Int.abs(nanoseconds));
+            subtractTime(components, Int.abs(nanoseconds));
         } else if (nanoseconds > 0) {
-            addNanoseconds(components, Int.abs(nanoseconds));
+            addTimeNat(components, Int.abs(nanoseconds));
         } else {
             return components;
         };
     };
 
-    private func subtractNanoseconds(components : Components, nanoseconds : Nat) : Components {
+    private func subtractTime(components : Components, nanoseconds : Nat) : Components {
         let nanosecondsInAMinute = 60 * 1000000000;
         let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
         let nanosecondsInADay = 24 * nanosecondsInAnHour;
@@ -254,10 +254,55 @@ module {
         remainingNanoseconds %= nanosecondsInAMinute;
 
         newComponents := subtractMinutes(newComponents, removeMinutes);
+        
+        return subtractNanoseconds(newComponents, remainingNanoseconds);
+    };
 
-        let nanosecond = remainingNanoseconds;
+    private func subtractNanoseconds(components : Components, removeNanoseconds : Nat) : Components {
+        if (removeNanoseconds == 0) {
+            return components;
+        };
 
-        return {newComponents with nanosecond=nanosecond};
+        var year = components.year;
+        var month = components.month;
+        var day = components.day;
+        var hour = components.hour;
+        var minute = components.minute;
+        // TODO remove redundancy with this method and subtractHours
+        let nanosecond : Nat = if (removeNanoseconds > components.nanosecond) {
+            if (minute == 0){
+                if (hour == 0) {
+                    if (day == 1) {
+                        if (month == 1) {
+                            year -= 1;
+                            month := 12;
+                        } else {
+                            month -= 1;
+                        };
+                        day := InternalComponents.daysInMonth(month, InternalComponents.isLeapYear(year));
+                    } else {
+                        day -= 1;
+                    };
+                    hour := 23;
+                } else {
+                    hour -= 1;
+                };            
+                minute := 59 - (minute - components.minute);
+            } else {
+                minute := components.minute - minute;
+            };
+            60_000_000_000 - (removeNanoseconds - components.nanosecond);
+        } else {
+            components.nanosecond - removeNanoseconds;
+        };
+        {
+            year = year;
+            month = month;
+            day = day;
+            hour = hour;
+            minute = minute;
+            nanosecond = nanosecond;
+        }
     };
 
     type DateComponents = {
@@ -270,15 +315,13 @@ module {
         if (removeMinutes == 0) {
             return components;
         };
-        Debug.print("Components: " # debug_show (components));
-        Debug.print("subtractMinutes: " # debug_show (removeMinutes));
 
         var year = components.year;
         var month = components.month;
         var day = components.day;
         var hour = components.hour;
         // TODO remove redundancy with this method and subtractHours
-        let minute : Nat = if (removeMinutes >= components.minute) {
+        let minute : Nat = if (removeMinutes > components.minute) {
             if (hour == 0) {
                 if (day == 1) {
                     if (month == 1) {
@@ -295,7 +338,7 @@ module {
             } else {
                 hour -= 1;
             };            
-            59 - (removeMinutes - components.minute);
+            60 - (removeMinutes - components.minute);
         } else {
             components.minute - removeMinutes;
         };
@@ -429,8 +472,9 @@ module {
         };
     };
 
-    private func addNanoseconds(startDateTime : Components, nanoseconds : Nat) : Components {
-        let nanosecondsInAMinute = 60 * 1000000000;
+    private func addTimeNat(startDateTime : Components, nanoseconds : Nat) : Components {
+        let nanosecondsInASecond = 1000000000;
+        let nanosecondsInAMinute = 60 * nanosecondsInASecond;
         let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
         let nanosecondsInADay = 24 * nanosecondsInAnHour;
 
@@ -481,7 +525,16 @@ module {
 
         let minutes = remainingNanoseconds / nanosecondsInAMinute;
         remainingNanoseconds %= nanosecondsInAMinute;
+
         var minute : Nat = startDateTime.minute + minutes;
+
+        var nanosecond : Nat = startDateTime.nanosecond + remainingNanoseconds;
+
+        if (nanosecond >= nanosecondsInAMinute) {
+            nanosecond -= nanosecondsInAMinute;
+            minute += 1;
+        };
+        
         if(minute >= 60) {
             minute -= 60;
             hour += 1;
@@ -501,8 +554,6 @@ module {
             month -= 12;
             year += 1;
         };
-
-        let nanosecond = remainingNanoseconds;
 
         return {
             year = year;

@@ -56,10 +56,7 @@ module  {
 
         public func toTime() : Time.Time {
             let offset = getOffsetSeconds();
-            Debug.print("Offset: " # debug_show(offset));
             let newComponents = Components.addTime(components, -offset * 1_000_000_000);
-            Debug.print("Components: " # debug_show(components));
-            Debug.print("New Components: " # debug_show(newComponents));
             let ?time = Components.toTime(newComponents) else Prelude.unreachable();
             time;
         };
@@ -96,7 +93,13 @@ module  {
                 case (#fixed(f)) {
                     switch (f) {
                         case (#seconds(s)) s;
-                        case (#hoursAndMinutes(h, m)) h * 3600 + m * 60;
+                        case (#hoursAndMinutes(h, m)) {
+                            if (h < 0) {
+                                h * 3600 - m * 60;
+                            } else {
+                                h * 3600 + m * 60;
+                            };
+                        };
                     };
                 };
                 case (#dynamic(d)) {
@@ -135,15 +138,13 @@ module  {
 
     public func fromTime(nanoseconds : Time.Time, timeZone: TimeZone) : LocalDateTime {
         let utcComponents = Components.fromTime(nanoseconds);
-        Debug.print("UTC Components: " # debug_show(utcComponents));
         let offset = Components.getOffsetSeconds(utcComponents, timeZone);
         let localizedComponents = Components.addTime(utcComponents, offset * 1_000_000_000);
         LocalDateTime(localizedComponents, timeZone);
     };
 
     public func toText(dateTime : LocalDateTime) : Text {
-        // dateTime.toText();
-        debug_show(dateTime.toComponents());
+        dateTime.toText();
     };
 
     public func toTextFormatted(dateTime : LocalDateTime, format : TextFormat) : Text {
