@@ -6,6 +6,7 @@ module {
         #nanoseconds : Int;
         #milliseconds : Int;
         #seconds : Int;
+        #minutes : Int;
         #hours : Int;
         #days : Int;
         #weeks : Int;
@@ -55,7 +56,7 @@ module {
 
         toComponents : () -> Components;
 
-        isLeapYear : () -> Bool;
+        isInLeapYear : () -> Bool;
 
         compare : (other : DateTime) -> Order.Order;
     };
@@ -75,7 +76,7 @@ module {
 
         toComponents : () -> Components;
 
-        isLeapYear : () -> Bool;
+        isInLeapYear : () -> Bool;
 
         compare : (other : LocalDateTime) -> Order.Order;
     };

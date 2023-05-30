@@ -28,6 +28,9 @@ module Module {
             case (#seconds(seconds)) {
                 #absoluteTime(seconds * 1_000_000_000);
             };
+            case (#minutes(minutes)) {
+                #absoluteTime(minutes * 60 * 1_000_000_000);
+            };
             case (#hours(hours)) {
                 #absoluteTime(hours * 60 * 60 * 1_000_000_000);
             };

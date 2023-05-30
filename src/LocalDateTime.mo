@@ -75,7 +75,7 @@ module  {
             components;
         };
 
-        public func isLeapYear() : Bool {
+        public func isInLeapYear() : Bool {
             let year = toComponents().year;
             InternalComponents.isLeapYear(year);
         };
