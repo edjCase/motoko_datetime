@@ -3,6 +3,8 @@
 /// Import from the base library to use this module.
 /// ```motoko name=import
 /// import DateTime "mo:datetime/DateTime";
+/// import Components "mo:datetime/Components";
+/// import Time "mo:base/Time";
 /// ```
 
 import Time "mo:base/Time";
@@ -25,6 +27,12 @@ module D {
     public type DateTime = InternalTypes.DateTime;
     type Components = InternalTypes.Components;
 
+    /// Creates an instance of the `DateTime` type from a `Time.Time` value.
+    ///
+    /// ```motoko include=import
+    /// let nowTime : Time.Time = Time.now();
+    /// let nowDateTime : DateTime.DateTime = DateTime(time);
+    /// ```
     public func DateTime(time : Time.Time) : DateTime = object {
         var componentsCache : ?Components = null;
 
@@ -32,9 +40,9 @@ module D {
         /// Does not modify the current `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let now : DateTime = DateTime.now();
-        /// let fourDays : Duration = #days(4);
-        /// let fourDaysFromNow : DateTime = now.add(fourDays);
+        /// let now : DateTime.DateTime = DateTime.now();
+        /// let fourDays : DateTime.Duration = #days(4);
+        /// let fourDaysFromNow : DateTime.DateTime = now.add(fourDays);
         /// ```
         public func add(duration : Duration) : DateTime {
             switch(InternalComponents.resolveDuration(duration)) {
@@ -104,12 +112,13 @@ module D {
         //     return weekOfMonth;
         // };
 
+        // TODO rename
         /// Calculates the time difference between this `DateTime` and another `DateTime` value.
         /// Will return a negative value if the other `DateTime` is in the future compared with this `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let dateTime : DateTime = DateTime.now();
-        /// let otherDateTime : DateTime = DateTime.fromText("2021-01-01T00:00:00.000Z");
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let otherDateTime : DateTime.DateTime = DateTime.fromText("2021-01-01T00:00:00.000Z");
         /// let timeSince : Time.Time = dateTime.timeSince(otherDateTime);
         /// ```
         public func timeSince(other : DateTime) : Time.Time {
@@ -120,7 +129,7 @@ module D {
         /// Creates a `Time.Time` (nanoseconds since epoch) value from a `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let dateTime : DateTime = DateTime.now();
+        /// let dateTime : DateTime.DateTime = DateTime.now();
         /// let nanoseconds : Time.Time = dateTime.toTime();
         /// ```
         public func toTime() : Time.Time {
@@ -130,7 +139,7 @@ module D {
         /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
         ///
         /// ```motoko include=import
-        /// let dateTime : DateTime = DateTime.now();
+        /// let dateTime : DateTime.DateTime = DateTime.now();
         /// let dateTimeText : Text = dateTime.toText();
         /// ```
         public func toText() : Text {
@@ -143,7 +152,7 @@ module D {
         /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
         ///
         /// ```motoko include=import
-        /// let dateTime : DateTime = DateTime.now();
+        /// let dateTime : DateTime.DateTime = DateTime.now();
         /// let dateTimeText : Text = dateTime.toTextFormatted(#iso8601);
         /// ```
         public func toTextFormatted(format : TextFormat) : Text {
@@ -155,8 +164,8 @@ module D {
         /// Creates a `Components` from a `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let datetime : DateTime = DateTime.now();
-        /// let components : Components = datetime.toComponents();
+        /// let datetime : DateTime.DateTime = DateTime.now();
+        /// let components : Components.Components = datetime.toComponents();
         /// ```
         public func toComponents() : Components {
             switch (componentsCache) {
@@ -172,7 +181,7 @@ module D {
         /// Checks if the `DateTime` is in a leap year.
         ///
         /// ```motoko include=import
-        /// let datetime : DateTime = DateTime.now();
+        /// let datetime : DateTime.DateTime = DateTime.now();
         /// let isInLeapYear : Bool = datetime.isInLeapYear();
         /// ```
         public func isInLeapYear() : Bool {
@@ -183,8 +192,8 @@ module D {
         /// Compares this `DateTime` with another `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let a : DateTime = DateTime.fromTime(...);
-        /// let b : DateTime = DateTime.fromTime(...);
+        /// let a : DateTime.DateTime = DateTime.fromTime(...);
+        /// let b : DateTime.DateTime = DateTime.fromTime(...);
         /// let order : Order.Order = a.compare(b);
         /// ```
         public func compare(other : DateTime) : Order.Order {
@@ -194,8 +203,8 @@ module D {
         /// Checks the equality of this `DateTime` with another `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let a : DateTime = DateTime.fromTime(...);
-        /// let b : DateTime = DateTime.fromTime(...);
+        /// let a : DateTime.DateTime = DateTime.fromTime(...);
+        /// let b : DateTime.DateTime = DateTime.fromTime(...);
         /// let areEqual : Bool= a.equal(b);
         /// ```
         public func equal(other : DateTime) : Bool {
@@ -206,8 +215,8 @@ module D {
     /// Checks the equality of two `DateTime` values.
     ///
     /// ```motoko include=import
-    /// let a : DateTime = DateTime.fromTime(...);
-    /// let b : DateTime = DateTime.fromTime(...);
+    /// let a : DateTime.DateTime = DateTime.fromTime(...);
+    /// let b : DateTime.DateTime = DateTime.fromTime(...);
     /// let equal : Bool = DateTime.equal(a, b);
     /// ```
     public func equal(a : DateTime, b : DateTime) : Bool {
@@ -217,8 +226,8 @@ module D {
     /// Compares two `DateTime` values and returns their order.
     ///
     /// ```motoko include=import
-    /// let a : DateTime = DateTime.fromTime(...);
-    /// let b : DateTime = DateTime.fromTime(...);
+    /// let a : DateTime.DateTime = DateTime.fromTime(...);
+    /// let b : DateTime.DateTime = DateTime.fromTime(...);
     /// let order : Order.Order = DateTime.compare(a, b);
     /// ```
     public func compare(a : DateTime, b : DateTime) : Order.Order {
@@ -228,7 +237,7 @@ module D {
     /// Creates a `DateTime` for the current time
     ///
     /// ```motoko include=import
-    /// let now : DateTime = DateTime.now();
+    /// let now : DateTime.DateTime = DateTime.now();
     /// ```
     public func now() : DateTime {
         return fromTime(Time.now());
@@ -239,7 +248,7 @@ module D {
     ///
     /// ```motoko include=import
     /// let nanoseconds : Time.Time = Time.now();
-    /// let dateTime : DateTime = DateTime.fromTime(nanoseconds);
+    /// let dateTime : DateTime.DateTime = DateTime.fromTime(nanoseconds);
     /// ```
     public func fromTime(nanoseconds : Time.Time) : DateTime {
         DateTime(nanoseconds);
@@ -249,7 +258,7 @@ module D {
     /// Returns null if the `Components` value is invalid.
     ///
     /// ```motoko include=import
-    /// let components : Components = { 
+    /// let components : Components.Components = { 
     ///     year = 2021;
     ///     month = 1;
     ///     day = 1;
@@ -257,7 +266,7 @@ module D {
     ///     minute = 0;
     ///     nanosecond = 0;
     /// };
-    /// let ?dateTime : ?DateTime = DateTime.fromComponents(components) else return #error("Invalid date");
+    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromComponents(components) else return #error("Invalid date");
     /// ```
     public func fromComponents(components : Components) : ?DateTime {
         do ? {
@@ -270,7 +279,7 @@ module D {
     /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
     ///
     /// ```motoko include=import
-    /// let dateTime : DateTime = DateTime.now();
+    /// let dateTime : DateTime.DateTime = DateTime.now();
     /// let dateTimeText : Text = DateTime.toText(dateTime);
     /// ```
     public func toText(dateTime : DateTime) : Text {
@@ -283,7 +292,7 @@ module D {
     /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
     ///
     /// ```motoko include=import
-    /// let dateTime : DateTime = DateTime.now();
+    /// let dateTime : DateTime.DateTime = DateTime.now();
     /// let dateTimeText : Text = DateTime.toTextFormatted(datetime, #iso8601);
     /// ```
     public func toTextFormatted(dateTime : DateTime, format : TextFormat) : Text {
@@ -298,7 +307,7 @@ module D {
     ///
     /// ```motoko include=import
     /// let dateTimeText : Text = "2021-01-01T00:00:00.000Z";
-    /// let ?dateTime : ?DateTime = DateTime.fromTextFormatted(dateTimeText, #iso8601) else return #error("Invalid date");
+    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, #iso8601) else return #error("Invalid date");
     /// ```
     public func fromTextFormatted(text : Text, format : TextFormat) : ?DateTime {
         switch (format) {

@@ -1,3 +1,10 @@
+/// This module provides a set of functions for working with datetime component values.
+///
+/// Import from the base library to use this module.
+/// ```motoko name=import
+/// import Components "mo:datetime/Components";
+/// ```
+
 import InternalTypes "../internal/Types";
 import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
@@ -21,6 +28,11 @@ module {
     public type Duration = InternalTypes.Duration;
     public type TextFormat = InternalTypes.TextFormat;
 
+    /// Returns the the epoch (1970-01-01T00:00:00Z) in component form
+    ///
+    /// ```motoko include=import
+    /// let epoch : Components.Components = Components.epoch();
+    /// ```
     public func epoch() : Components {
         {
             year = 1970;
@@ -32,17 +44,34 @@ module {
         };
     };
     
-    public func compare(c1 : Components, c2 : Components) : Order.Order {
-        switch(Int.compare(c1.year, c2.year)){
-            case (#greater) #greater;
-            case (#less) #less;
-            case (#equal) {
-                switch (Int.compare(c1.month, c2.month)) {
-                    case (#greater) #greater;
-                    case (#less) #less;                    
-                    case (#equal) Int.compare(c1.day, c2.day);
-                };
-            }
+    /// Compares two components, returning the order between them.
+    /// Will return null if either of the components are invalid
+    ///
+    /// ```motoko include=import
+    /// let c1 : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let c2 : Components.Components = {year = 2020; month = 2; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let ?order : ?Order.Order = Components.compare(c1, c2) else return #error("One or both components are invalid");
+    /// ```
+    public func compare(c1 : Components, c2 : Components) : ?Order.Order {
+        do ? {
+            let t1 = toTime(c1)!;
+            let t2 = toTime(c2)!;
+            Int.compare(t1, t2);
+        };
+    };
+    
+    /// Compares two components, returning the order between them.
+    /// Will trap if either of the components are invalid
+    ///
+    /// ```motoko include=import
+    /// let c1 : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let c2 : Components.Components = {year = 2020; month = 2; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let order : Order.Order = Components.compareOrTrap(c1, c2);
+    /// ```
+    public func compareOrTrap(c1 : Components, c2 : Components) : Order.Order {
+        switch (compare(c1, c2)) {
+            case (null) Debug.trap("One or both components are invalid");
+            case (?o) o;
         };
     };
 

@@ -81,7 +81,7 @@ module  {
         };
 
         public func compare(other : LocalDateTime) : Order.Order {
-            Components.compare(components, other.toComponents());
+            Int.compare(toTime(), other.toTime());
         };
 
         public func toUtcDateTime() : DateTime.DateTime {
