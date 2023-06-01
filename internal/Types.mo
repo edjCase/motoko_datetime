@@ -27,6 +27,12 @@ module {
         #iso8601;
     };
 
+    public type TimeZoneDescriptor = {
+        #unspecified;
+        #utc;
+        #hoursAndMinutes : (Int, Nat);
+    };
+
     public type TimeZone = {
         #fixed : FixedTimeZone;
         #dynamic : DynamicTimeZone;

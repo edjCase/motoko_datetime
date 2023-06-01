@@ -11,10 +11,11 @@ import InternalTypes "../internal/Types";
 import InternalTextUtil "../internal/TextUtil";
 import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
+import InternalTimeZone "../internal/TimeZone";
 import Components "Components";
 import TimeZone "TimeZone";
 
-module  {
+module {
 
     public type DynamicTimeZone = InternalTypes.DynamicTimeZone;
 
@@ -26,8 +27,10 @@ module  {
 
     public type TextFormat = InternalTypes.TextFormat;
 
+    type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
+
     public func LocalDateTime(components : Components, timeZone : TimeZone) : LocalDateTime = object {
-        if(not Components.isValid(components)){
+        if (not Components.isValid(components)) {
             Debug.trap("Invalid components");
         };
 
@@ -36,7 +39,7 @@ module  {
         };
 
         public func add(duration : DateTime.Duration) : LocalDateTime {
-            switch(InternalComponents.resolveDuration(duration)) {
+            switch (InternalComponents.resolveDuration(duration)) {
                 case (#absoluteTime(nanoseconds)) {
                     let newComponents = Components.addTime(components, nanoseconds);
                     LocalDateTime(newComponents, timeZone);
@@ -67,8 +70,8 @@ module  {
 
         public func toTextFormatted(format : DateTime.TextFormat) : Text {
             let components = toComponents();
-            let timeZone = getTimeZoneDesignator();
-            InternalComponents.toTextFormatted(components, format, timeZone);
+            let timeZone = getTimeZoneDescriptor();
+            InternalComponents.toTextFormatted(components, timeZone, format);
         };
 
         public func toComponents() : Components.Components {
@@ -108,21 +111,19 @@ module  {
             };
         };
 
-        public func getTimeZoneDesignator() : Text {
+        public func getTimeZoneDescriptor() : TimeZoneDescriptor {
             let offsetSeconds = getOffsetSeconds();
             if (offsetSeconds == 0) {
-                return "Z";
+                return #utc;
             };
             let hours : Int = offsetSeconds / 3600;
             let minutes : Nat = (Int.abs(offsetSeconds) % 3600) / 60;
-            let hoursText = InternalTextUtil.toTextPaddedSign(hours, 2, true);
-            let minutesText = InternalTextUtil.toTextPadded(minutes, 2);
-            hoursText # ":" # minutesText;
+            #hoursAndMinutes(hours, minutes);
         };
     };
-    
-    public func fromComponents(components : Components, timeZone: TimeZone) : ?LocalDateTime {
-        if(not Components.isValid(components)){
+
+    public func fromComponents(components : Components, timeZone : TimeZone) : ?LocalDateTime {
+        if (not Components.isValid(components)) {
             return null;
         };
         ?LocalDateTime(components, timeZone);
@@ -136,9 +137,9 @@ module  {
         return fromTime(Time.now(), timeZone);
     };
 
-    public func fromTime(nanoseconds : Time.Time, timeZone: TimeZone) : LocalDateTime {
+    public func fromTime(nanoseconds : Time.Time, timeZone : TimeZone) : LocalDateTime {
         let utcComponents = Components.fromTime(nanoseconds);
-        let offset = Components.getOffsetSeconds(utcComponents, timeZone);
+        let offset = TimeZone.getOffsetSeconds(timeZone, utcComponents);
         let localizedComponents = Components.addTime(utcComponents, offset * 1_000_000_000);
         LocalDateTime(localizedComponents, timeZone);
     };
@@ -154,12 +155,13 @@ module  {
     public func fromTextFormatted(text : Text, format : TextFormat) : ?LocalDateTime {
         do ? {
             let result = Components.fromTextFormatted(text, format)!;
-            let timeZone : TimeZone = switch(result.timeZoneDescriptor){
-                case (?d) TimeZone.fromDescriptor(d)!;
-                case (null) TimeZone.utc();
+            let timeZone : TimeZone = switch (result.timeZoneDescriptor) {
+                case (#utc) TimeZone.utc();
+                case (#hoursAndMinutes(h, m)) #fixed(#hoursAndMinutes(h, m));
+                case (#unspecified) TimeZone.utc(); // TODO is this the best way to handle it?
             };
             LocalDateTime(result.components, timeZone);
-        }
+        };
     };
 
 };

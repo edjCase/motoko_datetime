@@ -11,6 +11,7 @@ module Module {
 
     type Components = InternalTypes.Components;
     type Duration = InternalTypes.Duration;
+    type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     
     public type CalculatedDuration = {
         #adder : (Components) -> Components;
@@ -80,7 +81,16 @@ module Module {
         };
     };
     
-    public func toTextFormatted(components : Components, format : InternalTypes.TextFormat, timeZone : Text) : Text {
+    public func toTextFormatted(components : Components, timeZone : TimeZoneDescriptor, format : InternalTypes.TextFormat) : Text {
+        let tz = switch(timeZone){
+            case (#utc) "Z";
+            case (#unspecified) ""; // TODO is this allowed in ISO 8601?
+            case (#hoursAndMinutes(h, m)) {
+                let hours = TextUtil.toTextPaddedSign(h, 2, true);
+                let minutes = TextUtil.toTextPaddedSign(m, 2, false);
+                hours # ":" # minutes;
+            };
+        };
         switch (format) {
             case (#iso8601) {
                 let seconds = components.nanosecond / 1_000_000_000;
@@ -98,7 +108,7 @@ module Module {
                 TextUtil.toTextPadded(seconds, 2)
                 # "." #
                 TextUtil.toTextPadded(milliseconds, 3)
-                # timeZone;
+                # tz;
             };
         };
     };

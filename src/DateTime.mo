@@ -157,7 +157,7 @@ module D {
         /// ```
         public func toTextFormatted(format : TextFormat) : Text {
             let components : Components = toComponents();
-            InternalComponents.toTextFormatted(components, format, "Z");
+            InternalComponents.toTextFormatted(components, #utc, format);
         };
 
         

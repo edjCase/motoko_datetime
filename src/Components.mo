@@ -8,6 +8,7 @@
 import InternalTypes "../internal/Types";
 import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
+import InternalTimeZone "../internal/TimeZone";
 import Time "mo:base/Time";
 import Iter "mo:base/Iter";
 import Text "mo:base/Text";
@@ -27,6 +28,12 @@ module {
     public type TimeZone = InternalTypes.TimeZone;
     public type Duration = InternalTypes.Duration;
     public type TextFormat = InternalTypes.TextFormat;
+    public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
+
+    public type FromTextResult = {
+        components : Components;
+        timeZoneDescriptor : TimeZoneDescriptor;
+    };
 
     /// Returns the the epoch (1970-01-01T00:00:00Z) in component form
     ///
@@ -43,7 +50,7 @@ module {
             nanosecond = 0;
         };
     };
-    
+
     /// Compares two components, returning the order between them.
     /// Will return null if either of the components are invalid
     ///
@@ -59,7 +66,7 @@ module {
             Int.compare(t1, t2);
         };
     };
-    
+
     /// Compares two components, returning the order between them.
     /// Will trap if either of the components are invalid
     ///
@@ -75,6 +82,13 @@ module {
         };
     };
 
+    /// Converts the components to the equivalent UTC time in nanoseconds since the epoch.
+    /// Will return null if the components are invalid
+    ///
+    /// ```motoko include=import
+    /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let ?order : ?Time.Time = Components.toTime(c) else return #error("Components are invalid");
+    /// ```
     public func toTime(components : Components) : ?Time.Time {
         if (not isValid(components)) {
             return null;
@@ -141,53 +155,78 @@ module {
         ?totalNanoseconds;
     };
 
+    /// Converts the UTC time in nanoseconds since the epoch to the equivalent components.
+    ///
+    /// ```motoko include=import
+    /// let components : Components.Components = Components.fromTime(123467890);
+    /// ```
     public func fromTime(nanoseconds : Int) : Components {
         addTime(epoch(), nanoseconds);
     };
 
-    public func isValid(dateTime : Components) : Bool {
-        let leapYear = InternalComponents.isLeapYear(dateTime.year);
+    /// Checks if the specified components are valid.
+    /// Checks that the day is valid for the month and year, and that the time is valid.
+    /// Returns true if the components are valid, false otherwise.
+    ///
+    /// ```motoko include=import
+    /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let isValid : Bool = Components.isValid(c);
+    /// ```
+    public func isValid(components : Components) : Bool {
+        let leapYear = InternalComponents.isLeapYear(components.year);
 
-        let daysInM = InternalComponents.daysInMonth(dateTime.month, leapYear);
+        let daysInM = InternalComponents.daysInMonth(components.month, leapYear);
 
-        if (dateTime.day == 0 or dateTime.day > daysInM) {
+        if (components.day == 0 or components.day > daysInM) {
             return false;
         };
 
-        if (dateTime.hour >= 24) {
+        if (components.hour >= 24) {
             return false;
         };
 
-        if (dateTime.minute >= 60) {
+        if (components.minute >= 60) {
             return false;
         };
 
-        if (dateTime.nanosecond >= 60_000_000_000) {
+        if (components.nanosecond >= 60_000_000_000) {
             return false;
         };
 
         return true;
     };
 
-    public func getOffsetSeconds(components : Components, timeZone : TimeZone) : Int {
-        switch (timeZone) {
-            case (#fixed(f)) {
-                switch (f) {
-                    case (#seconds(s)) s;
-                    case (#hoursAndMinutes(h, m)) h * 3600 + m * 60;
-                };
-            };
-            case (#dynamic(d)) {
-                d.getOffsetSeconds(components);
-            };
-        };
+    /// Converts datetime components to text in ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    ///
+    /// ```motoko include=import
+    /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let text : Text = Components.toText(c, TimeZone.utc());
+    /// ```
+    public func toText(components : Components, timeZone : TimeZoneDescriptor) : Text {
+        toTextFormatted(components, timeZone, #iso8601);
     };
 
-    public type FromTextResult = {
-        components : Components;
-        timeZoneDescriptor : ?Text;
+    /// Converts datetime components to the specified text format.
+    ///
+    /// Formats:
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    ///
+    /// ```motoko include=import
+    /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let text : Text = Components.toTextFormatted(c, #iso8601, TimeZone.utc());
+    /// ```
+    public func toTextFormatted(components : Components, timeZone : TimeZoneDescriptor, format : InternalTypes.TextFormat) : Text {
+        InternalComponents.toTextFormatted(components, timeZone, format);
     };
 
+    /// Parses a formatted datetime text into components and timezone with the specified format.
+    /// Returns null if the text is not a valid formatted datetime
+    /// Formats:
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    ///
+    /// ```motoko include=import
+    /// let ?result : ?FromTextResult = Components.fromTextFormatted("2020-01-01T00:00:00Z", #iso8601) else return #error("Invalid datetime text");
+    /// ```
     public func fromTextFormatted(text : Text, format : TextFormat) : ?FromTextResult {
         switch (format) {
             case (#iso8601) {
@@ -226,6 +265,13 @@ module {
                     };
                     case (null)(0, null);
                 };
+                let timeZoneDescriptor : TimeZoneDescriptor = switch (timezone) {
+                    case (null) #unspecified;
+                    case (?tz) {
+                        let ?desc = InternalTimeZone.parseDescriptor(tz) else return null;
+                        desc;
+                    }
+                };
                 let components = {
                     year = year;
                     month = month;
@@ -236,11 +282,12 @@ module {
                 };
                 return ?{
                     components = components;
-                    timeZoneDescriptor = timezone;
+                    timeZoneDescriptor = timeZoneDescriptor;
                 };
             };
         };
     };
+
 
     public func addTime(components : Components, nanoseconds : Time.Time) : Components {
         if (not isValid(components)) {
@@ -283,8 +330,8 @@ module {
         remainingNanoseconds %= nanosecondsInAMinute;
 
         newComponents := subtractMinutes(newComponents, removeMinutes);
-        
-        return subtractNanoseconds(newComponents, remainingNanoseconds);
+
+        subtractNanoseconds(newComponents, remainingNanoseconds);
     };
 
     private func subtractNanoseconds(components : Components, removeNanoseconds : Nat) : Components {
@@ -299,7 +346,7 @@ module {
         var minute = components.minute;
         // TODO remove redundancy with this method and subtractHours
         let nanosecond : Nat = if (removeNanoseconds > components.nanosecond) {
-            if (minute == 0){
+            if (minute == 0) {
                 if (hour == 0) {
                     if (day == 1) {
                         if (month == 1) {
@@ -315,10 +362,10 @@ module {
                     hour := 23;
                 } else {
                     hour -= 1;
-                };            
+                };
                 minute := 59 - (minute - components.minute);
             } else {
-                minute := components.minute - minute;
+                minute := components.minute - 1;
             };
             60_000_000_000 - (removeNanoseconds - components.nanosecond);
         } else {
@@ -331,7 +378,7 @@ module {
             hour = hour;
             minute = minute;
             nanosecond = nanosecond;
-        }
+        };
     };
 
     type DateComponents = {
@@ -366,7 +413,7 @@ module {
                 hour := 23;
             } else {
                 hour -= 1;
-            };            
+            };
             60 - (removeMinutes - components.minute);
         } else {
             components.minute - removeMinutes;
@@ -378,7 +425,7 @@ module {
             hour = hour;
             minute = minute;
             nanosecond = components.nanosecond;
-        }
+        };
     };
 
     private func subtractHours(components : Components, removeHours : Nat) : Components {
@@ -411,7 +458,7 @@ module {
             hour = hour;
             minute = components.minute;
             nanosecond = components.nanosecond;
-        }
+        };
     };
 
     private func subtractDays(components : DateComponents, days : Nat) : DateComponents {
@@ -431,7 +478,7 @@ module {
             let daysInYear = if (beforeLeapDay) {
                 InternalComponents.daysInYear(newYear);
             } else {
-                InternalComponents.daysInYear(newYear + 1) ;
+                InternalComponents.daysInYear(newYear + 1);
             };
             if (remainingDays < InternalComponents.daysInYear(newYear)) {
                 break l;
@@ -442,7 +489,6 @@ module {
             remainingDays -= daysInYear;
             year := newYear;
         };
-
 
         // Subtract months from total days
         label l loop {
@@ -563,23 +609,21 @@ module {
             nanosecond -= nanosecondsInAMinute;
             minute += 1;
         };
-        
-        if(minute >= 60) {
+
+        if (minute >= 60) {
             minute -= 60;
             hour += 1;
         };
-        if(hour >= 24) {
+        if (hour >= 24) {
             hour -= 24;
             day += 1;
         };
         let daysInMonth = InternalComponents.daysInMonth(month, InternalComponents.isLeapYear(year));
-        if(day > daysInMonth)
-        {
+        if (day > daysInMonth) {
             day -= daysInMonth;
             month += 1;
         };
-        if(month > 12)
-        {
+        if (month > 12) {
             month -= 12;
             year += 1;
         };
