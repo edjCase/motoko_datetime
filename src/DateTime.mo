@@ -18,7 +18,9 @@ import Order "mo:base/Order";
 import InternalTypes "../internal/Types";
 import InternalTextUtil "../internal/TextUtil";
 import InternalComponents "../internal/Components";
+import InternalTimeZone "../internal/TimeZone";
 import Components "Components";
+import TimeZone "TimeZone";
 
 module D {
 
@@ -47,7 +49,7 @@ module D {
         public func add(duration : Duration) : DateTime {
             switch(InternalComponents.resolveDuration(duration)) {
                 case (#absoluteTime(newTime)) {
-                    DateTime(newTime);
+                    DateTime(toTime() + newTime);
                 };
                 case (#adder(adder)) {
                     let components = toComponents();
@@ -347,25 +349,36 @@ module D {
                     };
                     case (null)(0, null);
                 };
-                // TODO toupper
-                switch (timezone) {
-                    case (?"Z" or null) {
-                        // No change
-                    };
+                let offset : ?Time.Time = switch (timezone) {
+                    case (null) null;
                     case (?tz) {
-                        // TODO timezone
-                        Prelude.nyi();
+                         let ?d = InternalTimeZone.parseDescriptor(tz) else return null;
+                         switch (d) {
+                             case (#utc) null;
+                             case (#unspecified) null;
+                             case (#hoursAndMinutes(h, m)) ?TimeZone.getFixedOffsetSeconds(#hoursAndMinutes(h, m));
+                         };
                     };
                 };
 
-                return fromComponents({
+                let components : Components.Components = {
                     year = year;
                     month = month;
                     day = day;
                     hour = hour;
                     minute = minute;
                     nanosecond = (seconds * 1_000_000_000) + (milliseconds * 1_000_000);
-                });
+                };
+                let dateTime : ?DateTime = fromComponents(components);
+                let dt = switch(dateTime) {
+                    case (null) null;
+                    case (?dt) switch(offset) {
+                        case (null) ?dt;
+                        case (?o) {
+                            ?dt.add(#seconds(o* -1));
+                        };
+                    };
+                };
             };
         };
     };

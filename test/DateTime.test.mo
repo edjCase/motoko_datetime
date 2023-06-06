@@ -124,15 +124,73 @@ test(
             (+0, #weeks(+8), +4_838_400_000_000_000),
             (+0, #months(+7), +18_316_800_000_000_000),
             (+0, #years(+9), +283_996_800_000_000_000),
+
+            (+123_456_789_000_000, #nanoseconds(+5), +123_456_789_000_005),
+            (+123_456_789_000_000, #months(+7), +18_440_256_789_000_000),
+
+            (+123_456_789_000_000, #nanoseconds(-5_000_000), +123_456_784_000_000),
+            (-123_456_789_000_000, #nanoseconds(-5_000_000), -123_456_794_000_000),
+            (-123_456_789_000_000, #years(-3), -94_817_856_789_000_000),
         ];
         for (testCase in Iter.fromArray(testCases)) {            
-            let dateTime1 = DateTime.fromTime(testCase.0);
-            let dateTime2 = dateTime1.add(testCase.1);
-            let newTime = dateTime2.toTime();
+            let actual = DateTime.fromTime(testCase.0).add(testCase.1);
+            let newTime = actual.toTime();
             if (newTime != testCase.2) {
+                Debug.print("Case " # debug_show(testCase.0) # " + " # debug_show(testCase.1));
                 Debug.print("Expected: " # debug_show(testCase.2) # " but got " # debug_show(newTime));
                 assert false;
             };
         };
     }
+);
+
+
+func assertText(expected : Text, actual : Text) {
+    if (expected != actual) {
+        Debug.print("Expected: " # debug_show (expected));
+        Debug.print("Actual:   " # debug_show (actual));
+        assert false;
+    };
+};
+
+test(
+    "fromTextFormatted",
+    func() {
+        let testCases = [
+            {
+                dateTime = DateTime.DateTime(0);
+                timeZoneDescriptor = #utc;
+                expectedIso8601 = "1970-01-01T00:00:00.000Z";
+            },
+            {
+                dateTime = DateTime.DateTime(+25_320_000_000_000);
+                timeZoneDescriptor = #hoursAndMinutes(-7, 2);
+                expectedIso8601 = "1970-01-01T00:00:00.000-07:02";
+            },
+            {
+                dateTime = DateTime.DateTime(+1_686_082_300_787_000_000);
+                timeZoneDescriptor = #hoursAndMinutes(8, 0);
+                expectedIso8601 = "2023-06-07T04:11:40.787+08:00";
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let fromTextResult = DateTime.fromTextFormatted(testCase.expectedIso8601, #iso8601);
+            switch (fromTextResult) {
+                case (null) {
+                    Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectedIso8601));
+                    assert false;
+                };
+                case (?actualDateTime) {            
+                    let matched2 = testCase.dateTime.equal(actualDateTime);
+
+                    if (not matched2) {
+                        Debug.print("Text: " # debug_show (testCase.expectedIso8601));
+                        Debug.print("Expected: " # debug_show (testCase.dateTime.toTime()));
+                        Debug.print("Actual:   " # debug_show (actualDateTime.toTime()));
+                        assert false;
+                    };
+                }
+            };
+        };
+    },
 );
