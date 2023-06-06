@@ -503,3 +503,80 @@ test(
         };
     },
 );
+
+
+test(
+    "addTime",
+    func() {
+        let testCases = [
+            {
+                components = {
+                    year = 1970;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                timeToAdd = 123;
+                expectedComponents = {
+                    year = 1970;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 123;
+                };
+            },
+            {
+                components = {
+                    year = 1980;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                timeToAdd = 123_456_789_012_345_678;
+                expectedComponents = {
+                    year = 1983;
+                    month = 11;
+                    day = 29;
+                    hour = 21;
+                    minute = 33;
+                    nanosecond = 9_012_345_678;
+                };
+            },
+            {
+                components = {
+                    year = 1971;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                timeToAdd = -123_456_789_012_345_678;
+                expectedComponents = {
+                    year = 1967;
+                    month = 2;
+                    day = 2;
+                    hour = 2;
+                    minute = 26;
+                    nanosecond = 50_987_654_322;
+                };
+            }
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual : Components.Components = Components.addTime(testCase.components, testCase.timeToAdd);
+            let matched = testCase.expectedComponents == actual;
+            if (not matched) {
+                Debug.print("Components: " # debug_show (testCase.components));
+                Debug.print("Time to add: " # debug_show (testCase.timeToAdd));
+                Debug.print("Expected: " # debug_show (testCase.expectedComponents));
+                Debug.print("Actual:   " # debug_show (actual));
+                assert false;
+            };
+        };
+    },
+);

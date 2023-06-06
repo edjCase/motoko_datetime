@@ -289,6 +289,14 @@ module {
     };
 
 
+    /// Adds the specified nanoseconds to the components and returns the resulting components.
+    /// Will trap if the resulting components are invalid.
+    ///
+    /// ```motoko include=import
+    /// let c : Components = ...;
+    /// let timeToAdd : Time.Time = ...;
+    /// let newC : Components = Components.addTime(c, timeToAdd);
+    /// ```
     public func addTime(components : Components, nanoseconds : Time.Time) : Components {
         if (not isValid(components)) {
             return Debug.trap("Invalid components: " # debug_show (components));
@@ -301,6 +309,21 @@ module {
             return components;
         };
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     private func subtractTime(components : Components, nanoseconds : Nat) : Components {
         let nanosecondsInAMinute = 60 * 1000000000;
@@ -381,12 +404,6 @@ module {
         };
     };
 
-    type DateComponents = {
-        year : Int;
-        month : Nat;
-        day : Nat;
-    };
-
     private func subtractMinutes(components : Components, removeMinutes : Nat) : Components {
         if (removeMinutes == 0) {
             return components;
@@ -459,6 +476,13 @@ module {
             minute = components.minute;
             nanosecond = components.nanosecond;
         };
+    };
+
+
+    type DateComponents = {
+        year : Int;
+        month : Nat;
+        day : Nat;
     };
 
     private func subtractDays(components : DateComponents, days : Nat) : DateComponents {
