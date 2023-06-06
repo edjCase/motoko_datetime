@@ -47,7 +47,7 @@ module D {
         /// let fourDaysFromNow : DateTime.DateTime = now.add(fourDays);
         /// ```
         public func add(duration : Duration) : DateTime {
-            switch(InternalComponents.resolveDuration(duration)) {
+            switch (InternalComponents.resolveDuration(duration)) {
                 case (#absoluteTime(newTime)) {
                     DateTime(toTime() + newTime);
                 };
@@ -162,7 +162,6 @@ module D {
             InternalComponents.toTextFormatted(components, #utc, format);
         };
 
-        
         /// Creates a `Components` from a `DateTime` value.
         ///
         /// ```motoko include=import
@@ -194,20 +193,20 @@ module D {
         /// Compares this `DateTime` with another `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let a : DateTime.DateTime = DateTime.fromTime(...);
-        /// let b : DateTime.DateTime = DateTime.fromTime(...);
+        /// let a : DateTime.DateTime = ...;
+        /// let b : DateTime.DateTime = ...;
         /// let order : Order.Order = a.compare(b);
         /// ```
         public func compare(other : DateTime) : Order.Order {
             Int.compare(time, other.toTime());
         };
-        
+
         /// Checks the equality of this `DateTime` with another `DateTime` value.
         ///
         /// ```motoko include=import
-        /// let a : DateTime.DateTime = DateTime.fromTime(...);
-        /// let b : DateTime.DateTime = DateTime.fromTime(...);
-        /// let areEqual : Bool= a.equal(b);
+        /// let a : DateTime.DateTime = ...;
+        /// let b : DateTime.DateTime = ...;
+        /// let areEqual : Bool = a.equal(b);
         /// ```
         public func equal(other : DateTime) : Bool {
             return time == other.toTime();
@@ -217,8 +216,8 @@ module D {
     /// Checks the equality of two `DateTime` values.
     ///
     /// ```motoko include=import
-    /// let a : DateTime.DateTime = DateTime.fromTime(...);
-    /// let b : DateTime.DateTime = DateTime.fromTime(...);
+    /// let a : DateTime.DateTime = ...;
+    /// let b : DateTime.DateTime = ...;
     /// let equal : Bool = DateTime.equal(a, b);
     /// ```
     public func equal(a : DateTime, b : DateTime) : Bool {
@@ -228,8 +227,8 @@ module D {
     /// Compares two `DateTime` values and returns their order.
     ///
     /// ```motoko include=import
-    /// let a : DateTime.DateTime = DateTime.fromTime(...);
-    /// let b : DateTime.DateTime = DateTime.fromTime(...);
+    /// let a : DateTime.DateTime = ...;
+    /// let b : DateTime.DateTime = ...;
     /// let order : Order.Order = DateTime.compare(a, b);
     /// ```
     public func compare(a : DateTime, b : DateTime) : Order.Order {
@@ -260,14 +259,7 @@ module D {
     /// Returns null if the `Components` value is invalid.
     ///
     /// ```motoko include=import
-    /// let components : Components.Components = { 
-    ///     year = 2021;
-    ///     month = 1;
-    ///     day = 1;
-    ///     hour = 0;
-    ///     minute = 0;
-    ///     nanosecond = 0;
-    /// };
+    /// let components : Components.Components = ...;
     /// let ?dateTime : ?DateTime.DateTime = DateTime.fromComponents(components) else return #error("Invalid date");
     /// ```
     public func fromComponents(components : Components) : ?DateTime {
@@ -276,7 +268,6 @@ module D {
             DateTime(totalNanoseconds);
         };
     };
-
 
     /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
     ///
@@ -303,6 +294,7 @@ module D {
 
     /// Parses the Text value as a `DateTime` using the given format.
     /// Returns null if the Text value is invalid.
+    /// Treats the Text value as UTC if no timezone is specified.
     ///
     /// Formats:
     /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
@@ -312,75 +304,25 @@ module D {
     /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, #iso8601) else return #error("Invalid date");
     /// ```
     public func fromTextFormatted(text : Text, format : TextFormat) : ?DateTime {
-        switch (format) {
-            case (#iso8601) {
-                let iter = Text.toIter(text);
-                let ?year = InternalTextUtil.parseNat(iter, 4) else return null;
 
-                if (iter.next() != ?'-') return null;
-
-                let ?month = InternalTextUtil.parseNat(iter, 2) else return null;
-
-                if (iter.next() != ?'-') return null;
-
-                let ?day = InternalTextUtil.parseNat(iter, 2) else return null;
-
-                if (iter.next() != ?'T') return null;
-
-                let ?hour = InternalTextUtil.parseNat(iter, 2) else return null;
-
-                if (iter.next() != ?':') return null;
-
-                let ?minute = InternalTextUtil.parseNat(iter, 2) else return null;
-
-                if (iter.next() != ?':') return null;
-
-                let ?seconds = InternalTextUtil.parseNat(iter, 2) else return null;
-
-                let (milliseconds : Nat, timezone : ?Text) = switch (iter.next()) {
-                    case (?'.') {
-                        let ?ms = InternalTextUtil.parseNat(iter, 3) else return null;
-                        let tz = InternalTextUtil.readTillEnd(iter, null);
-                        (ms, tz);
-                    };
-                    case (?tzChar) {
-                        let tz = InternalTextUtil.readTillEnd(iter, ?tzChar);
-                        (0, tz);
-                    };
-                    case (null)(0, null);
+        do ? {
+            let {components; timeZoneDescriptor} : Components.FromTextResult = Components.fromTextFormatted(text, format)!;
+            let offset : ?Time.Time = switch (timeZoneDescriptor) {
+                case (#utc) null;
+                case (#unspecified) null;
+                case (#fixed(f)) ?TimeZone.getFixedOffsetSeconds(f);
+            };
+            switch (offset) {
+                case (null) {
+                    let ?dt = fromComponents(components) else return null;
+                    dt;
                 };
-                let offset : ?Time.Time = switch (timezone) {
-                    case (null) null;
-                    case (?tz) {
-                         let ?d = InternalTimeZone.parseDescriptor(tz) else return null;
-                         switch (d) {
-                             case (#utc) null;
-                             case (#unspecified) null;
-                             case (#hoursAndMinutes(h, m)) ?TimeZone.getFixedOffsetSeconds(#hoursAndMinutes(h, m));
-                         };
-                    };
-                };
-
-                let components : Components.Components = {
-                    year = year;
-                    month = month;
-                    day = day;
-                    hour = hour;
-                    minute = minute;
-                    nanosecond = (seconds * 1_000_000_000) + (milliseconds * 1_000_000);
-                };
-                let dateTime : ?DateTime = fromComponents(components);
-                let dt = switch(dateTime) {
-                    case (null) null;
-                    case (?dt) switch(offset) {
-                        case (null) ?dt;
-                        case (?o) {
-                            ?dt.add(#seconds(o* -1));
-                        };
-                    };
+                case (?offsetSeconds) {
+                    let localTime = Components.toTime(components)!;
+                    let utcTime = localTime - (offsetSeconds * 1_000_000_000);
+                    DateTime(utcTime);
                 };
             };
         };
     };
-
 };

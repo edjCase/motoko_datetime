@@ -5,6 +5,7 @@ import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 import Time "mo:base/Time";
 import Int "mo:base/Int";
+import InternalTimeZone "TimeZone";
 
 
 module Module {
@@ -85,10 +86,20 @@ module Module {
         let tz = switch(timeZone){
             case (#utc) "Z";
             case (#unspecified) ""; // TODO is this allowed in ISO 8601?
-            case (#hoursAndMinutes(h, m)) {
+            case (#fixed(f)) {
+                let offsetSeconds = InternalTimeZone.getFixedOffsetSeconds(f);
+                let h = offsetSeconds / 3600;
+                let m = (Int.abs(offsetSeconds) % 3600) / 60;
+                let s = Int.abs(offsetSeconds) % 60;
                 let hours = TextUtil.toTextPaddedSign(h, 2, true);
                 let minutes = TextUtil.toTextPaddedSign(m, 2, false);
-                hours # ":" # minutes;
+                
+                if(s > 0) {
+                    let seconds = TextUtil.toTextPaddedSign(s, 2, false);
+                    hours # ":" # minutes # ":" # seconds;
+                } else {
+                    hours # ":" # minutes;
+                }
             };
         };
         switch (format) {

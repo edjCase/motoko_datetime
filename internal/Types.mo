@@ -30,7 +30,7 @@ module {
     public type TimeZoneDescriptor = {
         #unspecified;
         #utc;
-        #hoursAndMinutes : (Int, Nat);
+        #fixed : FixedTimeZone;
     };
 
     public type TimeZone = {
@@ -43,8 +43,8 @@ module {
     };
 
     public type FixedTimeZone = {
+        #hours : Int;
         #seconds : Int;
-        #hoursAndMinutes : (Int, Nat);
     };
 
     public type DateTime = {
@@ -52,7 +52,7 @@ module {
 
         add : (duration : Duration) -> DateTime;
 
-        timeSince : (other : DateTime) -> Int;
+        timeSince : (other : DateTime) -> Time.Time;
 
         toTime : () -> Time.Time;
 
@@ -72,7 +72,7 @@ module {
 
         add : (duration : Duration) -> LocalDateTime;
 
-        nanosecondsSince : (other : LocalDateTime) -> Int;
+        timeSince : (other : LocalDateTime) -> Time.Time;
 
         toTime : () -> Time.Time;
 

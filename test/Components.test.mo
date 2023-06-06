@@ -474,8 +474,20 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                timeZoneDescriptor = #hoursAndMinutes(-7, 2);
+                timeZoneDescriptor = #fixed(#seconds(-25_320));
                 expectedIso8601 = "1970-01-01T00:00:00.000-07:02";
+            },
+            {
+                components = {
+                    year = 1970;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                timeZoneDescriptor = #fixed(#seconds(-25_321));
+                expectedIso8601 = "1970-01-01T00:00:00.000-07:02:01";
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {

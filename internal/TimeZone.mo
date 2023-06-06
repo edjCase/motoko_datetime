@@ -1,20 +1,22 @@
 import InternalTypes "Types";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
+import Debug "mo:base/Debug";
 
 module {
 
     type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
+    type FixedTimeZone = InternalTypes.FixedTimeZone;
 
     public func parseDescriptor(descriptor : Text) : ?TimeZoneDescriptor {
         do ? {
             if (descriptor == "") {
-                return ?#unspecified;
+                return ? #unspecified;
             };
             if (descriptor == "Z") {
-                return ?#utc;
+                return ? #utc;
             };
-            if (descriptor.size() != 6) {
+            if (descriptor.size() != 6 and descriptor.size() != 9) {
                 return null;
             };
             let splitIter = Text.split(descriptor, #char(':'));
@@ -29,12 +31,28 @@ module {
             };
             hoursText := Text.fromIter(iter);
             let minutesText = splitIter.next()!;
-            var hours : Int = Nat.fromText(hoursText)!;
-            if (isNegative) {
-                hours := -1 * hours;
-            };
+            let secondsText : ?Text = splitIter.next();
+            let hours : Nat = Nat.fromText(hoursText)!;
             let minutes = Nat.fromText(minutesText)!;
-            #hoursAndMinutes(hours, minutes);
+            let seconds : Nat = switch (secondsText) {
+                case (null) 0;
+                case (?s) Nat.fromText(s)!;
+            };
+            let totalSeconds : Int = hours * 3600 + minutes * 60 + seconds;
+            if (isNegative) {
+                #fixed(#seconds(-totalSeconds));
+            } else {
+                #fixed(#seconds(totalSeconds));
+            };
         };
     };
+    public func getFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {
+        switch (fixedTimeZone) {
+            case (#seconds(s)) s;
+            case (#hours(h)) {
+                return h * 3600;
+            };
+        };
+    };
+
 };

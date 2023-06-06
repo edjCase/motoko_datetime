@@ -8,6 +8,7 @@
 
 
 import InternalTypes "../internal/Types";
+import InternalTimeZone "../internal/TimeZone";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
@@ -54,16 +55,6 @@ module {
     /// let offsetSeconds : Int = TimeZone.getFixedOffsetSeconds(timeZone);
     /// ```
     public func getFixedOffsetSeconds(fixedTimeZone: FixedTimeZone) : Int {
-        switch (fixedTimeZone) {
-            case (#seconds(s)) s;
-            case (#hoursAndMinutes(h, m)) {
-                let seconds = Int.abs(h) * 3600 + m * 60;
-                if (h < 0) {
-                    -seconds;
-                } else {
-                    seconds;
-                };
-            };
-        };
+        InternalTimeZone.getFixedOffsetSeconds(fixedTimeZone);
     };
 };
