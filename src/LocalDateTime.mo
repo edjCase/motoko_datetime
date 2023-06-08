@@ -77,7 +77,6 @@ module {
             };
         };
 
-        // TODO rename
         /// Calculates the time difference between this `LocalDateTime` and another `LocalDateTime` value.
         /// Will return a negative value if the other value is in the future compared with this value.
         ///
@@ -85,9 +84,9 @@ module {
         /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(3, 0))); // UTC+3
         /// let dateTime : LocalDateTime.LocalDateTime = LocalDateTime.now(timeZone);
         /// let otherDateTime : LocalDateTime.LocalDateTime = LocalDateTime.fromText("2021-01-01T00:00:00.000+03:00");
-        /// let timeSince : Time.Time = dateTime.timeSince(otherDateTime);
+        /// let timeBetween : Time.Time = dateTime.timeBetween(otherDateTime);
         /// ```
-        public func timeSince(other : LocalDateTime) : Time.Time {
+        public func timeBetween(other : LocalDateTime) : Time.Time {
             let otherTime = other.toTime();
             return toTime() - otherTime;
         };

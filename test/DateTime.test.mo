@@ -90,7 +90,7 @@ test(
 );
 
 test(
-    "timeSince",
+    "timeBetween",
     func() {
         
         let testCases = [
@@ -101,9 +101,9 @@ test(
         for (testCase in Iter.fromArray(testCases)) {            
             let dateTime1 = DateTime.fromTime(testCase.0);
             let dateTime2 = DateTime.fromTime(testCase.1);
-            let timeSince = dateTime1.timeSince(dateTime2);
-            if (timeSince != testCase.2) {
-                Debug.print("Expected: " # debug_show(testCase.2) # " but got " # debug_show(timeSince) # " for " # dateTime1.toText() # " and " # dateTime2.toText());
+            let timeBetween = dateTime1.timeBetween(dateTime2);
+            if (timeBetween != testCase.2) {
+                Debug.print("Expected: " # debug_show(testCase.2) # " but got " # debug_show(timeBetween) # " for " # dateTime1.toText() # " and " # dateTime2.toText());
                 assert false;
             };
         };

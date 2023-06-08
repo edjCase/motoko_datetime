@@ -121,9 +121,9 @@ module D {
         /// ```motoko include=import
         /// let dateTime : DateTime.DateTime = DateTime.now();
         /// let otherDateTime : DateTime.DateTime = DateTime.fromText("2021-01-01T00:00:00.000Z");
-        /// let timeSince : Time.Time = dateTime.timeSince(otherDateTime);
+        /// let timeBetween : Time.Time = dateTime.timeBetween(otherDateTime);
         /// ```
-        public func timeSince(other : DateTime) : Time.Time {
+        public func timeBetween(other : DateTime) : Time.Time {
             let otherTime = other.toTime();
             return time - otherTime;
         };

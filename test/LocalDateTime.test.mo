@@ -9,7 +9,7 @@ import Types "../internal/Types";
 
 
 test(
-    "compare, equal, timeSince",
+    "compare, equal, timeBetween",
     func() {
         let testCases = [
             {
@@ -214,9 +214,9 @@ test(
                 assert false;
             };
 
-            let diff = a.timeSince(b);
+            let diff = a.timeBetween(b);
             if (diff != testCase.diff) {
-                Debug.print("Failed a.timeSince(b)");
+                Debug.print("Failed a.timeBetween(b)");
                 Debug.print("a: " # debug_show(a.toText()));
                 Debug.print("b: " # debug_show(b.toText()));
                 Debug.print("Expected " # debug_show(testCase.diff));

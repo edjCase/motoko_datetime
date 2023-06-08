@@ -52,7 +52,7 @@ module {
 
         add : (duration : Duration) -> DateTime;
 
-        timeSince : (other : DateTime) -> Time.Time;
+        timeBetween : (other : DateTime) -> Time.Time;
 
         toTime : () -> Time.Time;
 
@@ -72,7 +72,7 @@ module {
 
         add : (duration : Duration) -> LocalDateTime;
 
-        timeSince : (other : LocalDateTime) -> Time.Time;
+        timeBetween : (other : LocalDateTime) -> Time.Time;
 
         toTime : () -> Time.Time;
 
