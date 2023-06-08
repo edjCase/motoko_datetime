@@ -46,12 +46,12 @@ module {
             };
         };
     };
+
+    
     public func getFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {
         switch (fixedTimeZone) {
             case (#seconds(s)) s;
-            case (#hours(h)) {
-                return h * 3600;
-            };
+            case (#hours(h)) h * 3600;
         };
     };
 

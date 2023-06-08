@@ -99,7 +99,7 @@ module {
         /// let nanoseconds : Time.Time = dateTime.toTime();
         /// ```
         public func toTime() : Time.Time {
-            let offset = getOffsetSeconds();
+            let offset = TimeZone.getOffsetSeconds(timeZone, components);
             let newComponents = Components.addTime(components, -offset * 1_000_000_000);
             let ?time = Components.toTime(newComponents) else Prelude.unreachable();
             time;
@@ -128,8 +128,14 @@ module {
         /// ```
         public func toTextFormatted(format : DateTime.TextFormat) : Text {
             let components = toComponents();
-            let timeZone = getTimeZoneDescriptor();
-            InternalComponents.toTextFormatted(components, timeZone, format);
+            
+            let offsetSeconds = TimeZone.getOffsetSeconds(timeZone, components);
+            let tz = if (offsetSeconds == 0) {
+                #utc;
+            } else {
+                #fixed(#seconds(offsetSeconds));
+            };
+            InternalComponents.toTextFormatted(components, tz, format);
         };
 
         /// Creates a `Components` from a `LocalDateTime` value.
@@ -181,26 +187,8 @@ module {
             DateTime.DateTime(toTime());
         };
 
-        public func getOffsetSeconds() : Int {
-            switch (timeZone) {
-                case (#fixed(f)) {
-                    switch (f) {
-                        case (#seconds(s)) s;
-                        case (#hours(h)) h * 3600;
-                    };
-                };
-                case (#dynamic(d)) {
-                    d.getOffsetSeconds(components);
-                };
-            };
-        };
-
-        public func getTimeZoneDescriptor() : TimeZoneDescriptor {
-            let offsetSeconds = getOffsetSeconds();
-            if (offsetSeconds == 0) {
-                return #utc;
-            };
-            #fixed(#seconds(offsetSeconds));
+        public func getTimeZone() : TimeZone.TimeZone {
+            timeZone;
         };
     };
 

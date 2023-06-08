@@ -18,6 +18,7 @@ module {
     public type TimeZone = InternalTypes.TimeZone;
     public type FixedTimeZone = InternalTypes.FixedTimeZone;
     public type Offset = InternalTypes.FixedTimeZone;
+    public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     type Components = InternalTypes.Components;
     
     

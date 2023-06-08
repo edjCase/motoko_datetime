@@ -47,12 +47,12 @@ module {
         #seconds : Int;
     };
 
-    public type DateTime = {
-        equal : (other : DateTime) -> Bool;
+    type DateTimeType<T> = {
+        equal : (other : T) -> Bool;
 
-        add : (duration : Duration) -> DateTime;
+        add : (duration : Duration) -> T;
 
-        timeBetween : (other : DateTime) -> Time.Time;
+        timeBetween : (other : T) -> Time.Time;
 
         toTime : () -> Time.Time;
 
@@ -64,26 +64,14 @@ module {
 
         isInLeapYear : () -> Bool;
 
-        compare : (other : DateTime) -> Order.Order;
+        compare : (other : T) -> Order.Order;
     };
 
-    public type LocalDateTime = {
-        equal : (other : LocalDateTime) -> Bool;
+    public type DateTime = DateTimeType<DateTime>;
 
-        add : (duration : Duration) -> LocalDateTime;
+    public type LocalDateTime = DateTimeType<LocalDateTime> and {
+        toUtcDateTime : () -> DateTime;
 
-        timeBetween : (other : LocalDateTime) -> Time.Time;
-
-        toTime : () -> Time.Time;
-
-        toText : () -> Text;
-
-        toTextFormatted : (format : TextFormat) -> Text;
-
-        toComponents : () -> Components;
-
-        isInLeapYear : () -> Bool;
-
-        compare : (other : LocalDateTime) -> Order.Order;
+        getTimeZone: () -> TimeZone;
     };
 };
