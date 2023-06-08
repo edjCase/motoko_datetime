@@ -19,11 +19,22 @@ module {
     public type FixedTimeZone = InternalTypes.FixedTimeZone;
     public type Offset = InternalTypes.FixedTimeZone;
     type Components = InternalTypes.Components;
-
+    
+    
+    /// Helper function to create a UTC timezone (fixed at UTC+0)
+    ///
+    /// ```motoko include=import
+    /// let timeZone : TimeZone.TimeZone = TimeZone.utc();
+    /// ```
     public func utc() : TimeZone {
         return #fixed(#seconds(0));
     };
-
+    
+    /// Helper function to create a timezone with a fixed offset like UTC+3
+    ///
+    /// ```motoko include=import
+    /// let timeZone : TimeZone.TimeZone = TimeZone.withFixedOffset(#hours(3)); // UTC+3
+    /// ```
     public func withFixedOffset(offset : Offset) : TimeZone {
         return #fixed(offset);
     };
