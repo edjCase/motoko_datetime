@@ -4,7 +4,8 @@ import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 
 module {
-
+    type Components = InternalTypes.Components;
+    type TimeZone = InternalTypes.TimeZone;
     type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     type FixedTimeZone = InternalTypes.FixedTimeZone;
 
@@ -47,8 +48,14 @@ module {
         };
     };
 
-    
-    public func getFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {
+    public func toOffsetSeconds(timeZone : TimeZone, components : Components) : Int {
+        switch (timeZone) {
+            case (#fixed(f)) toFixedOffsetSeconds(f);
+            case (#dynamic(d)) d.toOffsetSeconds(components);
+        };
+    };
+
+    public func toFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {
         switch (fixedTimeZone) {
             case (#seconds(s)) s;
             case (#hours(h)) h * 3600;

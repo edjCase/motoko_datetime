@@ -120,7 +120,7 @@ module D {
         ///
         /// ```motoko include=import
         /// let dateTime : DateTime.DateTime = DateTime.now();
-        /// let otherDateTime : DateTime.DateTime = DateTime.fromText("2021-01-01T00:00:00.000Z");
+        /// let otherDateTime : DateTime.DateTime = DateTime.fromText("2021-01-01T00:00:00.000000000Z");
         /// let timeBetween : Time.Time = dateTime.timeBetween(otherDateTime);
         /// ```
         public func timeBetween(other : DateTime) : Time.Time {
@@ -138,7 +138,7 @@ module D {
             return time;
         };
 
-        /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+        /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
         ///
         /// ```motoko include=import
         /// let dateTime : DateTime.DateTime = DateTime.now();
@@ -151,7 +151,7 @@ module D {
         /// Formats the `DateTime` as Text value using the given format.
         ///
         /// Formats:
-        /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+        /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
         ///
         /// ```motoko include=import
         /// let dateTime : DateTime.DateTime = DateTime.now();
@@ -159,7 +159,7 @@ module D {
         /// ```
         public func toTextFormatted(format : TextFormat) : Text {
             let components : Components = toComponents();
-            InternalComponents.toTextFormatted(components, #utc, format);
+            InternalComponents.toTextFormatted(components, #fixed(#seconds(0)), format);
         };
 
         /// Creates a `Components` from a `DateTime` value.
@@ -269,7 +269,7 @@ module D {
         };
     };
 
-    /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
     ///
     /// ```motoko include=import
     /// let dateTime : DateTime.DateTime = DateTime.now();
@@ -282,7 +282,7 @@ module D {
     /// Formats the `DateTime` as Text value using the given format.
     ///
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
     ///
     /// ```motoko include=import
     /// let dateTime : DateTime.DateTime = DateTime.now();
@@ -297,10 +297,10 @@ module D {
     /// Treats the Text value as UTC if no timezone is specified.
     ///
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
     ///
     /// ```motoko include=import
-    /// let dateTimeText : Text = "2021-01-01T00:00:00.000Z";
+    /// let dateTimeText : Text = "2021-01-01T00:00:00.000000000Z";
     /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, #iso8601) else return #error("Invalid date");
     /// ```
     public func fromTextFormatted(text : Text, format : TextFormat) : ?DateTime {
@@ -310,7 +310,7 @@ module D {
             let offset : ?Time.Time = switch (timeZoneDescriptor) {
                 case (#utc) null;
                 case (#unspecified) null;
-                case (#fixed(f)) ?TimeZone.getFixedOffsetSeconds(f);
+                case (#fixed(f)) ?TimeZone.toFixedOffsetSeconds(f);
             };
             switch (offset) {
                 case (null) {

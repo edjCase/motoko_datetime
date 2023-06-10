@@ -14,17 +14,31 @@ module {
         #years : Int;
     };
 
-    public type Components = {
+    public type DateComponents = {
         year : Int;
         month : Nat;
         day : Nat;
+    };
+
+    public type Components = DateComponents and {
         hour : Nat;
         minute : Nat;
         nanosecond : Nat;
     };
 
+    public type DayOfWeek = {
+        #sunday;
+        #monday;
+        #tuesday;
+        #wednesday;
+        #thursday;
+        #friday;
+        #saturday;
+    };
+
     public type TextFormat = {
         #iso8601;
+        #custom : Text;
     };
 
     public type TimeZoneDescriptor = {
@@ -39,7 +53,7 @@ module {
     };
 
     public type DynamicTimeZone = {
-        getOffsetSeconds : (components : Components) -> Int;
+        toOffsetSeconds : (components : Components) -> Int;
     };
 
     public type FixedTimeZone = {

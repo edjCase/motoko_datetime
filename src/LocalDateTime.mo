@@ -83,7 +83,7 @@ module {
         /// ```motoko include=import
         /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(3, 0))); // UTC+3
         /// let dateTime : LocalDateTime.LocalDateTime = LocalDateTime.now(timeZone);
-        /// let otherDateTime : LocalDateTime.LocalDateTime = LocalDateTime.fromText("2021-01-01T00:00:00.000+03:00");
+        /// let otherDateTime : LocalDateTime.LocalDateTime = LocalDateTime.fromText("2021-01-01T00:00:00.000000000+03:00");
         /// let timeBetween : Time.Time = dateTime.timeBetween(otherDateTime);
         /// ```
         public func timeBetween(other : LocalDateTime) : Time.Time {
@@ -99,13 +99,13 @@ module {
         /// let nanoseconds : Time.Time = dateTime.toTime();
         /// ```
         public func toTime() : Time.Time {
-            let offset = TimeZone.getOffsetSeconds(timeZone, components);
+            let offset = TimeZone.toOffsetSeconds(timeZone, components);
             let newComponents = Components.addTime(components, -offset * 1_000_000_000);
             let ?time = Components.toTime(newComponents) else Prelude.unreachable();
             time;
         };
 
-        /// Formats the `LocalDateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000+03:00`)
+        /// Formats the `LocalDateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000+03:00`)
         ///
         /// ```motoko include=import
         /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(3, 0))); // UTC+3
@@ -119,7 +119,7 @@ module {
         /// Formats the `DateTime` as Text value using the given format.
         ///
         /// Formats:
-        /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000+03:00`)
+        /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000+03:00`)
         ///
         /// ```motoko include=import
         /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(3, 0))); // UTC+3
@@ -128,14 +128,7 @@ module {
         /// ```
         public func toTextFormatted(format : DateTime.TextFormat) : Text {
             let components = toComponents();
-            
-            let offsetSeconds = TimeZone.getOffsetSeconds(timeZone, components);
-            let tz = if (offsetSeconds == 0) {
-                #utc;
-            } else {
-                #fixed(#seconds(offsetSeconds));
-            };
-            InternalComponents.toTextFormatted(components, tz, format);
+            InternalComponents.toTextFormatted(components, timeZone, format);
         };
 
         /// Creates a `Components` from a `LocalDateTime` value.
@@ -236,7 +229,7 @@ module {
     /// ```
     public func fromTime(nanoseconds : Time.Time, timeZone : TimeZone) : LocalDateTime {
         let utcComponents = Components.fromTime(nanoseconds);
-        let offset = TimeZone.getOffsetSeconds(timeZone, utcComponents);
+        let offset = TimeZone.toOffsetSeconds(timeZone, utcComponents);
         let localizedComponents = Components.addTime(utcComponents, offset * 1_000_000_000);
         LocalDateTime(localizedComponents, timeZone);
     };
@@ -255,7 +248,7 @@ module {
         ?LocalDateTime(components, timeZone);
     };
 
-    /// Formats the `LocalDateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000+03:00`)
+    /// Formats the `LocalDateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000+03:00`)
     ///
     /// ```motoko include=import
     /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(3, 0))); // UTC+3
@@ -269,7 +262,7 @@ module {
     /// Formats the `LocalDateTime` as Text value using the given format.
     ///
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000+03:00`)
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000+03:00`)
     ///
     /// ```motoko include=import
     /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(3, 0))); // UTC+3
@@ -285,10 +278,10 @@ module {
     /// Treats the Text value as UTC if no timezone is specified.
     ///
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000+03:00`)
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000+03:00`)
     ///
     /// ```motoko include=import
-    /// let dateTimeText : Text = "2021-01-01T00:00:00.000+03:00";
+    /// let dateTimeText : Text = "2021-01-01T00:00:00.000000000+03:00";
     /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, #iso8601) else return #error("Invalid date");
     /// ```
     public func fromTextFormatted(text : Text, format : TextFormat) : ?LocalDateTime {

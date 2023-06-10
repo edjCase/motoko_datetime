@@ -557,7 +557,7 @@ test(
                     nanosecond = 0;
                 };
                 timeZone = #seconds(0);
-                expectedIso8601 = "1970-01-01T00:00:00.000Z";
+                expectedIso8601 = "1970-01-01T00:00:00.000000000Z";
             },
             {
                 dateTime = {
@@ -569,7 +569,7 @@ test(
                     nanosecond = 0;
                 };
                 timeZone = #seconds(-25_320);
-                expectedIso8601 = "1970-01-01T00:00:00.000-07:02";
+                expectedIso8601 = "1970-01-01T00:00:00.000000000-07:02";
             },
             {
                 dateTime = {
@@ -581,7 +581,7 @@ test(
                     nanosecond = 40_787_000_000;
                 };
                 timeZone = #hours(8);
-                expectedIso8601 = "2023-06-07T04:11:40.787+08:00";
+                expectedIso8601 = "2023-06-07T04:11:40.787000000+08:00";
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {

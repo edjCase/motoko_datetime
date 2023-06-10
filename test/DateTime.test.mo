@@ -160,17 +160,17 @@ test(
             {
                 dateTime = DateTime.DateTime(0);
                 timeZoneDescriptor = #utc;
-                expectedIso8601 = "1970-01-01T00:00:00.000Z";
+                expectedIso8601 = "1970-01-01T00:00:00.000000000Z";
             },
             {
                 dateTime = DateTime.DateTime(+25_320_000_000_000);
                 timeZoneDescriptor = #hoursAndMinutes(-7, 2);
-                expectedIso8601 = "1970-01-01T00:00:00.000-07:02";
+                expectedIso8601 = "1970-01-01T00:00:00.000000000-07:02";
             },
             {
                 dateTime = DateTime.DateTime(+1_686_082_300_787_000_000);
                 timeZoneDescriptor = #hoursAndMinutes(8, 0);
-                expectedIso8601 = "2023-06-07T04:11:40.787+08:00";
+                expectedIso8601 = "2023-06-07T04:11:40.787000000+08:00";
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {

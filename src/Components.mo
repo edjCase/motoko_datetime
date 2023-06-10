@@ -19,10 +19,13 @@ import InternalTextUtil "../internal/TextUtil";
 import Debug "mo:base/Debug";
 import Components "../internal/Components";
 import Order "mo:base/Order";
+import Prelude "mo:base/Prelude";
 
 module {
 
     public type Components = InternalTypes.Components;
+    public type DateComponents = InternalTypes.DateComponents;
+    public type DayOfWeek = InternalTypes.DayOfWeek;
     public type DateTime = InternalTypes.DateTime;
     public type LocalDateTime = InternalTypes.LocalDateTime;
     public type TimeZone = InternalTypes.TimeZone;
@@ -164,6 +167,11 @@ module {
         addTime(epoch(), nanoseconds);
     };
 
+
+    public func dayOfWeek(components : DateComponents) : DayOfWeek {
+        InternalComponents.dayOfWeek(components);
+    };
+
     /// Checks if the specified components are valid.
     /// Checks that the day is valid for the month and year, and that the time is valid.
     /// Returns true if the components are valid, false otherwise.
@@ -196,95 +204,103 @@ module {
         return true;
     };
 
-    /// Converts datetime components to text in ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    /// Converts datetime components to text in ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
     ///
     /// ```motoko include=import
     /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
     /// let text : Text = Components.toText(c, TimeZone.utc());
     /// ```
-    public func toText(components : Components, timeZone : TimeZoneDescriptor) : Text {
+    public func toText(components : Components, timeZone : TimeZone) : Text {
         toTextFormatted(components, timeZone, #iso8601);
     };
 
     /// Converts datetime components to the specified text format.
     ///
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
     ///
     /// ```motoko include=import
     /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
     /// let text : Text = Components.toTextFormatted(c, #iso8601, TimeZone.utc());
     /// ```
-    public func toTextFormatted(components : Components, timeZone : TimeZoneDescriptor, format : InternalTypes.TextFormat) : Text {
+    public func toTextFormatted(components : Components, timeZone : TimeZone, format : InternalTypes.TextFormat) : Text {
         InternalComponents.toTextFormatted(components, timeZone, format);
     };
 
     /// Parses a formatted datetime text into components and timezone with the specified format.
     /// Returns null if the text is not a valid formatted datetime
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000Z`)
+    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
     ///
     /// ```motoko include=import
     /// let ?result : ?FromTextResult = Components.fromTextFormatted("2020-01-01T00:00:00Z", #iso8601) else return #error("Invalid datetime text");
     /// ```
     public func fromTextFormatted(text : Text, format : TextFormat) : ?FromTextResult {
         switch (format) {
-            case (#iso8601) {
-                let iter = Text.toIter(text);
-                let ?year = InternalTextUtil.parseNat(iter, 4) else return null;
+            case (#iso8601) fromTextISO8601(text);
+            case (#custom(customFormat)) fromTextCustomFormat(text, customFormat);
+        };
+    };
 
-                if (iter.next() != ?'-') return null;
+    private func fromTextCustomFormat(text: Text, customFormat : Text) : ?FromTextResult {
+        // TODO
+        Prelude.nyi();
+    };
 
-                let ?month = InternalTextUtil.parseNat(iter, 2) else return null;
+    private func fromTextISO8601(text : Text) : ?FromTextResult {
+        let iter = Text.toIter(text);
+        let ?year = InternalTextUtil.parseNat(iter, 4) else return null;
 
-                if (iter.next() != ?'-') return null;
+        if (iter.next() != ?'-') return null;
 
-                let ?day = InternalTextUtil.parseNat(iter, 2) else return null;
+        let ?month = InternalTextUtil.parseNat(iter, 2) else return null;
 
-                if (iter.next() != ?'T') return null;
+        if (iter.next() != ?'-') return null;
 
-                let ?hour = InternalTextUtil.parseNat(iter, 2) else return null;
+        let ?day = InternalTextUtil.parseNat(iter, 2) else return null;
 
-                if (iter.next() != ?':') return null;
+        if (iter.next() != ?'T') return null;
 
-                let ?minute = InternalTextUtil.parseNat(iter, 2) else return null;
+        let ?hour = InternalTextUtil.parseNat(iter, 2) else return null;
 
-                if (iter.next() != ?':') return null;
+        if (iter.next() != ?':') return null;
 
-                let ?seconds = InternalTextUtil.parseNat(iter, 2) else return null;
+        let ?minute = InternalTextUtil.parseNat(iter, 2) else return null;
 
-                let (milliseconds : Nat, timezone : ?Text) = switch (iter.next()) {
-                    case (?'.') {
-                        let ?ms = InternalTextUtil.parseNat(iter, 3) else return null;
-                        let tz = InternalTextUtil.readTillEnd(iter, null);
-                        (ms, tz);
-                    };
-                    case (?tzChar) {
-                        let tz = InternalTextUtil.readTillEnd(iter, ?tzChar);
-                        (0, tz);
-                    };
-                    case (null)(0, null);
-                };
-                let timeZoneDescriptor : TimeZoneDescriptor = switch (timezone) {
-                    case (null) #unspecified;
-                    case (?tz) {
-                        let ?desc = InternalTimeZone.parseDescriptor(tz) else return null;
-                        desc;
-                    }
-                };
-                let components = {
-                    year = year;
-                    month = month;
-                    day = day;
-                    hour = hour;
-                    minute = minute;
-                    nanosecond = (seconds * 1_000_000_000) + (milliseconds * 1_000_000);
-                };
-                return ?{
-                    components = components;
-                    timeZoneDescriptor = timeZoneDescriptor;
-                };
+        if (iter.next() != ?':') return null;
+
+        let ?seconds = InternalTextUtil.parseNat(iter, 2) else return null;
+
+        let (nanoseconds : Nat, timezone : ?Text) = switch (iter.next()) {
+            case (?'.') {
+                let ?ns = InternalTextUtil.parseNat(iter, 9) else return null;
+                let tz = InternalTextUtil.readTillEnd(iter, null);
+                (ns, tz);
             };
+            case (?tzChar) {
+                let tz = InternalTextUtil.readTillEnd(iter, ?tzChar);
+                (0, tz);
+            };
+            case (null)(0, null);
+        };
+        let timeZoneDescriptor : TimeZoneDescriptor = switch (timezone) {
+            case (null) #unspecified;
+            case (?tz) {
+                let ?desc = InternalTimeZone.parseDescriptor(tz) else return null;
+                desc;
+            }
+        };
+        let components = {
+            year = year;
+            month = month;
+            day = day;
+            hour = hour;
+            minute = minute;
+            nanosecond = (seconds * 1_000_000_000) + nanoseconds;
+        };
+        return ?{
+            components = components;
+            timeZoneDescriptor = timeZoneDescriptor;
         };
     };
 
@@ -476,13 +492,6 @@ module {
             minute = components.minute;
             nanosecond = components.nanosecond;
         };
-    };
-
-
-    type DateComponents = {
-        year : Int;
-        month : Nat;
-        day : Nat;
     };
 
     private func subtractDays(components : DateComponents, days : Nat) : DateComponents {

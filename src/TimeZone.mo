@@ -49,15 +49,8 @@ module {
     /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
     /// let offsetSeconds : Int = TimeZone.getOffsetSeconds(timeZone, c);
     /// ```
-    public func getOffsetSeconds(timeZone : TimeZone, components : Components) : Int {
-        switch (timeZone) {
-            case (#fixed(f)) {
-                getFixedOffsetSeconds(f);
-            };
-            case (#dynamic(d)) {
-                d.getOffsetSeconds(components);
-            };
-        };
+    public func toOffsetSeconds(timeZone : TimeZone, components : Components) : Int {
+       InternalTimeZone.toOffsetSeconds(timeZone, components);
     };
 
     /// Gets the UTC offset in seconds for the specified fixed time zone.
@@ -66,7 +59,7 @@ module {
     /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(1, 0));
     /// let offsetSeconds : Int = TimeZone.getFixedOffsetSeconds(timeZone);
     /// ```
-    public func getFixedOffsetSeconds(fixedTimeZone: FixedTimeZone) : Int {
-        InternalTimeZone.getFixedOffsetSeconds(fixedTimeZone);
+    public func toFixedOffsetSeconds(fixedTimeZone: FixedTimeZone) : Int {
+        InternalTimeZone.toFixedOffsetSeconds(fixedTimeZone);
     };
 };

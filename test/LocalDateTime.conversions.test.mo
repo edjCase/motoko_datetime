@@ -27,7 +27,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -631_126_800_000_000_000;
-    textIso8061 = "1950-01-01T00:00:00.000-07:00";
+    textIso8061 = "1950-01-01T00:00:00.000000000-07:00";
   },
   {
     timeZone = #fixed(#hours(-5));
@@ -40,7 +40,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -603_901_620_000_000_000;
-    textIso8061 = "1950-11-12T04:33:00.000-05:00";
+    textIso8061 = "1950-11-12T04:33:00.000000000-05:00";
   },
   {
     timeZone = #fixed(#hours(9));
@@ -53,7 +53,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -32_400_000_000_000;
-    textIso8061 = "1970-01-01T00:00:00.000+09:00";
+    textIso8061 = "1970-01-01T00:00:00.000000000+09:00";
   },
   {
     timeZone = #fixed(#hours(13,));
@@ -66,7 +66,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -46_740_000_000_000;
-    textIso8061 = "1970-01-01T00:01:00.000+13:00";
+    textIso8061 = "1970-01-01T00:01:00.000000000+13:00";
   },
   {
     timeZone = #fixed(#hours(-1));
@@ -79,7 +79,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 90_000_000_000_000;
-    textIso8061 = "1970-01-02T00:00:00.000-01:00";
+    textIso8061 = "1970-01-02T00:00:00.000000000-01:00";
   },
   {
     timeZone = #fixed(#seconds(27_240));
@@ -92,7 +92,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 68_169_600_000_000_000;
-    textIso8061 = "1972-02-29T07:34:00.000+07:34";
+    textIso8061 = "1972-02-29T07:34:00.000000000+07:34";
   },
   {
     timeZone = #fixed(#seconds(-25_320));
@@ -105,7 +105,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 946_710_120_000_000_000;
-    textIso8061 = "2000-01-01T00:00:00.000-07:02";
+    textIso8061 = "2000-01-01T00:00:00.000000000-07:02";
   },
   {
     timeZone = #fixed(#seconds(120));
@@ -118,7 +118,7 @@ let testCases : [TestCase] = [
       nanosecond = 59_000_000_000;
     };
     nanoseconds = 978_307_079_000_000_000;
-    textIso8061 = "2000-12-31T23:59:59.000+00:02";
+    textIso8061 = "2000-12-31T23:59:59.000000000+00:02";
   },
   {
     timeZone = #fixed(#seconds(14_580));
@@ -131,7 +131,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 1_589_974_020_000_000_000;
-    textIso8061 = "2020-05-20T15:30:00.000+04:03";
+    textIso8061 = "2020-05-20T15:30:00.000000000+04:03";
   },
 ];
 

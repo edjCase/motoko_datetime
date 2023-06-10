@@ -20,11 +20,15 @@ module {
     };
 
     public func toTextPadded(value : Nat, length : Nat) : Text {
+        toTextPaddedSymb(value, length, "0");
+    };
+    
+    public func toTextPaddedSymb(value : Nat, length : Nat, padChar : Text) : Text {
         var text = Nat.toText(value);
         if (text.size() < length) {
             // Pad with leading zeros
             for (a in Iter.range(0, length - text.size() - 1)) {
-                text := "0" # text;
+                text := padChar # text;
             };
         };
         text;

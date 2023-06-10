@@ -23,7 +23,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -631_152_000_000_000_000;
-    textIso8061 = "1950-01-01T00:00:00.000Z";
+    textIso8061 = "1950-01-01T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -35,7 +35,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -603_919_620_000_000_000;
-    textIso8061 = "1950-11-12T04:33:00.000Z";
+    textIso8061 = "1950-11-12T04:33:00.000000000Z";
   },
   {
     dateTime = {
@@ -47,7 +47,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 0;
-    textIso8061 = "1970-01-01T00:00:00.000Z";
+    textIso8061 = "1970-01-01T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -59,7 +59,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 60_000_000_000;
-    textIso8061 = "1970-01-01T00:01:00.000Z";
+    textIso8061 = "1970-01-01T00:01:00.000000000Z";
   },
   {
     dateTime = {
@@ -71,7 +71,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 86_400_000_000_000;
-    textIso8061 = "1970-01-02T00:00:00.000Z";
+    textIso8061 = "1970-01-02T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -83,7 +83,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 68_169_600_000_000_000;
-    textIso8061 = "1972-02-29T00:00:00.000Z";
+    textIso8061 = "1972-02-29T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -95,7 +95,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 946_684_800_000_000_000;
-    textIso8061 = "2000-01-01T00:00:00.000Z";
+    textIso8061 = "2000-01-01T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -107,7 +107,7 @@ let testCases : [TestCase] = [
       nanosecond = 59_000_000_000;
     };
     nanoseconds = 978_307_199_000_000_000;
-    textIso8061 = "2000-12-31T23:59:59.000Z";
+    textIso8061 = "2000-12-31T23:59:59.000000000Z";
   },
   {
     dateTime = {
@@ -119,7 +119,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 1_589_988_600_000_000_000;
-    textIso8061 = "2020-05-20T15:30:00.000Z";
+    textIso8061 = "2020-05-20T15:30:00.000000000Z";
   },
 ];
 
