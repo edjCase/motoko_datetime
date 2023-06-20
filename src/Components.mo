@@ -167,7 +167,6 @@ module {
         addTime(epoch(), nanoseconds);
     };
 
-
     public func dayOfWeek(components : DateComponents) : DayOfWeek {
         InternalComponents.dayOfWeek(components);
     };
@@ -242,7 +241,7 @@ module {
         };
     };
 
-    private func fromTextCustomFormat(text: Text, customFormat : Text) : ?FromTextResult {
+    private func fromTextCustomFormat(text : Text, customFormat : Text) : ?FromTextResult {
         // TODO
         Prelude.nyi();
     };
@@ -288,7 +287,7 @@ module {
             case (?tz) {
                 let ?desc = InternalTimeZone.parseDescriptor(tz) else return null;
                 desc;
-            }
+            };
         };
         let components = {
             year = year;
@@ -303,7 +302,6 @@ module {
             timeZoneDescriptor = timeZoneDescriptor;
         };
     };
-
 
     /// Adds the specified nanoseconds to the components and returns the resulting components.
     /// Will trap if the resulting components are invalid.
@@ -325,21 +323,6 @@ module {
             return components;
         };
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
     private func subtractTime(components : Components, nanoseconds : Nat) : Components {
         let nanosecondsInAMinute = 60 * 1000000000;

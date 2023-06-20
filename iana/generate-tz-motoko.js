@@ -15,11 +15,15 @@ function buildLine(t) {
 };
 
 function buildList(listName, items, func) {
-    let list = buildLine(`${listName} = [`);
+    let list = `${listName} = [`;
+    if (items.length == 0) {
+        return buildLine(list + `];`);
+    };
+    list = buildLine(list);
     depth += 1;
     for (let i = 0; i < items.length; i++) {
         let v = func(items[i]);
-        list += buildLine(`${v},`)
+        list += `${v},\n`;
     };
     depth -= 1;
     list += buildLine(`];`);
@@ -40,7 +44,12 @@ function buildLocale(localeId, locale) {
             obj += buildLine(`abbr = "${locale.abbrs[i]}";`);
             obj += buildLine(`until = ${locale.untils[i] == null ? "null" : "?" + locale.untils[i]};`);
             obj += buildLine(`isdst = ${locale.isdsts[i] ? "true" : "false"};`);
-            obj += buildLine(`offset = ${locale.offsets[i]};`);
+            let offset = locale.offsets[i];
+            let isFloat = !!(offset % 1);
+            if (isFloat && offset < 0) {
+                offset = Math.abs(offset);
+            }
+            obj += buildLine(`offset = ${offset};`); // TODO remove abs
             depth -= 1;
             obj += getPadding() + "}";
             return obj;

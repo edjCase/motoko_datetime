@@ -440,7 +440,6 @@ test(
     },
 );
 
-
 func assertText(expected : Text, actual : Text) {
     if (expected != actual) {
         Debug.print("Expected: " # debug_show (expected));
@@ -462,7 +461,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                timeZoneDescriptor = #utc;
+                timeZone = #fixed(#seconds(0));
                 expectedIso8601 = "1970-01-01T00:00:00.000000000Z";
             },
             {
@@ -474,7 +473,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                timeZoneDescriptor = #fixed(#seconds(-25_320));
+                timeZone = #fixed(#seconds(-25_320));
                 expectedIso8601 = "1970-01-01T00:00:00.000000000-07:02";
             },
             {
@@ -486,12 +485,12 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                timeZoneDescriptor = #fixed(#seconds(-25_321));
+                timeZone = #fixed(#seconds(-25_321));
                 expectedIso8601 = "1970-01-01T00:00:00.000000000-07:02:01";
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
-            let actual : Text = Components.toTextFormatted(testCase.components, testCase.timeZoneDescriptor, #iso8601);
+            let actual : Text = Components.toTextFormatted(testCase.components, testCase.timeZone, #iso8601);
             assertText(testCase.expectedIso8601, actual);
 
             let fromTextResult = Components.fromTextFormatted(testCase.expectedIso8601, #iso8601);
@@ -500,22 +499,20 @@ test(
                     Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectedIso8601));
                     assert false;
                 };
-                case (?r) {            
-                    let matched2 = testCase.components == r.components
-                        and testCase.timeZoneDescriptor == r.timeZoneDescriptor;
+                case (?r) {
+                    let matched2 = testCase.components == r.components and testCase.timeZone == r.timeZoneDescriptor;
 
                     if (not matched2) {
                         Debug.print("Text: " # debug_show (testCase.expectedIso8601));
-                        Debug.print("Expected: " # debug_show (testCase.components) # " - " # debug_show (testCase.timeZoneDescriptor));
+                        Debug.print("Expected: " # debug_show (testCase.components) # " - " # debug_show (testCase.timeZone));
                         Debug.print("Actual:   " # debug_show (r.components) # " - " # debug_show (r.timeZoneDescriptor));
                         assert false;
                     };
-                }
+                };
             };
         };
     },
 );
-
 
 test(
     "addTime",
@@ -577,7 +574,7 @@ test(
                     minute = 26;
                     nanosecond = 50_987_654_322;
                 };
-            }
+            },
         ];
         for (testCase in Iter.fromArray(testCases)) {
             let actual : Components.Components = Components.addTime(testCase.components, testCase.timeToAdd);
