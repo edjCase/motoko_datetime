@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "scripts": {
+    "gen": "node generate-tz-motoko.js"
+  },
+  "dependencies": {
+    "iana-tz-data": "^2019.1.0"
+  }
+}
