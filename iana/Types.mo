@@ -8,19 +8,17 @@ import Debug "mo:base/Debug";
 import InternalTimeZone "../internal/TimeZone";
 import DateTime "../src/DateTime";
 import Components "../src/Components";
-
 module {
     public type Locale = {
         id : Text;
-        data : [LocaleData];
-        locales : [Locale];
+        rules : [LocaleRule];
     };
 
-    public type LocaleData = {
-        abbr : Text;
-        until : ?Int;
-        isdst : Bool;
-        offset : Float;
+    public type LocaleRule = {
+        abbreviation : Text;
+        expiration : ?Int;
+        isDaylightsSavings : Bool;
+        offsetSeconds : Int;
     };
 
     type Seconds = Int;

@@ -1,10 +1,10 @@
 import IANATimezoneData from "iana-tz-data" assert { type: 'json' };
 import fs from "fs";
 
-let filename = 'Data.mo';
 
 
 var depth = 0;
+let nameMap = {};
 
 function getPadding() {
     return "\t".repeat(depth);
@@ -31,59 +31,109 @@ function buildList(listName, items, func) {
 };
 
 
-function buildLocale(localeId, locale) {
-    let obj = buildLine(`{`);
+function buildLocale(localeId, locale, parentLocaleId, parentModuleName) {
+    let moduleName = normalizeText(localeId);
+    let fullLocaleId;
+    let fullModuleName;
+    let prefix;
+    if (!!parentLocaleId) {
+        parentLocaleId = parentLocaleId + "/";
+        parentModuleName = parentModuleName + ".";
+        fullLocaleId = parentLocaleId + localeId;
+        fullModuleName = parentModuleName + moduleName;
+        if (locale.abbrs?.length > 0) {
+            nameMap[fullLocaleId] = fullModuleName;
+        }
+        prefix = `public `;
+    }
+    else {
+        fullLocaleId = localeId;
+        fullModuleName = moduleName;
+        prefix = "";
+    }
+    let obj = buildLine(prefix + `module ${moduleName} {`);
     depth += 1;
-    obj += buildLine(`id = "${localeId}";`);
 
-    if (!!locale.abbrs) {
-        let indicies = Array.from({ length: locale.abbrs.length }, (_, i) => i);
-        obj += buildList("data", indicies, (i) => {
+    let abbrs = locale.abbrs || [];
+    let untils = locale.untils || [];
+    let isdsts = locale.isdsts || [];
+    let offsets = locale.offsets || [];
+    delete locale.abbrs;
+    delete locale.untils;
+    delete locale.isdsts;
+    delete locale.offsets;
+
+    let indicies = Array.from({ length: abbrs.length }, (_, i) => i);
+    if (indicies.length > 0) {
+        obj += buildLine(`public let locale : Types.Locale = {`);
+        depth += 1;
+        obj += buildLine(`id = "${fullLocaleId}";`);
+        obj += buildList("rules", indicies, (i) => {
             let obj = buildLine("{");
             depth += 1;
-            obj += buildLine(`abbr = "${locale.abbrs[i]}";`);
-            obj += buildLine(`until = ${locale.untils[i] == null ? "null" : "?" + locale.untils[i]};`);
-            obj += buildLine(`isdst = ${locale.isdsts[i] ? "true" : "false"};`);
-            let offset = locale.offsets[i];
-            let isFloat = !!(offset % 1);
-            if (isFloat && offset < 0) {
-                offset = Math.abs(offset);
-            }
-            obj += buildLine(`offset = ${offset};`); // TODO remove abs
+            obj += buildLine(`abbreviation = "${abbrs[i]}";`);
+            obj += buildLine(`expiration = ${untils[i] == null ? "null" : "?" + untils[i]};`);
+            obj += buildLine(`isDaylightsSavings = ${isdsts[i] ? "true" : "false"};`);
+            let offset = -1 * Math.round(offsets[i] * 60); // Convert to seconds int from minutes float
+            obj += buildLine(`offsetSeconds = ${offset};`);
             depth -= 1;
             obj += getPadding() + "}";
             return obj;
         });
-        delete locale.abbrs;
-        delete locale.untils;
-        delete locale.isdsts;
-        delete locale.offsets;
-    } else {
-        obj += buildLine(`data = [];`);
-    }
+        depth -= 1;
+        obj += buildLine(`};`);
+    };
 
-    obj += buildList("locales", Object.keys(locale), (innerLocaleId) => {
+    for (let innerLocaleId in locale) {
         let innerLocale = locale[innerLocaleId];
-        return buildLocale(innerLocaleId, innerLocale);
-    });
+        obj += buildLocale(innerLocaleId, innerLocale, fullLocaleId, fullModuleName);
+    }
     depth -= 1;
-    obj += getPadding() + "}";
+    obj += buildLine("};");
     return obj;
 };
 
 
 
 
+function buildFile(zoneId, zone, parentLocaleId, parentModule) {
+    let fileText = "";
+    fileText += buildLine(`import Types "../Types";`);
+    fileText += buildLocale(zoneId, zone, parentLocaleId, parentModule);
+    return fileText;
+}
 
+function normalizeText(t) {
+    return t.replace(/\//g, "_").replace(/-/g, "_").replace(/\+/g, "__").replace(/ /g, "_");
+}
 
-let fileText = "";
-fileText += buildLine(`import Types "./Types";`);
-fileText += buildLine("module {");
+try {
+    fs.rmdirSync("timezones", { recursive: true });
+} catch (e) { }
+
+fs.mkdirSync("timezones");
+
+let fileNames = [];
+for (let zoneId in IANATimezoneData.zoneData) {
+    let zone = IANATimezoneData.zoneData[zoneId];
+    let moduleName = normalizeText(zoneId);
+    fileNames.push(moduleName);
+    let fileText = buildFile(zoneId, zone, "", "");
+    let fileName = `timezones/${moduleName}.mo`;
+    fs.writeFile(fileName, fileText, (err) => { });
+};
+
+let localeMapText = "";
+for (let fileName of fileNames) {
+    localeMapText += buildLine(`import ${fileName} "timezones/${fileName}";`);
+};
+localeMapText += buildLine(`module {`);
 depth += 1;
-
-fileText += buildList("public let data : [Types.Locale]", Object.keys(IANATimezoneData.zoneData), (zoneId) => buildLocale(zoneId, IANATimezoneData.zoneData[zoneId]));
-
+localeMapText += buildList("public let locales", Object.keys(nameMap), (localeName) => {
+    let moduleName = nameMap[localeName];
+    return `\t\t${moduleName}.locale`;
+});
 depth -= 1;
-fileText += buildLine(`};`);
+localeMapText += buildLine(`};`);
 
-fs.writeFile(filename, fileText, (err) => { });
+fs.writeFileSync("LocaleList.mo", localeMapText, (err) => { }); 
