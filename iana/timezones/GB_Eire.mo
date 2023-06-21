@@ -1,8 +1,8 @@
 import Types "../Types";
 module GB_Eire {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "GB-Eire";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "GMT";
 				expiration = ?-1691964000000;

@@ -1,8 +1,8 @@
 import Types "../Types";
 module CET {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "CET";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "CET";
 				expiration = ?-1693706400000;

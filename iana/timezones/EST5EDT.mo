@@ -1,8 +1,8 @@
 import Types "../Types";
 module EST5EDT {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "EST5EDT";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "EST";
 				expiration = ?-1633280400000;

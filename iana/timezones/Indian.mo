@@ -1,9 +1,9 @@
 import Types "../Types";
 module Indian {
 	public module Antananarivo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Antananarivo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -38,9 +38,9 @@ module Indian {
 		};
 	};
 	public module Chagos {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Chagos";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1988167780000;
@@ -63,9 +63,9 @@ module Indian {
 		};
 	};
 	public module Christmas {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Christmas";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+07";
 					expiration = null;
@@ -76,9 +76,9 @@ module Indian {
 		};
 	};
 	public module Cocos {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Cocos";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+0630";
 					expiration = null;
@@ -89,9 +89,9 @@ module Indian {
 		};
 	};
 	public module Comoro {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Comoro";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -126,9 +126,9 @@ module Indian {
 		};
 	};
 	public module Kerguelen {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Kerguelen";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-631152000000;
@@ -145,9 +145,9 @@ module Indian {
 		};
 	};
 	public module Mahe {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Mahe";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2006653308000;
@@ -164,9 +164,9 @@ module Indian {
 		};
 	};
 	public module Maldives {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Maldives";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-315636840000;
@@ -183,9 +183,9 @@ module Indian {
 		};
 	};
 	public module Mauritius {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Mauritius";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1988164200000;
@@ -226,9 +226,9 @@ module Indian {
 		};
 	};
 	public module Mayotte {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Mayotte";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -263,9 +263,9 @@ module Indian {
 		};
 	};
 	public module Reunion {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Indian/Reunion";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1848886912000;

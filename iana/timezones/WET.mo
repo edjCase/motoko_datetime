@@ -1,8 +1,8 @@
 import Types "../Types";
 module WET {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "WET";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "WET";
 				expiration = ?228877200000;

@@ -1,9 +1,9 @@
 import Types "../Types";
 module Australia {
 	public module ACT {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/ACT";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -860,9 +860,9 @@ module Australia {
 		};
 	};
 	public module Adelaide {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Adelaide";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "ACST";
 					expiration = ?-1672565340000;
@@ -1719,9 +1719,9 @@ module Australia {
 		};
 	};
 	public module Brisbane {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Brisbane";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -1828,9 +1828,9 @@ module Australia {
 		};
 	};
 	public module Broken_Hill {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Broken_Hill";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "ACST";
 					expiration = ?-1672565340000;
@@ -2687,9 +2687,9 @@ module Australia {
 		};
 	};
 	public module Canberra {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Canberra";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -3546,9 +3546,9 @@ module Australia {
 		};
 	};
 	public module Currie {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Currie";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1680508800000;
@@ -4405,9 +4405,9 @@ module Australia {
 		};
 	};
 	public module Darwin {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Darwin";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "ACST";
 					expiration = ?-1672565340000;
@@ -4466,9 +4466,9 @@ module Australia {
 		};
 	};
 	public module Eucla {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Eucla";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+0845";
 					expiration = ?-1672562640000;
@@ -4587,9 +4587,9 @@ module Australia {
 		};
 	};
 	public module Hobart {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Hobart";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1680508800000;
@@ -5494,9 +5494,9 @@ module Australia {
 		};
 	};
 	public module LHI {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/LHI";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?352216800000;
@@ -6191,9 +6191,9 @@ module Australia {
 		};
 	};
 	public module Lindeman {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Lindeman";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -6324,9 +6324,9 @@ module Australia {
 		};
 	};
 	public module Lord_Howe {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Lord_Howe";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?352216800000;
@@ -7021,9 +7021,9 @@ module Australia {
 		};
 	};
 	public module Melbourne {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Melbourne";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -7880,9 +7880,9 @@ module Australia {
 		};
 	};
 	public module NSW {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/NSW";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -8739,9 +8739,9 @@ module Australia {
 		};
 	};
 	public module North {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/North";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "ACST";
 					expiration = ?-1672565340000;
@@ -8800,9 +8800,9 @@ module Australia {
 		};
 	};
 	public module Perth {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Perth";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AWST";
 					expiration = ?-1672559940000;
@@ -8921,9 +8921,9 @@ module Australia {
 		};
 	};
 	public module Queensland {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Queensland";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -9030,9 +9030,9 @@ module Australia {
 		};
 	};
 	public module South {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/South";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "ACST";
 					expiration = ?-1672565340000;
@@ -9889,9 +9889,9 @@ module Australia {
 		};
 	};
 	public module Sydney {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Sydney";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -10748,9 +10748,9 @@ module Australia {
 		};
 	};
 	public module Tasmania {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Tasmania";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1680508800000;
@@ -11655,9 +11655,9 @@ module Australia {
 		};
 	};
 	public module Victoria {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Victoria";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1672567140000;
@@ -12514,9 +12514,9 @@ module Australia {
 		};
 	};
 	public module West {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/West";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AWST";
 					expiration = ?-1672559940000;
@@ -12635,9 +12635,9 @@ module Australia {
 		};
 	};
 	public module Yancowinna {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Australia/Yancowinna";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "ACST";
 					expiration = ?-1672565340000;

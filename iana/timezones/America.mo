@@ -1,9 +1,9 @@
 import Types "../Types";
 module America {
 	public module Adak {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Adak";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NST";
 					expiration = ?-880196400000;
@@ -872,9 +872,9 @@ module America {
 		};
 	};
 	public module Anchorage {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Anchorage";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AST";
 					expiration = ?-880200000000;
@@ -1743,9 +1743,9 @@ module America {
 		};
 	};
 	public module Anguilla {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Anguilla";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -1762,9 +1762,9 @@ module America {
 		};
 	};
 	public module Antigua {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Antigua";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -1781,9 +1781,9 @@ module America {
 		};
 	};
 	public module Araguaina {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Araguaina";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767214032000;
@@ -2101,9 +2101,9 @@ module America {
 	};
 	public module Argentina {
 		public module Buenos_Aires {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Buenos_Aires";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -2474,9 +2474,9 @@ module America {
 			};
 		};
 		public module Catamarca {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Catamarca";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -2847,9 +2847,9 @@ module America {
 			};
 		};
 		public module ComodRivadavia {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/ComodRivadavia";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -3220,9 +3220,9 @@ module America {
 			};
 		};
 		public module Cordoba {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Cordoba";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -3593,9 +3593,9 @@ module America {
 			};
 		};
 		public module Jujuy {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Jujuy";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -3954,9 +3954,9 @@ module America {
 			};
 		};
 		public module La_Rioja {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/La_Rioja";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -4333,9 +4333,9 @@ module America {
 			};
 		};
 		public module Mendoza {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Mendoza";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -4706,9 +4706,9 @@ module America {
 			};
 		};
 		public module Rio_Gallegos {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Rio_Gallegos";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -5079,9 +5079,9 @@ module America {
 			};
 		};
 		public module Salta {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Salta";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -5440,9 +5440,9 @@ module America {
 			};
 		};
 		public module San_Juan {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/San_Juan";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -5819,9 +5819,9 @@ module America {
 			};
 		};
 		public module San_Luis {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/San_Luis";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -6198,9 +6198,9 @@ module America {
 			};
 		};
 		public module Tucuman {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Tucuman";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -6583,9 +6583,9 @@ module America {
 			};
 		};
 		public module Ushuaia {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Argentina/Ushuaia";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CMT";
 						expiration = ?-1567453392000;
@@ -6957,9 +6957,9 @@ module America {
 		};
 	};
 	public module Aruba {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Aruba";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1826738653000;
@@ -6982,9 +6982,9 @@ module America {
 		};
 	};
 	public module Asuncion {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Asuncion";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AMT";
 					expiration = ?-1206389360000;
@@ -7763,9 +7763,9 @@ module America {
 		};
 	};
 	public module Atikokan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Atikokan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1632067200000;
@@ -7812,9 +7812,9 @@ module America {
 		};
 	};
 	public module Atka {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Atka";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NST";
 					expiration = ?-880196400000;
@@ -8683,9 +8683,9 @@ module America {
 		};
 	};
 	public module Bahia {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Bahia";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767216356000;
@@ -9062,9 +9062,9 @@ module America {
 		};
 	};
 	public module Bahia_Banderas {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Bahia_Banderas";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -9633,9 +9633,9 @@ module America {
 		};
 	};
 	public module Barbados {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Barbados";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1451678491000;
@@ -9706,9 +9706,9 @@ module America {
 		};
 	};
 	public module Belem {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Belem";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767213964000;
@@ -9893,9 +9893,9 @@ module America {
 		};
 	};
 	public module Belize {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Belize";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1822500432000;
@@ -10236,9 +10236,9 @@ module America {
 		};
 	};
 	public module Blanc_Sablon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Blanc-Sablon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AST";
 					expiration = ?-1632074400000;
@@ -10279,9 +10279,9 @@ module America {
 		};
 	};
 	public module Boa_Vista {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Boa_Vista";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767211040000;
@@ -10490,9 +10490,9 @@ module America {
 		};
 	};
 	public module Bogota {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Bogota";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "BMT";
 					expiration = ?-1739041424000;
@@ -10521,9 +10521,9 @@ module America {
 		};
 	};
 	public module Boise {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Boise";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1633269600000;
@@ -11434,9 +11434,9 @@ module America {
 		};
 	};
 	public module Buenos_Aires {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Buenos_Aires";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1567453392000;
@@ -11807,9 +11807,9 @@ module America {
 		};
 	};
 	public module Cambridge_Bay {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Cambridge_Bay";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-1577923200000;
@@ -12558,9 +12558,9 @@ module America {
 		};
 	};
 	public module Campo_Grande {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Campo_Grande";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767212492000;
@@ -13117,9 +13117,9 @@ module America {
 		};
 	};
 	public module Cancun {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Cancun";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514743200000;
@@ -13382,9 +13382,9 @@ module America {
 		};
 	};
 	public module Caracas {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Caracas";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1826739140000;
@@ -13419,9 +13419,9 @@ module America {
 		};
 	};
 	public module Catamarca {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Catamarca";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1567453392000;
@@ -13792,9 +13792,9 @@ module America {
 		};
 	};
 	public module Cayenne {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Cayenne";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1846269040000;
@@ -13817,9 +13817,9 @@ module America {
 		};
 	};
 	public module Cayman {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Cayman";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1946918424000;
@@ -13836,9 +13836,9 @@ module America {
 		};
 	};
 	public module Chicago {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Chicago";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1633276800000;
@@ -15259,9 +15259,9 @@ module America {
 		};
 	};
 	public module Chihuahua {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Chihuahua";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -15812,9 +15812,9 @@ module America {
 		};
 	};
 	public module Coral_Harbour {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Coral_Harbour";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1632067200000;
@@ -15861,9 +15861,9 @@ module America {
 		};
 	};
 	public module Cordoba {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Cordoba";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1567453392000;
@@ -16234,9 +16234,9 @@ module America {
 		};
 	};
 	public module Costa_Rica {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Costa_Rica";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SJMT";
 					expiration = ?-1545071027000;
@@ -16301,9 +16301,9 @@ module America {
 		};
 	};
 	public module Creston {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Creston";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MST";
 					expiration = ?-1680454800000;
@@ -16326,9 +16326,9 @@ module America {
 		};
 	};
 	public module Cuiaba {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Cuiaba";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767212140000;
@@ -16873,9 +16873,9 @@ module America {
 		};
 	};
 	public module Curacao {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Curacao";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1826738653000;
@@ -16898,9 +16898,9 @@ module America {
 		};
 	};
 	public module Danmarkshavn {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Danmarkshavn";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1686091520000;
@@ -17115,9 +17115,9 @@ module America {
 		};
 	};
 	public module Dawson {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Dawson";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "YST";
 					expiration = ?-1632056400000;
@@ -17884,9 +17884,9 @@ module America {
 		};
 	};
 	public module Dawson_Creek {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Dawson_Creek";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1632060000000;
@@ -18239,9 +18239,9 @@ module America {
 		};
 	};
 	public module Denver {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Denver";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MST";
 					expiration = ?-1633273200000;
@@ -19194,9 +19194,9 @@ module America {
 		};
 	};
 	public module Detroit {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Detroit";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2051202469000;
@@ -20029,9 +20029,9 @@ module America {
 		};
 	};
 	public module Dominica {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Dominica";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -20048,9 +20048,9 @@ module America {
 		};
 	};
 	public module Edmonton {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Edmonton";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1998663968000;
@@ -20985,9 +20985,9 @@ module America {
 		};
 	};
 	public module Eirunepe {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Eirunepe";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767208832000;
@@ -21196,9 +21196,9 @@ module America {
 		};
 	};
 	public module El_Salvador {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/El_Salvador";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1546279392000;
@@ -21239,9 +21239,9 @@ module America {
 		};
 	};
 	public module Ensenada {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Ensenada";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514736000000;
@@ -22146,9 +22146,9 @@ module America {
 		};
 	};
 	public module Fort_Nelson {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Fort_Nelson";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1632060000000;
@@ -23011,9 +23011,9 @@ module America {
 		};
 	};
 	public module Fort_Wayne {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Fort_Wayne";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1633276800000;
@@ -23612,9 +23612,9 @@ module America {
 		};
 	};
 	public module Fortaleza {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Fortaleza";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767216360000;
@@ -23859,9 +23859,9 @@ module America {
 		};
 	};
 	public module Glace_Bay {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Glace_Bay";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2131646412000;
@@ -24712,9 +24712,9 @@ module America {
 		};
 	};
 	public module Godthab {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Godthab";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1686083584000;
@@ -25427,9 +25427,9 @@ module America {
 		};
 	};
 	public module Goose_Bay {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Goose_Bay";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NST";
 					expiration = ?-1632076148000;
@@ -26658,9 +26658,9 @@ module America {
 		};
 	};
 	public module Grand_Turk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Grand_Turk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "KMT";
 					expiration = ?-1827687170000;
@@ -27361,9 +27361,9 @@ module America {
 		};
 	};
 	public module Grenada {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Grenada";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -27380,9 +27380,9 @@ module America {
 		};
 	};
 	public module Guadeloupe {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Guadeloupe";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -27399,9 +27399,9 @@ module America {
 		};
 	};
 	public module Guatemala {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Guatemala";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1617040676000;
@@ -27466,9 +27466,9 @@ module America {
 		};
 	};
 	public module Guayaquil {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Guayaquil";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "QMT";
 					expiration = ?-1230749160000;
@@ -27497,9 +27497,9 @@ module America {
 		};
 	};
 	public module Guyana {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Guyana";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1730578040000;
@@ -27528,9 +27528,9 @@ module America {
 		};
 	};
 	public module Halifax {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Halifax";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2131645536000;
@@ -28909,9 +28909,9 @@ module America {
 		};
 	};
 	public module Havana {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Havana";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "HMT";
 					expiration = ?-1402813824000;
@@ -29852,9 +29852,9 @@ module America {
 		};
 	};
 	public module Hermosillo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Hermosillo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -29956,9 +29956,9 @@ module America {
 	};
 	public module Indiana {
 		public module Indianapolis {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Indianapolis";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -30557,9 +30557,9 @@ module America {
 			};
 		};
 		public module Knox {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Knox";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -31488,9 +31488,9 @@ module America {
 			};
 		};
 		public module Marengo {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Marengo";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -32113,9 +32113,9 @@ module America {
 			};
 		};
 		public module Petersburg {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Petersburg";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -32816,9 +32816,9 @@ module America {
 			};
 		};
 		public module Tell_City {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Tell_City";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -33429,9 +33429,9 @@ module America {
 			};
 		};
 		public module Vevay {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Vevay";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -33922,9 +33922,9 @@ module America {
 			};
 		};
 		public module Vincennes {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Vincennes";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -34535,9 +34535,9 @@ module America {
 			};
 		};
 		public module Winamac {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Indiana/Winamac";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -35185,9 +35185,9 @@ module America {
 		};
 	};
 	public module Indianapolis {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Indianapolis";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1633276800000;
@@ -35786,9 +35786,9 @@ module America {
 		};
 	};
 	public module Inuvik {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Inuvik";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-536457600000;
@@ -36519,9 +36519,9 @@ module America {
 		};
 	};
 	public module Iqaluit {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Iqaluit";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-865296000000;
@@ -37258,9 +37258,9 @@ module America {
 		};
 	};
 	public module Jamaica {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Jamaica";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "KMT";
 					expiration = ?-1827687170000;
@@ -37397,9 +37397,9 @@ module America {
 		};
 	};
 	public module Jujuy {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Jujuy";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1567453392000;
@@ -37758,9 +37758,9 @@ module America {
 		};
 	};
 	public module Juneau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Juneau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-880207200000;
@@ -38624,9 +38624,9 @@ module America {
 	};
 	public module Kentucky {
 		public module Louisville {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Kentucky/Louisville";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -39699,9 +39699,9 @@ module America {
 			};
 		};
 		public module Monticello {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/Kentucky/Monticello";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "CST";
 						expiration = ?-1633276800000;
@@ -40595,9 +40595,9 @@ module America {
 		};
 	};
 	public module Knox_IN {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Knox_IN";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1633276800000;
@@ -41526,9 +41526,9 @@ module America {
 		};
 	};
 	public module Kralendijk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Kralendijk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1826738653000;
@@ -41551,9 +41551,9 @@ module America {
 		};
 	};
 	public module La_Paz {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/La_Paz";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1205954844000;
@@ -41576,9 +41576,9 @@ module America {
 		};
 	};
 	public module Lima {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Lima";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1938538284000;
@@ -41679,9 +41679,9 @@ module America {
 		};
 	};
 	public module Los_Angeles {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Los_Angeles";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1633269600000;
@@ -42802,9 +42802,9 @@ module America {
 		};
 	};
 	public module Louisville {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Louisville";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1633276800000;
@@ -43877,9 +43877,9 @@ module America {
 		};
 	};
 	public module Lower_Princes {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Lower_Princes";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1826738653000;
@@ -43902,9 +43902,9 @@ module America {
 		};
 	};
 	public module Maceio {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Maceio";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767217028000;
@@ -44161,9 +44161,9 @@ module America {
 		};
 	};
 	public module Managua {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Managua";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-1121105688000;
@@ -44264,9 +44264,9 @@ module America {
 		};
 	};
 	public module Manaus {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Manaus";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767211196000;
@@ -44463,9 +44463,9 @@ module America {
 		};
 	};
 	public module Marigot {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Marigot";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -44482,9 +44482,9 @@ module America {
 		};
 	};
 	public module Martinique {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Martinique";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "FFMT";
 					expiration = ?-1851537340000;
@@ -44513,9 +44513,9 @@ module America {
 		};
 	};
 	public module Matamoros {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Matamoros";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514743200000;
@@ -45048,9 +45048,9 @@ module America {
 		};
 	};
 	public module Mazatlan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Mazatlan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -45619,9 +45619,9 @@ module America {
 		};
 	};
 	public module Mendoza {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Mendoza";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1567453392000;
@@ -45992,9 +45992,9 @@ module America {
 		};
 	};
 	public module Menominee {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Menominee";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1633276800000;
@@ -46857,9 +46857,9 @@ module America {
 		};
 	};
 	public module Merida {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Merida";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514743200000;
@@ -47392,9 +47392,9 @@ module America {
 		};
 	};
 	public module Metlakatla {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Metlakatla";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-880207200000;
@@ -47879,9 +47879,9 @@ module America {
 		};
 	};
 	public module Mexico_City {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Mexico_City";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -48480,9 +48480,9 @@ module America {
 		};
 	};
 	public module Miquelon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Miquelon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1850328920000;
@@ -49117,9 +49117,9 @@ module America {
 		};
 	};
 	public module Moncton {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Moncton";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EST";
 					expiration = ?-2131642800000;
@@ -50366,9 +50366,9 @@ module America {
 		};
 	};
 	public module Monterrey {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Monterrey";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514743200000;
@@ -50901,9 +50901,9 @@ module America {
 		};
 	};
 	public module Montevideo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Montevideo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1942690509000;
@@ -51430,9 +51430,9 @@ module America {
 		};
 	};
 	public module Montreal {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Montreal";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EST";
 					expiration = ?-1632070800000;
@@ -52835,9 +52835,9 @@ module America {
 		};
 	};
 	public module Montserrat {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Montserrat";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -52854,9 +52854,9 @@ module America {
 		};
 	};
 	public module Nassau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Nassau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825095030000;
@@ -53761,9 +53761,9 @@ module America {
 		};
 	};
 	public module New_York {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/New_York";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EST";
 					expiration = ?-1633280400000;
@@ -55184,9 +55184,9 @@ module America {
 		};
 	};
 	public module Nipigon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Nipigon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EST";
 					expiration = ?-1632070800000;
@@ -56001,9 +56001,9 @@ module America {
 		};
 	};
 	public module Nome {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Nome";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NST";
 					expiration = ?-880196400000;
@@ -56872,9 +56872,9 @@ module America {
 		};
 	};
 	public module Noronha {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Noronha";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767217820000;
@@ -57120,9 +57120,9 @@ module America {
 	};
 	public module North_Dakota {
 		public module Beulah {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/North_Dakota/Beulah";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "MST";
 						expiration = ?-1633273200000;
@@ -58027,9 +58027,9 @@ module America {
 			};
 		};
 		public module Center {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/North_Dakota/Center";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "MST";
 						expiration = ?-1633273200000;
@@ -58934,9 +58934,9 @@ module America {
 			};
 		};
 		public module New_Salem {
-			public let locale : Types.Locale = {
+			public let region : Types.Region = {
 				id = "America/North_Dakota/New_Salem";
-				rules = [
+				timeZoneRules = [
 					{
 						abbreviation = "MST";
 						expiration = ?-1633273200000;
@@ -59842,9 +59842,9 @@ module America {
 		};
 	};
 	public module Ojinaga {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Ojinaga";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -60395,9 +60395,9 @@ module America {
 		};
 	};
 	public module Panama {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Panama";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1946918424000;
@@ -60414,9 +60414,9 @@ module America {
 		};
 	};
 	public module Pangnirtung {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Pangnirtung";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-1546300800000;
@@ -61159,9 +61159,9 @@ module America {
 		};
 	};
 	public module Paramaribo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Paramaribo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1861906760000;
@@ -61196,9 +61196,9 @@ module America {
 		};
 	};
 	public module Phoenix {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Phoenix";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MST";
 					expiration = ?-1633273200000;
@@ -61269,9 +61269,9 @@ module America {
 		};
 	};
 	public module Port_au_Prince {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Port-au-Prince";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PPMT";
 					expiration = ?-1670483460000;
@@ -61792,9 +61792,9 @@ module America {
 		};
 	};
 	public module Port_of_Spain {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Port_of_Spain";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -61811,9 +61811,9 @@ module America {
 		};
 	};
 	public module Porto_Acre {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Porto_Acre";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767209328000;
@@ -62010,9 +62010,9 @@ module America {
 		};
 	};
 	public module Porto_Velho {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Porto_Velho";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767210264000;
@@ -62197,9 +62197,9 @@ module America {
 		};
 	};
 	public module Puerto_Rico {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Puerto_Rico";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AST";
 					expiration = ?-873057600000;
@@ -62228,9 +62228,9 @@ module America {
 		};
 	};
 	public module Punta_Arenas {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Punta_Arenas";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SMT";
 					expiration = ?-1892661434000;
@@ -62931,9 +62931,9 @@ module America {
 		};
 	};
 	public module Rainy_River {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Rainy_River";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1632067200000;
@@ -63748,9 +63748,9 @@ module America {
 		};
 	};
 	public module Rankin_Inlet {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Rankin_Inlet";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-410227200000;
@@ -64475,9 +64475,9 @@ module America {
 		};
 	};
 	public module Recife {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Recife";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767217224000;
@@ -64722,9 +64722,9 @@ module America {
 		};
 	};
 	public module Regina {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Regina";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2030202084000;
@@ -65053,9 +65053,9 @@ module America {
 		};
 	};
 	public module Resolute {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Resolute";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-704937600000;
@@ -65780,9 +65780,9 @@ module America {
 		};
 	};
 	public module Rio_Branco {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Rio_Branco";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767209328000;
@@ -65979,9 +65979,9 @@ module America {
 		};
 	};
 	public module Rosario {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Rosario";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1567453392000;
@@ -66352,9 +66352,9 @@ module America {
 		};
 	};
 	public module Santa_Isabel {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Santa_Isabel";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514736000000;
@@ -67259,9 +67259,9 @@ module America {
 		};
 	};
 	public module Santarem {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Santarem";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767212472000;
@@ -67452,9 +67452,9 @@ module America {
 		};
 	};
 	public module Santiago {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Santiago";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SMT";
 					expiration = ?-1892661434000;
@@ -68413,9 +68413,9 @@ module America {
 		};
 	};
 	public module Santo_Domingo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Santo_Domingo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SDMT";
 					expiration = ?-1159773600000;
@@ -68522,9 +68522,9 @@ module America {
 		};
 	};
 	public module Sao_Paulo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Sao_Paulo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767214412000;
@@ -69081,9 +69081,9 @@ module America {
 		};
 	};
 	public module Scoresbysund {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Scoresbysund";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1686090728000;
@@ -69796,9 +69796,9 @@ module America {
 		};
 	};
 	public module Shiprock {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Shiprock";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MST";
 					expiration = ?-1633273200000;
@@ -70751,9 +70751,9 @@ module America {
 		};
 	};
 	public module Sitka {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Sitka";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-880207200000;
@@ -71616,9 +71616,9 @@ module America {
 		};
 	};
 	public module St_Barthelemy {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/St_Barthelemy";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -71635,9 +71635,9 @@ module America {
 		};
 	};
 	public module St_Johns {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/St_Johns";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NST";
 					expiration = ?-1664130548000;
@@ -73076,9 +73076,9 @@ module America {
 		};
 	};
 	public module St_Kitts {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/St_Kitts";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -73095,9 +73095,9 @@ module America {
 		};
 	};
 	public module St_Lucia {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/St_Lucia";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -73114,9 +73114,9 @@ module America {
 		};
 	};
 	public module St_Thomas {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/St_Thomas";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -73133,9 +73133,9 @@ module America {
 		};
 	};
 	public module St_Vincent {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/St_Vincent";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -73152,9 +73152,9 @@ module America {
 		};
 	};
 	public module Swift_Current {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Swift_Current";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2030201320000;
@@ -73303,9 +73303,9 @@ module America {
 		};
 	};
 	public module Tegucigalpa {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Tegucigalpa";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1538503868000;
@@ -73358,9 +73358,9 @@ module America {
 		};
 	};
 	public module Thule {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Thule";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1686079492000;
@@ -73941,9 +73941,9 @@ module America {
 		};
 	};
 	public module Thunder_Bay {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Thunder_Bay";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1893434400000;
@@ -74782,9 +74782,9 @@ module America {
 		};
 	};
 	public module Tijuana {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Tijuana";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514736000000;
@@ -75689,9 +75689,9 @@ module America {
 		};
 	};
 	public module Toronto {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Toronto";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EST";
 					expiration = ?-1632070800000;
@@ -77094,9 +77094,9 @@ module America {
 		};
 	};
 	public module Tortola {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Tortola";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -77113,9 +77113,9 @@ module America {
 		};
 	};
 	public module Vancouver {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Vancouver";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1632060000000;
@@ -78260,9 +78260,9 @@ module America {
 		};
 	};
 	public module Virgin {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Virgin";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1825098836000;
@@ -78279,9 +78279,9 @@ module America {
 		};
 	};
 	public module Whitehorse {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Whitehorse";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "YST";
 					expiration = ?-1632056400000;
@@ -79048,9 +79048,9 @@ module America {
 		};
 	};
 	public module Winnipeg {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Winnipeg";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1694368800000;
@@ -80171,9 +80171,9 @@ module America {
 		};
 	};
 	public module Yakutat {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Yakutat";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "YST";
 					expiration = ?-880203600000;
@@ -81036,9 +81036,9 @@ module America {
 		};
 	};
 	public module Yellowknife {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "America/Yellowknife";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-1104537600000;

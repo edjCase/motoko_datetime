@@ -1,9 +1,9 @@
 import Types "../Types";
 module Europe {
 	public module Amsterdam {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Amsterdam";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AMT";
 					expiration = ?-1693700372000;
@@ -1088,9 +1088,9 @@ module Europe {
 		};
 	};
 	public module Andorra {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Andorra";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "WET";
 					expiration = ?-733881600000;
@@ -1743,9 +1743,9 @@ module Europe {
 		};
 	};
 	public module Astrakhan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Astrakhan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441249932000;
@@ -2140,9 +2140,9 @@ module Europe {
 		};
 	};
 	public module Athens {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Athens";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AMT";
 					expiration = ?-1686101632000;
@@ -2975,9 +2975,9 @@ module Europe {
 		};
 	};
 	public module Belfast {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Belfast";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GMT";
 					expiration = ?-1691964000000;
@@ -4434,9 +4434,9 @@ module Europe {
 		};
 	};
 	public module Belgrade {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Belgrade";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-905824800000;
@@ -5155,9 +5155,9 @@ module Europe {
 		};
 	};
 	public module Berlin {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Berlin";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1693706400000;
@@ -6020,9 +6020,9 @@ module Europe {
 		};
 	};
 	public module Bratislava {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Bratislava";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1693706400000;
@@ -6885,9 +6885,9 @@ module Europe {
 		};
 	};
 	public module Brussels {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Brussels";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "WET";
 					expiration = ?-1740355200000;
@@ -7996,9 +7996,9 @@ module Europe {
 		};
 	};
 	public module Bucharest {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Bucharest";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "BMT";
 					expiration = ?-1213148664000;
@@ -8819,9 +8819,9 @@ module Europe {
 		};
 	};
 	public module Budapest {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Budapest";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1693706400000;
@@ -9732,9 +9732,9 @@ module Europe {
 		};
 	};
 	public module Busingen {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Busingen";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-904435200000;
@@ -10453,9 +10453,9 @@ module Europe {
 		};
 	};
 	public module Chisinau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Chisinau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1637114100000;
@@ -11306,9 +11306,9 @@ module Europe {
 		};
 	};
 	public module Copenhagen {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Copenhagen";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1692496800000;
@@ -12111,9 +12111,9 @@ module Europe {
 		};
 	};
 	public module Dublin {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Dublin";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "DMT";
 					expiration = ?-1691962479000;
@@ -13486,9 +13486,9 @@ module Europe {
 		};
 	};
 	public module Gibraltar {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Gibraltar";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GMT";
 					expiration = ?-1691964000000;
@@ -14681,9 +14681,9 @@ module Europe {
 		};
 	};
 	public module Guernsey {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Guernsey";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GMT";
 					expiration = ?-1691964000000;
@@ -16140,9 +16140,9 @@ module Europe {
 		};
 	};
 	public module Helsinki {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Helsinki";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "HMT";
 					expiration = ?-1535938789000;
@@ -16855,9 +16855,9 @@ module Europe {
 		};
 	};
 	public module Isle_of_Man {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Isle_of_Man";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GMT";
 					expiration = ?-1691964000000;
@@ -18314,9 +18314,9 @@ module Europe {
 		};
 	};
 	public module Istanbul {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Istanbul";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "IMT";
 					expiration = ?-1869875816000;
@@ -19095,9 +19095,9 @@ module Europe {
 		};
 	};
 	public module Jersey {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Jersey";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GMT";
 					expiration = ?-1691964000000;
@@ -20554,9 +20554,9 @@ module Europe {
 		};
 	};
 	public module Kaliningrad {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Kaliningrad";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1693706400000;
@@ -21035,9 +21035,9 @@ module Europe {
 		};
 	};
 	public module Kiev {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Kiev";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "KMT";
 					expiration = ?-1441159324000;
@@ -21768,9 +21768,9 @@ module Europe {
 		};
 	};
 	public module Kirov {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Kirov";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1593820800000;
@@ -22159,9 +22159,9 @@ module Europe {
 		};
 	};
 	public module Lisbon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Lisbon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830384000000;
@@ -23498,9 +23498,9 @@ module Europe {
 		};
 	};
 	public module Ljubljana {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Ljubljana";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-905824800000;
@@ -24219,9 +24219,9 @@ module Europe {
 		};
 	};
 	public module London {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/London";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GMT";
 					expiration = ?-1691964000000;
@@ -25678,9 +25678,9 @@ module Europe {
 		};
 	};
 	public module Luxembourg {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Luxembourg";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2069713476000;
@@ -26789,9 +26789,9 @@ module Europe {
 		};
 	};
 	public module Madrid {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Madrid";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "WET";
 					expiration = ?-1631926800000;
@@ -27768,9 +27768,9 @@ module Europe {
 		};
 	};
 	public module Malta {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Malta";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1690765200000;
@@ -28789,9 +28789,9 @@ module Europe {
 		};
 	};
 	public module Mariehamn {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Mariehamn";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "HMT";
 					expiration = ?-1535938789000;
@@ -29504,9 +29504,9 @@ module Europe {
 		};
 	};
 	public module Minsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Minsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-1441158600000;
@@ -29919,9 +29919,9 @@ module Europe {
 		};
 	};
 	public module Monaco {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Monaco";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PMT";
 					expiration = ?-1855958961000;
@@ -31036,9 +31036,9 @@ module Europe {
 		};
 	};
 	public module Moscow {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Moscow";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-1688265017000;
@@ -31511,9 +31511,9 @@ module Europe {
 		};
 	};
 	public module Nicosia {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Nicosia";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1518920008000;
@@ -32286,9 +32286,9 @@ module Europe {
 		};
 	};
 	public module Oslo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Oslo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1691884800000;
@@ -33139,9 +33139,9 @@ module Europe {
 		};
 	};
 	public module Paris {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Paris";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PMT";
 					expiration = ?-1855958901000;
@@ -34250,9 +34250,9 @@ module Europe {
 		};
 	};
 	public module Podgorica {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Podgorica";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-905824800000;
@@ -34971,9 +34971,9 @@ module Europe {
 		};
 	};
 	public module Prague {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Prague";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1693706400000;
@@ -35836,9 +35836,9 @@ module Europe {
 		};
 	};
 	public module Riga {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Riga";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "RMT";
 					expiration = ?-1632008194000;
@@ -36599,9 +36599,9 @@ module Europe {
 		};
 	};
 	public module Rome {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Rome";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1690765200000;
@@ -37620,9 +37620,9 @@ module Europe {
 		};
 	};
 	public module Samara {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Samara";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1593820800000;
@@ -38017,9 +38017,9 @@ module Europe {
 		};
 	};
 	public module San_Marino {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/San_Marino";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1690765200000;
@@ -39038,9 +39038,9 @@ module Europe {
 		};
 	};
 	public module Sarajevo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Sarajevo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-905824800000;
@@ -39759,9 +39759,9 @@ module Europe {
 		};
 	};
 	public module Saratov {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Saratov";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1593820800000;
@@ -40156,9 +40156,9 @@ module Europe {
 		};
 	};
 	public module Simferopol {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Simferopol";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SMT";
 					expiration = ?-1441160160000;
@@ -40613,9 +40613,9 @@ module Europe {
 		};
 	};
 	public module Skopje {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Skopje";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-905824800000;
@@ -41334,9 +41334,9 @@ module Europe {
 		};
 	};
 	public module Sofia {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Sofia";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EET";
 					expiration = ?-857257200000;
@@ -42091,9 +42091,9 @@ module Europe {
 		};
 	};
 	public module Stockholm {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Stockholm";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1692496800000;
@@ -42812,9 +42812,9 @@ module Europe {
 		};
 	};
 	public module Tallinn {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Tallinn";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "TMT";
 					expiration = ?-1638322740000;
@@ -43557,9 +43557,9 @@ module Europe {
 		};
 	};
 	public module Tirane {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Tirane";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767230360000;
@@ -44368,9 +44368,9 @@ module Europe {
 		};
 	};
 	public module Tiraspol {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Tiraspol";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CMT";
 					expiration = ?-1637114100000;
@@ -45221,9 +45221,9 @@ module Europe {
 		};
 	};
 	public module Ulyanovsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Ulyanovsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1593820800000;
@@ -45630,9 +45630,9 @@ module Europe {
 		};
 	};
 	public module Uzhgorod {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Uzhgorod";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-938905200000;
@@ -46357,9 +46357,9 @@ module Europe {
 		};
 	};
 	public module Vaduz {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Vaduz";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-904435200000;
@@ -47078,9 +47078,9 @@ module Europe {
 		};
 	};
 	public module Vatican {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Vatican";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1690765200000;
@@ -48099,9 +48099,9 @@ module Europe {
 		};
 	};
 	public module Vienna {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Vienna";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1693706400000;
@@ -48940,9 +48940,9 @@ module Europe {
 		};
 	};
 	public module Vilnius {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Vilnius";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "WMT";
 					expiration = ?-1672536240000;
@@ -49667,9 +49667,9 @@ module Europe {
 		};
 	};
 	public module Volgograd {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Volgograd";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577761060000;
@@ -50064,9 +50064,9 @@ module Europe {
 		};
 	};
 	public module Warsaw {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Warsaw";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "WMT";
 					expiration = ?-1717032240000;
@@ -51061,9 +51061,9 @@ module Europe {
 		};
 	};
 	public module Zagreb {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Zagreb";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-905824800000;
@@ -51782,9 +51782,9 @@ module Europe {
 		};
 	};
 	public module Zaporozhye {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Zaporozhye";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+0220";
 					expiration = ?-1441160400000;
@@ -52521,9 +52521,9 @@ module Europe {
 		};
 	};
 	public module Zurich {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Europe/Zurich";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-904435200000;

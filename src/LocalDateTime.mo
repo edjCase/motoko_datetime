@@ -1,4 +1,4 @@
-/// This module provides a set of functions for working with DateTime values with timezone/locale context.
+/// This module provides a set of functions for working with DateTime values with timezone/region context.
 ///
 /// Import from the base library to use this module.
 /// ```motoko name=import

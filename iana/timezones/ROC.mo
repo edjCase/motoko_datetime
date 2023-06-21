@@ -1,8 +1,8 @@
 import Types "../Types";
 module ROC {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "ROC";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "CST";
 				expiration = ?-1017820800000;

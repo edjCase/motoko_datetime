@@ -1,9 +1,9 @@
 import Types "../Types";
 module Africa {
 	public module Abidjan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Abidjan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -20,9 +20,9 @@ module Africa {
 		};
 	};
 	public module Accra {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Accra";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1640995148000;
@@ -315,9 +315,9 @@ module Africa {
 		};
 	};
 	public module Addis_Ababa {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Addis_Ababa";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -352,9 +352,9 @@ module Africa {
 		};
 	};
 	public module Algiers {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Algiers";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PMT";
 					expiration = ?-1855958961000;
@@ -563,9 +563,9 @@ module Africa {
 		};
 	};
 	public module Asmara {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Asmara";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -600,9 +600,9 @@ module Africa {
 		};
 	};
 	public module Asmera {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Asmera";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -637,9 +637,9 @@ module Africa {
 		};
 	};
 	public module Bamako {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Bamako";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -656,9 +656,9 @@ module Africa {
 		};
 	};
 	public module Bangui {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Bangui";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -675,9 +675,9 @@ module Africa {
 		};
 	};
 	public module Banjul {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Banjul";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -694,9 +694,9 @@ module Africa {
 		};
 	};
 	public module Bissau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Bissau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830380400000;
@@ -719,9 +719,9 @@ module Africa {
 		};
 	};
 	public module Blantyre {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Blantyre";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -738,9 +738,9 @@ module Africa {
 		};
 	};
 	public module Brazzaville {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Brazzaville";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -757,9 +757,9 @@ module Africa {
 		};
 	};
 	public module Bujumbura {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Bujumbura";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -776,9 +776,9 @@ module Africa {
 		};
 	};
 	public module Cairo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Cairo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EET";
 					expiration = ?-929844000000;
@@ -1545,9 +1545,9 @@ module Africa {
 		};
 	};
 	public module Casablanca {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Casablanca";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1773012580000;
@@ -2128,9 +2128,9 @@ module Africa {
 		};
 	};
 	public module Ceuta {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Ceuta";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "WET";
 					expiration = ?-1630112400000;
@@ -2891,9 +2891,9 @@ module Africa {
 		};
 	};
 	public module Conakry {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Conakry";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -2910,9 +2910,9 @@ module Africa {
 		};
 	};
 	public module Dakar {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Dakar";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -2929,9 +2929,9 @@ module Africa {
 		};
 	};
 	public module Dar_es_Salaam {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Dar_es_Salaam";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -2966,9 +2966,9 @@ module Africa {
 		};
 	};
 	public module Djibouti {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Djibouti";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -3003,9 +3003,9 @@ module Africa {
 		};
 	};
 	public module Douala {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Douala";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -3022,9 +3022,9 @@ module Africa {
 		};
 	};
 	public module El_Aaiun {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/El_Aaiun";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1136070432000;
@@ -3539,9 +3539,9 @@ module Africa {
 		};
 	};
 	public module Freetown {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Freetown";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -3558,9 +3558,9 @@ module Africa {
 		};
 	};
 	public module Gaborone {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Gaborone";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -3577,9 +3577,9 @@ module Africa {
 		};
 	};
 	public module Harare {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Harare";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -3596,9 +3596,9 @@ module Africa {
 		};
 	};
 	public module Johannesburg {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Johannesburg";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SAST";
 					expiration = ?-2109288600000;
@@ -3639,9 +3639,9 @@ module Africa {
 		};
 	};
 	public module Juba {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Juba";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1230775588000;
@@ -3856,9 +3856,9 @@ module Africa {
 		};
 	};
 	public module Kampala {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Kampala";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -3893,9 +3893,9 @@ module Africa {
 		};
 	};
 	public module Khartoum {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Khartoum";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1230775808000;
@@ -4116,9 +4116,9 @@ module Africa {
 		};
 	};
 	public module Kigali {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Kigali";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -4135,9 +4135,9 @@ module Africa {
 		};
 	};
 	public module Kinshasa {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Kinshasa";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -4154,9 +4154,9 @@ module Africa {
 		};
 	};
 	public module Lagos {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Lagos";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -4173,9 +4173,9 @@ module Africa {
 		};
 	};
 	public module Libreville {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Libreville";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -4192,9 +4192,9 @@ module Africa {
 		};
 	};
 	public module Lome {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Lome";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -4211,9 +4211,9 @@ module Africa {
 		};
 	};
 	public module Luanda {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Luanda";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -4230,9 +4230,9 @@ module Africa {
 		};
 	};
 	public module Lubumbashi {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Lubumbashi";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -4249,9 +4249,9 @@ module Africa {
 		};
 	};
 	public module Lusaka {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Lusaka";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -4268,9 +4268,9 @@ module Africa {
 		};
 	};
 	public module Malabo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Malabo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -4287,9 +4287,9 @@ module Africa {
 		};
 	};
 	public module Maputo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Maputo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2109291020000;
@@ -4306,9 +4306,9 @@ module Africa {
 		};
 	};
 	public module Maseru {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Maseru";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SAST";
 					expiration = ?-2109288600000;
@@ -4349,9 +4349,9 @@ module Africa {
 		};
 	};
 	public module Mbabane {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Mbabane";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SAST";
 					expiration = ?-2109288600000;
@@ -4392,9 +4392,9 @@ module Africa {
 		};
 	};
 	public module Mogadishu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Mogadishu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -4429,9 +4429,9 @@ module Africa {
 		};
 	};
 	public module Monrovia {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Monrovia";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-1604359012000;
@@ -4454,9 +4454,9 @@ module Africa {
 		};
 	};
 	public module Nairobi {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Nairobi";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1309746436000;
@@ -4491,9 +4491,9 @@ module Africa {
 		};
 	};
 	public module Ndjamena {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Ndjamena";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830387612000;
@@ -4522,9 +4522,9 @@ module Africa {
 		};
 	};
 	public module Niamey {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Niamey";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -4541,9 +4541,9 @@ module Africa {
 		};
 	};
 	public module Nouakchott {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Nouakchott";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -4560,9 +4560,9 @@ module Africa {
 		};
 	};
 	public module Ouagadougou {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Ouagadougou";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -4579,9 +4579,9 @@ module Africa {
 		};
 	};
 	public module Porto_Novo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Porto-Novo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1588464816000;
@@ -4598,9 +4598,9 @@ module Africa {
 		};
 	};
 	public module Sao_Tome {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Sao_Tome";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830384000000;
@@ -4629,9 +4629,9 @@ module Africa {
 		};
 	};
 	public module Timbuktu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Timbuktu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -4648,9 +4648,9 @@ module Africa {
 		};
 	};
 	public module Tripoli {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Tripoli";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577926364000;
@@ -4853,9 +4853,9 @@ module Africa {
 		};
 	};
 	public module Tunis {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Tunis";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PMT";
 					expiration = ?-1855958961000;
@@ -5064,9 +5064,9 @@ module Africa {
 		};
 	};
 	public module Windhoek {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Africa/Windhoek";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+0130";
 					expiration = ?-2109288600000;

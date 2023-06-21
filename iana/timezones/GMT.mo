@@ -1,8 +1,8 @@
 import Types "../Types";
 module GMT {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "GMT";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "GMT";
 				expiration = null;

@@ -1,8 +1,8 @@
 import Types "../Types";
 module MST {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "MST";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "MST";
 				expiration = null;

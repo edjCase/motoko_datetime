@@ -1,8 +1,8 @@
 import Types "../Types";
 module PRC {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "PRC";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "CST";
 				expiration = ?-933667200000;

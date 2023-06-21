@@ -1,9 +1,9 @@
 import Types "../Types";
 module Arctic {
 	public module Longyearbyen {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Arctic/Longyearbyen";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CET";
 					expiration = ?-1691884800000;

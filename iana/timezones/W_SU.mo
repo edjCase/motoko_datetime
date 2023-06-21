@@ -1,8 +1,8 @@
 import Types "../Types";
 module W_SU {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "W-SU";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "MMT";
 				expiration = ?-1688265017000;

@@ -1,8 +1,8 @@
 import Types "../Types";
 module NZ_CHAT {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "NZ-CHAT";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "+1215";
 				expiration = ?-757426500000;

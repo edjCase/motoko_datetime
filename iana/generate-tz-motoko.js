@@ -31,44 +31,44 @@ function buildList(listName, items, func) {
 };
 
 
-function buildLocale(localeId, locale, parentLocaleId, parentModuleName) {
-    let moduleName = normalizeText(localeId);
-    let fullLocaleId;
+function buildRegion(regionId, region, parentRegionId, parentModuleName) {
+    let moduleName = normalizeText(regionId);
+    let fullRegionId;
     let fullModuleName;
     let prefix;
-    if (!!parentLocaleId) {
-        parentLocaleId = parentLocaleId + "/";
+    if (!!parentRegionId) {
+        parentRegionId = parentRegionId + "/";
         parentModuleName = parentModuleName + ".";
-        fullLocaleId = parentLocaleId + localeId;
+        fullRegionId = parentRegionId + regionId;
         fullModuleName = parentModuleName + moduleName;
-        if (locale.abbrs?.length > 0) {
-            nameMap[fullLocaleId] = fullModuleName;
+        if (region.abbrs?.length > 0) {
+            nameMap[fullRegionId] = fullModuleName;
         }
         prefix = `public `;
     }
     else {
-        fullLocaleId = localeId;
+        fullRegionId = regionId;
         fullModuleName = moduleName;
         prefix = "";
     }
     let obj = buildLine(prefix + `module ${moduleName} {`);
     depth += 1;
 
-    let abbrs = locale.abbrs || [];
-    let untils = locale.untils || [];
-    let isdsts = locale.isdsts || [];
-    let offsets = locale.offsets || [];
-    delete locale.abbrs;
-    delete locale.untils;
-    delete locale.isdsts;
-    delete locale.offsets;
+    let abbrs = region.abbrs || [];
+    let untils = region.untils || [];
+    let isdsts = region.isdsts || [];
+    let offsets = region.offsets || [];
+    delete region.abbrs;
+    delete region.untils;
+    delete region.isdsts;
+    delete region.offsets;
 
     let indicies = Array.from({ length: abbrs.length }, (_, i) => i);
     if (indicies.length > 0) {
-        obj += buildLine(`public let locale : Types.Locale = {`);
+        obj += buildLine(`public let region : Types.Region = {`);
         depth += 1;
-        obj += buildLine(`id = "${fullLocaleId}";`);
-        obj += buildList("rules", indicies, (i) => {
+        obj += buildLine(`id = "${fullRegionId}";`);
+        obj += buildList("timeZoneRules", indicies, (i) => {
             let obj = buildLine("{");
             depth += 1;
             obj += buildLine(`abbreviation = "${abbrs[i]}";`);
@@ -84,9 +84,9 @@ function buildLocale(localeId, locale, parentLocaleId, parentModuleName) {
         obj += buildLine(`};`);
     };
 
-    for (let innerLocaleId in locale) {
-        let innerLocale = locale[innerLocaleId];
-        obj += buildLocale(innerLocaleId, innerLocale, fullLocaleId, fullModuleName);
+    for (let innerRegionId in region) {
+        let innerRegion = region[innerRegionId];
+        obj += buildRegion(innerRegionId, innerRegion, fullRegionId, fullModuleName);
     }
     depth -= 1;
     obj += buildLine("};");
@@ -96,10 +96,10 @@ function buildLocale(localeId, locale, parentLocaleId, parentModuleName) {
 
 
 
-function buildFile(zoneId, zone, parentLocaleId, parentModule) {
+function buildFile(zoneId, zone, parentRegionId, parentModule) {
     let fileText = "";
     fileText += buildLine(`import Types "../Types";`);
-    fileText += buildLocale(zoneId, zone, parentLocaleId, parentModule);
+    fileText += buildRegion(zoneId, zone, parentRegionId, parentModule);
     return fileText;
 }
 
@@ -123,17 +123,17 @@ for (let zoneId in IANATimezoneData.zoneData) {
     fs.writeFile(fileName, fileText, (err) => { });
 };
 
-let localeMapText = "";
+let regionMapText = "";
 for (let fileName of fileNames) {
-    localeMapText += buildLine(`import ${fileName} "timezones/${fileName}";`);
+    regionMapText += buildLine(`import ${fileName} "timezones/${fileName}";`);
 };
-localeMapText += buildLine(`module {`);
+regionMapText += buildLine(`module {`);
 depth += 1;
-localeMapText += buildList("public let locales", Object.keys(nameMap), (localeName) => {
-    let moduleName = nameMap[localeName];
-    return `\t\t${moduleName}.locale`;
+regionMapText += buildList("public let regions", Object.keys(nameMap), (regionName) => {
+    let moduleName = nameMap[regionName];
+    return `\t\t${moduleName}.region`;
 });
 depth -= 1;
-localeMapText += buildLine(`};`);
+regionMapText += buildLine(`};`);
 
-fs.writeFileSync("LocaleList.mo", localeMapText, (err) => { }); 
+fs.writeFileSync("RegionList.mo", regionMapText, (err) => { }); 

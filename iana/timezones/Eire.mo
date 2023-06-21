@@ -1,8 +1,8 @@
 import Types "../Types";
 module Eire {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "Eire";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "DMT";
 				expiration = ?-1691962479000;

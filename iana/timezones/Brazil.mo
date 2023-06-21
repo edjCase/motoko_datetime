@@ -1,9 +1,9 @@
 import Types "../Types";
 module Brazil {
 	public module Acre {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Brazil/Acre";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767209328000;
@@ -200,9 +200,9 @@ module Brazil {
 		};
 	};
 	public module DeNoronha {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Brazil/DeNoronha";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767217820000;
@@ -447,9 +447,9 @@ module Brazil {
 		};
 	};
 	public module East {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Brazil/East";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767214412000;
@@ -1006,9 +1006,9 @@ module Brazil {
 		};
 	};
 	public module West {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Brazil/West";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1767211196000;

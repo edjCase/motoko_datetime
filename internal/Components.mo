@@ -132,23 +132,23 @@ module Module {
             // Derived from https://man7.org/linux/man-pages/man1/date.1.html
             switch (formatChar) {
                 case ('a') {
-                    // Weekday as locale’s abbreviated name (Sun)
+                    // Weekday as region’s abbreviated name (Sun)
                     Prelude.nyi();
                 };
                 case ('A') {
-                    // Weekday as locale’s full name (Sunday)
+                    // Weekday as region’s full name (Sunday)
                     Prelude.nyi();
                 };
                 case ('b') {
-                    // Month as locale’s abbreviated name (Jan)
+                    // Month as region’s abbreviated name (Jan)
                     Prelude.nyi();
                 };
                 case ('B') {
-                    // Month as locale’s full name (January)
+                    // Month as region’s full name (January)
                     Prelude.nyi();
                 };
                 case ('c') {
-                    // The preferred date and time representation for the current locale
+                    // The preferred date and time representation for the current region
                     Prelude.nyi();
                 };
                 case ('C') {
@@ -242,11 +242,11 @@ module Module {
                 };
                 case ('p') {
                     // Either "AM" or "PM" according to the given time value, or the corresponding
-                    // strings for the current locale. Noon is treated as "PM" and midnight as "AM".
+                    // strings for the current region. Noon is treated as "PM" and midnight as "AM".
                     Prelude.nyi();
                 };
                 case ('P') {
-                    // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current locale.
+                    // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current region.
                     Prelude.nyi();
                 };
                 case ('q') {
@@ -262,7 +262,7 @@ module Module {
                     };
                 };
                 case ('r') {
-                    // The time in a.m. or p.m. notation. In the POSIX locale this is equivalent to %I:%M:%S %p.
+                    // The time in a.m. or p.m. notation. In the POSIX region this is equivalent to %I:%M:%S %p.
                     Prelude.nyi();
                 };
                 case ('R') {
@@ -332,7 +332,7 @@ module Module {
                     Prelude.nyi();
                 };
                 case ('x') {
-                    // The preferred date representation for the current locale without the time.
+                    // The preferred date representation for the current region without the time.
                     // let year = TextUtil.toTextPaddedSign(components.year, 4, false);
                     // let month = TextUtil.toTextPadded(components.month, 2);
                     // let day = TextUtil.toTextPadded(components.day, 2);
@@ -340,7 +340,7 @@ module Module {
                     Prelude.nyi();
                 };
                 case ('X') {
-                    // The preferred time representation for the current locale without the date.
+                    // The preferred time representation for the current region without the date.
                     // let hour = TextUtil.toTextPadded(components.hour, 2);
                     // let minute = TextUtil.toTextPadded(components.minute, 2);
                     // let second = TextUtil.toTextPadded(components.second, 2);
@@ -361,7 +361,7 @@ module Module {
                     // If tm_isdst is zero, the standard time offset is used. If tm_isdst is positive,
                     // the daylight saving time offset is used. If tm_isdst is negative, no timezone
                     // conversion is performed.
-                    
+
                     let offsetSeconds = InternalTimeZone.toOffsetSeconds(timeZone, components);
                     let h = offsetSeconds / 3600;
                     let m = (Int.abs(offsetSeconds) % 3600) / 60;

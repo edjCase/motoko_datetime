@@ -1,8 +1,8 @@
 import Types "../Types";
 module CST6CDT {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "CST6CDT";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "CST";
 				expiration = ?-1633276800000;

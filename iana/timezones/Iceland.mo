@@ -1,8 +1,8 @@
 import Types "../Types";
 module Iceland {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "Iceland";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "LMT";
 				expiration = ?-1956609120000;

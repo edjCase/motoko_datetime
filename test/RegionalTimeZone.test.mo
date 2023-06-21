@@ -1,4 +1,4 @@
-import LocaleTimeZone "../src/LocaleTimeZone";
+import RegionalTimeZone "../src/RegionalTimeZone";
 import { test } "mo:test";
 import InternalTypes "../internal/Types";
 import Debug "mo:base/Debug";
@@ -10,7 +10,7 @@ type DynamicTimeZone = InternalTypes.DynamicTimeZone;
 
 let testCases = [
     {
-        locale = America.New_York.locale;
+        region = America.New_York.region;
         dateTime = {
             year = 2020;
             month = 1;
@@ -23,7 +23,7 @@ let testCases = [
         expected = -18000;
     },
     {
-        locale = Africa.Accra.locale;
+        region = Africa.Accra.region;
         dateTime = {
             year = 1942;
             month = 12;
@@ -36,7 +36,7 @@ let testCases = [
         expected = 1200;
     },
     {
-        locale = America.Santiago.locale;
+        region = America.Santiago.region;
         dateTime = {
             year = 1910;
             month = 1;
@@ -54,7 +54,7 @@ test(
     "toOffsetSeconds",
     func() {
         for (testCase in Iter.fromArray(testCases)) {
-            let dynamicTimeZone : DynamicTimeZone = LocaleTimeZone.LocaleTimeZone(testCase.locale);
+            let dynamicTimeZone : DynamicTimeZone = RegionalTimeZone.RegionalTimeZone(testCase.region);
             let dateTime = testCase.dateTime;
             let actual = dynamicTimeZone.toOffsetSeconds(dateTime);
             if (actual != testCase.expected) {

@@ -1,8 +1,8 @@
 import Types "../Types";
 module Kwajalein {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "Kwajalein";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "+11";
 				expiration = ?-1041418800000;

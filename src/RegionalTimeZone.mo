@@ -10,14 +10,14 @@ import Float "mo:base/Float";
 import Prelude "mo:base/Prelude";
 
 module {
-    type Locale = IanaTypes.Locale;
+    type Region = IanaTypes.Region;
 
-    public class LocaleTimeZone(locale : Locale) : InternalTypes.DynamicTimeZone {
+    public class RegionalTimeZone(region : Region) : InternalTypes.DynamicTimeZone {
 
         public func toOffsetSeconds(dateTime : InternalTypes.Components) : Int {
             let ?utcTime = Components.toTime(dateTime) else Debug.trap("Invalid datetime components: " # debug_show (dateTime));
             let utcSeconds = utcTime / 1000000;
-            label f for (rule in Iter.fromArray(locale.rules)) {
+            label f for (rule in Iter.fromArray(region.timeZoneRules)) {
                 switch (rule.expiration) {
                     case (?expiration) {
                         if (utcSeconds > expiration) {

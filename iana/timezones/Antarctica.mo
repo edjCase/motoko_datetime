@@ -1,9 +1,9 @@
 import Types "../Types";
 module Antarctica {
 	public module Casey {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Casey";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-31536000000;
@@ -56,9 +56,9 @@ module Antarctica {
 		};
 	};
 	public module Davis {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Davis";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-409190400000;
@@ -111,9 +111,9 @@ module Antarctica {
 		};
 	};
 	public module DumontDUrville {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/DumontDUrville";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-725846400000;
@@ -142,9 +142,9 @@ module Antarctica {
 		};
 	};
 	public module Macquarie {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Macquarie";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "AEST";
 					expiration = ?-1680508800000;
@@ -695,9 +695,9 @@ module Antarctica {
 		};
 	};
 	public module Mawson {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Mawson";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-501206400000;
@@ -720,9 +720,9 @@ module Antarctica {
 		};
 	};
 	public module McMurdo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/McMurdo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NZMT";
 					expiration = ?-1330335000000;
@@ -1663,9 +1663,9 @@ module Antarctica {
 		};
 	};
 	public module Palmer {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Palmer";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-157766400000;
@@ -2168,9 +2168,9 @@ module Antarctica {
 		};
 	};
 	public module Rothera {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Rothera";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?218246400000;
@@ -2187,9 +2187,9 @@ module Antarctica {
 		};
 	};
 	public module South_Pole {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/South_Pole";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NZMT";
 					expiration = ?-1330335000000;
@@ -3130,9 +3130,9 @@ module Antarctica {
 		};
 	};
 	public module Syowa {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Syowa";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-407808000000;
@@ -3149,9 +3149,9 @@ module Antarctica {
 		};
 	};
 	public module Troll {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Troll";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?1108166400000;
@@ -3564,9 +3564,9 @@ module Antarctica {
 		};
 	};
 	public module Vostok {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Antarctica/Vostok";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-00";
 					expiration = ?-380073600000;

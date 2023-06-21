@@ -1,8 +1,8 @@
 import Types "../Types";
 module HST {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "HST";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "HST";
 				expiration = null;

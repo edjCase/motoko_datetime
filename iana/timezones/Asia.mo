@@ -1,9 +1,9 @@
 import Types "../Types";
 module Asia {
 	public module Aden {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Aden";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-719636812000;
@@ -20,9 +20,9 @@ module Asia {
 		};
 	};
 	public module Almaty {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Almaty";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441170468000;
@@ -339,9 +339,9 @@ module Asia {
 		};
 	};
 	public module Amman {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Amman";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1230776624000;
@@ -1054,9 +1054,9 @@ module Asia {
 		};
 	};
 	public module Anadyr {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Anadyr";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441194596000;
@@ -1451,9 +1451,9 @@ module Asia {
 		};
 	};
 	public module Aqtau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Aqtau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441164064000;
@@ -1764,9 +1764,9 @@ module Asia {
 		};
 	};
 	public module Aqtobe {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Aqtobe";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441165720000;
@@ -2083,9 +2083,9 @@ module Asia {
 		};
 	};
 	public module Ashgabat {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Ashgabat";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441166012000;
@@ -2246,9 +2246,9 @@ module Asia {
 		};
 	};
 	public module Ashkhabad {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Ashkhabad";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441166012000;
@@ -2409,9 +2409,9 @@ module Asia {
 		};
 	};
 	public module Atyrau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Atyrau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441164464000;
@@ -2722,9 +2722,9 @@ module Asia {
 		};
 	};
 	public module Baghdad {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Baghdad";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "BMT";
 					expiration = ?-1641005856000;
@@ -3053,9 +3053,9 @@ module Asia {
 		};
 	};
 	public module Bahrain {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Bahrain";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577935568000;
@@ -3078,9 +3078,9 @@ module Asia {
 		};
 	};
 	public module Baku {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Baku";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441163964000;
@@ -3487,9 +3487,9 @@ module Asia {
 		};
 	};
 	public module Bangkok {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Bangkok";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "BMT";
 					expiration = ?-1570084924000;
@@ -3506,9 +3506,9 @@ module Asia {
 		};
 	};
 	public module Barnaul {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Barnaul";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1579844100000;
@@ -3921,9 +3921,9 @@ module Asia {
 		};
 	};
 	public module Beirut {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Beirut";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EET";
 					expiration = ?-1570413600000;
@@ -4774,9 +4774,9 @@ module Asia {
 		};
 	};
 	public module Bishkek {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Bishkek";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441169904000;
@@ -5099,9 +5099,9 @@ module Asia {
 		};
 	};
 	public module Brunei {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Brunei";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1383464380000;
@@ -5124,9 +5124,9 @@ module Asia {
 		};
 	};
 	public module Calcutta {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Calcutta";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-2019705670000;
@@ -5167,9 +5167,9 @@ module Asia {
 		};
 	};
 	public module Chita {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Chita";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1579419232000;
@@ -5576,9 +5576,9 @@ module Asia {
 		};
 	};
 	public module Choibalsan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Choibalsan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2032933080000;
@@ -5895,9 +5895,9 @@ module Asia {
 		};
 	};
 	public module Chongqing {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Chongqing";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-933667200000;
@@ -6064,9 +6064,9 @@ module Asia {
 		};
 	};
 	public module Chungking {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Chungking";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-933667200000;
@@ -6233,9 +6233,9 @@ module Asia {
 		};
 	};
 	public module Colombo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Colombo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-2019705572000;
@@ -6288,9 +6288,9 @@ module Asia {
 		};
 	};
 	public module Dacca {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Dacca";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "HMT";
 					expiration = ?-891582800000;
@@ -6337,9 +6337,9 @@ module Asia {
 		};
 	};
 	public module Damascus {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Damascus";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577931912000;
@@ -7256,9 +7256,9 @@ module Asia {
 		};
 	};
 	public module Dhaka {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Dhaka";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "HMT";
 					expiration = ?-891582800000;
@@ -7305,9 +7305,9 @@ module Asia {
 		};
 	};
 	public module Dili {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Dili";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830414140000;
@@ -7342,9 +7342,9 @@ module Asia {
 		};
 	};
 	public module Dubai {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Dubai";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577936472000;
@@ -7361,9 +7361,9 @@ module Asia {
 		};
 	};
 	public module Dushanbe {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Dushanbe";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441168512000;
@@ -7518,9 +7518,9 @@ module Asia {
 		};
 	};
 	public module Famagusta {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Famagusta";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1518920148000;
@@ -8287,9 +8287,9 @@ module Asia {
 		};
 	};
 	public module Gaza {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Gaza";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EET";
 					expiration = ?-933645600000;
@@ -9182,9 +9182,9 @@ module Asia {
 		};
 	};
 	public module Harbin {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Harbin";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-933667200000;
@@ -9351,9 +9351,9 @@ module Asia {
 		};
 	};
 	public module Hebron {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Hebron";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EET";
 					expiration = ?-933645600000;
@@ -10258,9 +10258,9 @@ module Asia {
 		};
 	};
 	public module Ho_Chi_Minh {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Ho_Chi_Minh";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2004073600000;
@@ -10325,9 +10325,9 @@ module Asia {
 		};
 	};
 	public module Hong_Kong {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Hong_Kong";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2056690800000;
@@ -10752,9 +10752,9 @@ module Asia {
 		};
 	};
 	public module Hovd {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Hovd";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2032927596000;
@@ -11065,9 +11065,9 @@ module Asia {
 		};
 	};
 	public module Irkutsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Irkutsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "IMT";
 					expiration = ?-1575874625000;
@@ -11468,9 +11468,9 @@ module Asia {
 		};
 	};
 	public module Istanbul {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Istanbul";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "IMT";
 					expiration = ?-1869875816000;
@@ -12249,9 +12249,9 @@ module Asia {
 		};
 	};
 	public module Jakarta {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Jakarta";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "BMT";
 					expiration = ?-1451719200000;
@@ -12304,9 +12304,9 @@ module Asia {
 		};
 	};
 	public module Jayapura {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Jayapura";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1172913768000;
@@ -12335,9 +12335,9 @@ module Asia {
 		};
 	};
 	public module Jerusalem {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Jerusalem";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "JMT";
 					expiration = ?-1641003640000;
@@ -13224,9 +13224,9 @@ module Asia {
 		};
 	};
 	public module Kabul {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kabul";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+04";
 					expiration = ?-788932800000;
@@ -13243,9 +13243,9 @@ module Asia {
 		};
 	};
 	public module Kamchatka {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kamchatka";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1487759676000;
@@ -13640,9 +13640,9 @@ module Asia {
 		};
 	};
 	public module Karachi {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Karachi";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1988166492000;
@@ -13719,9 +13719,9 @@ module Asia {
 		};
 	};
 	public module Kashgar {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kashgar";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1325483420000;
@@ -13738,9 +13738,9 @@ module Asia {
 		};
 	};
 	public module Kathmandu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kathmandu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577943676000;
@@ -13763,9 +13763,9 @@ module Asia {
 		};
 	};
 	public module Katmandu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Katmandu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577943676000;
@@ -13788,9 +13788,9 @@ module Asia {
 		};
 	};
 	public module Khandyga {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Khandyga";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1579424533000;
@@ -14203,9 +14203,9 @@ module Asia {
 		};
 	};
 	public module Kolkata {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kolkata";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "MMT";
 					expiration = ?-2019705670000;
@@ -14246,9 +14246,9 @@ module Asia {
 		};
 	};
 	public module Krasnoyarsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Krasnoyarsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577513486000;
@@ -14649,9 +14649,9 @@ module Asia {
 		};
 	};
 	public module Kuala_Lumpur {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kuala_Lumpur";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SMT";
 					expiration = ?-2038200925000;
@@ -14704,9 +14704,9 @@ module Asia {
 		};
 	};
 	public module Kuching {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kuching";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1383463280000;
@@ -14825,9 +14825,9 @@ module Asia {
 		};
 	};
 	public module Kuwait {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Kuwait";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-719636812000;
@@ -14844,9 +14844,9 @@ module Asia {
 		};
 	};
 	public module Macao {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Macao";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2056692850000;
@@ -15283,9 +15283,9 @@ module Asia {
 		};
 	};
 	public module Macau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Macau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2056692850000;
@@ -15722,9 +15722,9 @@ module Asia {
 		};
 	};
 	public module Magadan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Magadan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441188192000;
@@ -16131,9 +16131,9 @@ module Asia {
 		};
 	};
 	public module Makassar {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Makassar";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577951856000;
@@ -16168,9 +16168,9 @@ module Asia {
 		};
 	};
 	public module Manila {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Manila";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1046678400000;
@@ -16229,9 +16229,9 @@ module Asia {
 		};
 	};
 	public module Muscat {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Muscat";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577936472000;
@@ -16248,9 +16248,9 @@ module Asia {
 		};
 	};
 	public module Nicosia {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Nicosia";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1518920008000;
@@ -17023,9 +17023,9 @@ module Asia {
 		};
 	};
 	public module Novokuznetsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Novokuznetsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441259328000;
@@ -17420,9 +17420,9 @@ module Asia {
 		};
 	};
 	public module Novosibirsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Novosibirsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1579476700000;
@@ -17835,9 +17835,9 @@ module Asia {
 		};
 	};
 	public module Omsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Omsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1582088010000;
@@ -18238,9 +18238,9 @@ module Asia {
 		};
 	};
 	public module Oral {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Oral";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441164324000;
@@ -18557,9 +18557,9 @@ module Asia {
 		};
 	};
 	public module Phnom_Penh {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Phnom_Penh";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "BMT";
 					expiration = ?-1570084924000;
@@ -18576,9 +18576,9 @@ module Asia {
 		};
 	};
 	public module Pontianak {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Pontianak";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1946186240000;
@@ -18637,9 +18637,9 @@ module Asia {
 		};
 	};
 	public module Pyongyang {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Pyongyang";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1948782180000;
@@ -18680,9 +18680,9 @@ module Asia {
 		};
 	};
 	public module Qatar {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Qatar";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577935568000;
@@ -18705,9 +18705,9 @@ module Asia {
 		};
 	};
 	public module Qostanay {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Qostanay";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441167268000;
@@ -19024,9 +19024,9 @@ module Asia {
 		};
 	};
 	public module Qyzylorda {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Qyzylorda";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441167712000;
@@ -19349,9 +19349,9 @@ module Asia {
 		};
 	};
 	public module Rangoon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Rangoon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "RMT";
 					expiration = ?-1577946287000;
@@ -19380,9 +19380,9 @@ module Asia {
 		};
 	};
 	public module Riyadh {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Riyadh";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-719636812000;
@@ -19399,9 +19399,9 @@ module Asia {
 		};
 	};
 	public module Saigon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Saigon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2004073600000;
@@ -19466,9 +19466,9 @@ module Asia {
 		};
 	};
 	public module Sakhalin {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Sakhalin";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2031039048000;
@@ -19875,9 +19875,9 @@ module Asia {
 		};
 	};
 	public module Samarkand {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Samarkand";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441168073000;
@@ -20032,9 +20032,9 @@ module Asia {
 		};
 	};
 	public module Seoul {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Seoul";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1948782472000;
@@ -20171,9 +20171,9 @@ module Asia {
 		};
 	};
 	public module Shanghai {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Shanghai";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-933667200000;
@@ -20340,9 +20340,9 @@ module Asia {
 		};
 	};
 	public module Singapore {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Singapore";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "SMT";
 					expiration = ?-2038200925000;
@@ -20395,9 +20395,9 @@ module Asia {
 		};
 	};
 	public module Srednekolymsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Srednekolymsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441188892000;
@@ -20798,9 +20798,9 @@ module Asia {
 		};
 	};
 	public module Taipei {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Taipei";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1017820800000;
@@ -21051,9 +21051,9 @@ module Asia {
 		};
 	};
 	public module Tashkent {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Tashkent";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441168631000;
@@ -21208,9 +21208,9 @@ module Asia {
 		};
 	};
 	public module Tbilisi {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Tbilisi";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "TBMT";
 					expiration = ?-1441162751000;
@@ -21521,9 +21521,9 @@ module Asia {
 		};
 	};
 	public module Tehran {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Tehran";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1704165944000;
@@ -22134,9 +22134,9 @@ module Asia {
 		};
 	};
 	public module Tel_Aviv {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Tel_Aviv";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "JMT";
 					expiration = ?-1641003640000;
@@ -23023,9 +23023,9 @@ module Asia {
 		};
 	};
 	public module Thimbu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Thimbu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-706341516000;
@@ -23048,9 +23048,9 @@ module Asia {
 		};
 	};
 	public module Thimphu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Thimphu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-706341516000;
@@ -23073,9 +23073,9 @@ module Asia {
 		};
 	};
 	public module Tokyo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Tokyo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "JST";
 					expiration = ?-683802000000;
@@ -23134,9 +23134,9 @@ module Asia {
 		};
 	};
 	public module Tomsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Tomsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1578807591000;
@@ -23549,9 +23549,9 @@ module Asia {
 		};
 	};
 	public module Ujung_Pandang {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Ujung_Pandang";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1577951856000;
@@ -23586,9 +23586,9 @@ module Asia {
 		};
 	};
 	public module Ulaanbaatar {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Ulaanbaatar";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2032931252000;
@@ -23899,9 +23899,9 @@ module Asia {
 		};
 	};
 	public module Ulan_Bator {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Ulan_Bator";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2032931252000;
@@ -24212,9 +24212,9 @@ module Asia {
 		};
 	};
 	public module Urumqi {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Urumqi";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1325483420000;
@@ -24231,9 +24231,9 @@ module Asia {
 		};
 	};
 	public module Ust_Nera {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Ust-Nera";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1579426374000;
@@ -24640,9 +24640,9 @@ module Asia {
 		};
 	};
 	public module Vientiane {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Vientiane";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "BMT";
 					expiration = ?-1570084924000;
@@ -24659,9 +24659,9 @@ module Asia {
 		};
 	};
 	public module Vladivostok {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Vladivostok";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1487321251000;
@@ -25062,9 +25062,9 @@ module Asia {
 		};
 	};
 	public module Yakutsk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Yakutsk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1579423138000;
@@ -25465,9 +25465,9 @@ module Asia {
 		};
 	};
 	public module Yangon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Yangon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "RMT";
 					expiration = ?-1577946287000;
@@ -25496,9 +25496,9 @@ module Asia {
 		};
 	};
 	public module Yekaterinburg {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Yekaterinburg";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1688270553000;
@@ -25905,9 +25905,9 @@ module Asia {
 		};
 	};
 	public module Yerevan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Asia/Yerevan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1441162680000;

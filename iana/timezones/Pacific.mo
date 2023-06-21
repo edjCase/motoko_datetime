@@ -1,9 +1,9 @@
 import Types "../Types";
 module Pacific {
 	public module Apia {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Apia";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1861878784000;
@@ -362,9 +362,9 @@ module Pacific {
 		};
 	};
 	public module Auckland {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Auckland";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NZMT";
 					expiration = ?-1330335000000;
@@ -1305,9 +1305,9 @@ module Pacific {
 		};
 	};
 	public module Bougainville {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Bougainville";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+10";
 					expiration = ?-868010400000;
@@ -1336,9 +1336,9 @@ module Pacific {
 		};
 	};
 	public module Chatham {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Chatham";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+1215";
 					expiration = ?-757426500000;
@@ -2117,9 +2117,9 @@ module Pacific {
 		};
 	};
 	public module Chuuk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Chuuk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+10";
 					expiration = ?-1743674400000;
@@ -2154,9 +2154,9 @@ module Pacific {
 		};
 	};
 	public module Easter {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Easter";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EMT";
 					expiration = ?-1178124152000;
@@ -2995,9 +2995,9 @@ module Pacific {
 		};
 	};
 	public module Efate {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Efate";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1829387596000;
@@ -3134,9 +3134,9 @@ module Pacific {
 		};
 	};
 	public module Enderbury {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Enderbury";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-12";
 					expiration = ?307627200000;
@@ -3159,9 +3159,9 @@ module Pacific {
 		};
 	};
 	public module Fakaofo {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Fakaofo";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-11";
 					expiration = ?1325242800000;
@@ -3178,9 +3178,9 @@ module Pacific {
 		};
 	};
 	public module Fiji {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Fiji";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1709985344000;
@@ -3569,9 +3569,9 @@ module Pacific {
 		};
 	};
 	public module Funafuti {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Funafuti";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+12";
 					expiration = null;
@@ -3582,9 +3582,9 @@ module Pacific {
 		};
 	};
 	public module Galapagos {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Galapagos";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1230746496000;
@@ -3619,9 +3619,9 @@ module Pacific {
 		};
 	};
 	public module Gambier {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Gambier";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1806678012000;
@@ -3638,9 +3638,9 @@ module Pacific {
 		};
 	};
 	public module Guadalcanal {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Guadalcanal";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1806748788000;
@@ -3657,9 +3657,9 @@ module Pacific {
 		};
 	};
 	public module Guam {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Guam";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GST";
 					expiration = ?-885549600000;
@@ -3784,9 +3784,9 @@ module Pacific {
 		};
 	};
 	public module Honolulu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Honolulu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "HST";
 					expiration = ?-1157283000000;
@@ -3833,9 +3833,9 @@ module Pacific {
 		};
 	};
 	public module Johnston {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Johnston";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "HST";
 					expiration = ?-1157283000000;
@@ -3882,9 +3882,9 @@ module Pacific {
 		};
 	};
 	public module Kiritimati {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Kiritimati";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-1040";
 					expiration = ?307622400000;
@@ -3907,9 +3907,9 @@ module Pacific {
 		};
 	};
 	public module Kosrae {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Kosrae";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+11";
 					expiration = ?-1743678000000;
@@ -3962,9 +3962,9 @@ module Pacific {
 		};
 	};
 	public module Kwajalein {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Kwajalein";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+11";
 					expiration = ?-1041418800000;
@@ -4005,9 +4005,9 @@ module Pacific {
 		};
 	};
 	public module Majuro {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Majuro";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+11";
 					expiration = ?-1743678000000;
@@ -4054,9 +4054,9 @@ module Pacific {
 		};
 	};
 	public module Marquesas {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Marquesas";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1806676920000;
@@ -4073,9 +4073,9 @@ module Pacific {
 		};
 	};
 	public module Midway {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Midway";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1861879032000;
@@ -4092,9 +4092,9 @@ module Pacific {
 		};
 	};
 	public module Nauru {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Nauru";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1545131260000;
@@ -4129,9 +4129,9 @@ module Pacific {
 		};
 	};
 	public module Niue {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Niue";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-1120";
 					expiration = ?-599575200000;
@@ -4154,9 +4154,9 @@ module Pacific {
 		};
 	};
 	public module Norfolk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Norfolk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+1112";
 					expiration = ?-599656320000;
@@ -4191,9 +4191,9 @@ module Pacific {
 		};
 	};
 	public module Noumea {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Noumea";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1829387148000;
@@ -4246,9 +4246,9 @@ module Pacific {
 		};
 	};
 	public module Pago_Pago {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Pago_Pago";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1861879032000;
@@ -4265,9 +4265,9 @@ module Pacific {
 		};
 	};
 	public module Palau {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Palau";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+09";
 					expiration = null;
@@ -4278,9 +4278,9 @@ module Pacific {
 		};
 	};
 	public module Pitcairn {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Pitcairn";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-0830";
 					expiration = ?893665800000;
@@ -4297,9 +4297,9 @@ module Pacific {
 		};
 	};
 	public module Pohnpei {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Pohnpei";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+11";
 					expiration = ?-1743678000000;
@@ -4340,9 +4340,9 @@ module Pacific {
 		};
 	};
 	public module Ponape {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Ponape";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+11";
 					expiration = ?-1743678000000;
@@ -4383,9 +4383,9 @@ module Pacific {
 		};
 	};
 	public module Port_Moresby {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Port_Moresby";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+10";
 					expiration = null;
@@ -4396,9 +4396,9 @@ module Pacific {
 		};
 	};
 	public module Rarotonga {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Rarotonga";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "-1030";
 					expiration = ?279714600000;
@@ -4565,9 +4565,9 @@ module Pacific {
 		};
 	};
 	public module Saipan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Saipan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "GST";
 					expiration = ?-885549600000;
@@ -4692,9 +4692,9 @@ module Pacific {
 		};
 	};
 	public module Samoa {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Samoa";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1861879032000;
@@ -4711,9 +4711,9 @@ module Pacific {
 		};
 	};
 	public module Tahiti {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Tahiti";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1806674504000;
@@ -4730,9 +4730,9 @@ module Pacific {
 		};
 	};
 	public module Tarawa {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Tarawa";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+12";
 					expiration = null;
@@ -4743,9 +4743,9 @@ module Pacific {
 		};
 	};
 	public module Tongatapu {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Tongatapu";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+1220";
 					expiration = ?-915193200000;
@@ -4810,9 +4810,9 @@ module Pacific {
 		};
 	};
 	public module Truk {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Truk";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+10";
 					expiration = ?-1743674400000;
@@ -4847,9 +4847,9 @@ module Pacific {
 		};
 	};
 	public module Wake {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Wake";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+12";
 					expiration = null;
@@ -4860,9 +4860,9 @@ module Pacific {
 		};
 	};
 	public module Wallis {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Wallis";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+12";
 					expiration = null;
@@ -4873,9 +4873,9 @@ module Pacific {
 		};
 	};
 	public module Yap {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Pacific/Yap";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "+10";
 					expiration = ?-1743674400000;

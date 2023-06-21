@@ -9,12 +9,12 @@ import InternalTimeZone "../internal/TimeZone";
 import DateTime "../src/DateTime";
 import Components "../src/Components";
 module {
-    public type Locale = {
+    public type Region = {
         id : Text;
-        rules : [LocaleRule];
+        timeZoneRules : [RegionTimeZoneRule];
     };
 
-    public type LocaleRule = {
+    public type RegionTimeZoneRule = {
         abbreviation : Text;
         expiration : ?Int;
         isDaylightsSavings : Bool;

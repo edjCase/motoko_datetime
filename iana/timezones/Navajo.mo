@@ -1,8 +1,8 @@
 import Types "../Types";
 module Navajo {
-	public let locale : Types.Locale = {
+	public let region : Types.Region = {
 		id = "Navajo";
-		rules = [
+		timeZoneRules = [
 			{
 				abbreviation = "MST";
 				expiration = ?-1633273200000;

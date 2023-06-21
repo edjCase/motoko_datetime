@@ -1,9 +1,9 @@
 import Types "../Types";
 module Canada {
 	public module Atlantic {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Atlantic";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2131645536000;
@@ -1382,9 +1382,9 @@ module Canada {
 		};
 	};
 	public module Central {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Central";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "CST";
 					expiration = ?-1694368800000;
@@ -2505,9 +2505,9 @@ module Canada {
 		};
 	};
 	public module Eastern {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Eastern";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "EST";
 					expiration = ?-1632070800000;
@@ -3910,9 +3910,9 @@ module Canada {
 		};
 	};
 	public module Mountain {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Mountain";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1998663968000;
@@ -4847,9 +4847,9 @@ module Canada {
 		};
 	};
 	public module Newfoundland {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Newfoundland";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "NST";
 					expiration = ?-1664130548000;
@@ -6288,9 +6288,9 @@ module Canada {
 		};
 	};
 	public module Pacific {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Pacific";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1632060000000;
@@ -7435,9 +7435,9 @@ module Canada {
 		};
 	};
 	public module Saskatchewan {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Saskatchewan";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2030202084000;
@@ -7766,9 +7766,9 @@ module Canada {
 		};
 	};
 	public module Yukon {
-		public let locale : Types.Locale = {
+		public let region : Types.Region = {
 			id = "Canada/Yukon";
-			rules = [
+			timeZoneRules = [
 				{
 					abbreviation = "YST";
 					expiration = ?-1632056400000;

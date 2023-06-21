@@ -6,7 +6,6 @@
 /// import Components "mo:datetime/Components";
 /// ```
 
-
 import InternalTypes "../internal/Types";
 import InternalTimeZone "../internal/TimeZone";
 import Int "mo:base/Int";
@@ -20,8 +19,7 @@ module {
     public type Offset = InternalTypes.FixedTimeZone;
     public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     type Components = InternalTypes.Components;
-    
-    
+
     /// Helper function to create a UTC timezone (fixed at UTC+0)
     ///
     /// ```motoko include=import
@@ -30,7 +28,7 @@ module {
     public func utc() : TimeZone {
         return #fixed(#seconds(0));
     };
-    
+
     /// Helper function to create a timezone with a fixed offset like UTC+3
     ///
     /// ```motoko include=import
@@ -39,10 +37,10 @@ module {
     public func withFixedOffset(offset : Offset) : TimeZone {
         return #fixed(offset);
     };
-    
+
     /// Gets the UTC offset in seconds for the specified components and time zone.
     /// The components are used if the timezone is dynamic. This is due to the timezone offset
-    /// being dependent on the date (daylight savings, changes to locale offset, etc...).
+    /// being dependent on the date (daylight savings, changes to region offset, etc...).
     ///
     /// ```motoko include=import
     /// let timeZone : TimeZone.TimeZone = ...;
@@ -50,7 +48,7 @@ module {
     /// let offsetSeconds : Int = TimeZone.getOffsetSeconds(timeZone, c);
     /// ```
     public func toOffsetSeconds(timeZone : TimeZone, components : Components) : Int {
-       InternalTimeZone.toOffsetSeconds(timeZone, components);
+        InternalTimeZone.toOffsetSeconds(timeZone, components);
     };
 
     /// Gets the UTC offset in seconds for the specified fixed time zone.
@@ -59,7 +57,7 @@ module {
     /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(1, 0));
     /// let offsetSeconds : Int = TimeZone.getFixedOffsetSeconds(timeZone);
     /// ```
-    public func toFixedOffsetSeconds(fixedTimeZone: FixedTimeZone) : Int {
+    public func toFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {
         InternalTimeZone.toFixedOffsetSeconds(fixedTimeZone);
     };
 };
