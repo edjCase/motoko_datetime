@@ -8,12 +8,13 @@ import fs from "fs";
 
 
 
-function writeLocale(writer, localeId, locale) {
-    writer.writeLine(`module ${localeId} {`);
+function writeLocale(writer, localName, locale) {
+    console.log(Object.keys(locale));
+    writer.writeLine(`module ${localName} {`);
     writer.depth += 1;
     writer.writeLine(`public let locale : Types.Locale = {`);
     writer.depth += 1;
-    writer.writeLine(`id = "${localeId}";`);
+    writer.writeLine(`id = "${locale._abbr}";`);
     writer.writeList("weekdays", locale.weekdays(), (w) => {
         writer.write(`"${w}"`);
     });
@@ -52,10 +53,10 @@ fs.mkdirSync("locales");
 
 for (let localeId of moment.locales()) {
     let locale = moment.localeData(localeId);
-    localeId = localeId.toUpperCase();
+    let localName = localeId.toUpperCase().replace('-', '_');
     let writer = new MotokoWriter();
     writer.writeLine(`import Types "../Types";`);
-    writeLocale(writer, localeId, locale);
-    let fileName = `locales/${localeId}.mo`;
+    writeLocale(writer, localName, locale);
+    let fileName = `locales/${localName}.mo`;
     fs.writeFile(fileName, writer.motoko, (err) => { });
 };

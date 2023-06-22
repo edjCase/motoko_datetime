@@ -1,7 +1,7 @@
 import Types "../Types";
 module ME {
 	public let locale : Types.Locale = {
-		id = "ME";
+		id = "me";
 		weekdays = [
 			"nedjelja",
 			"ponedjeljak",
