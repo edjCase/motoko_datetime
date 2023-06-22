@@ -1,8 +1,6 @@
 import IANATimezoneData from "iana-tz-data" assert { type: 'json' };
 import fs from "fs";
 
-
-
 var depth = 0;
 let nameMap = {};
 

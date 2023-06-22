@@ -93,23 +93,54 @@ module Module {
 
     public func toTextFormatted(components : Components, timeZone : TimeZone, format : InternalTypes.TextFormat) : Text {
 
-        let customFormat = switch (format) {
+        let customFormat : Text = switch (format) {
             case (#iso8601) "%Y-%m-%dT%H:%M:%S.%N%z";
             case (#custom(customFormat)) customFormat;
         };
+        // TODO optimize
+        var text = customFormat;
+        text := Text.replace(text, #text("YYYY"), TextUtil.toTextPaddedSign(components.year, 4, false));
+        text := Text.replace(text, #text("YY"), TextUtil.toTextPaddedSign(components.year % 100, 2, false));
+        text := Text.replace(text, #text("Y"), TextUtil.toTextPaddedSign(components.year, 1, false));
+        text := Text.replace(text, #text("Q"), quarter);
+        text := Text.replace(text, #text("MMMM"), fullMonth);
+        text := Text.replace(text, #text("MMM"), shortMonth);
+        text := Text.replace(text, #text("MM"), TextUtil.toTextPadded(components.month, 2));
+        text := Text.replace(text, #text("M"), TextUtil.toTextPadded(components.month, 1));
+        text := Text.replace(text, #text("DDDD"), paddedDayOfYear);
+        text := Text.replace(text, #text("DDD"), dayOfYear);
+        text := Text.replace(text, #text("DD"), TextUtil.toTextPadded(components.day, 2));
+        text := Text.replace(text, #text("D"), TextUtil.toTextPadded(components.day, 1));
+        text := Text.replace(text, #text("Do"), dayWithOrdinal);
+        text := Text.replace(text, #text("X"), unixTimestamp);
+        text := Text.replace(text, #text("x"), unixMsTimestamp);
 
-        var output = "";
-        var iter = Text.toIter(customFormat);
-        label l loop {
-            switch (getNext(components, iter, timeZone)) {
-                case (null) break l;
-                case (?(next, newIter)) {
-                    output #= next;
-                    iter := newIter;
-                };
-            };
-        };
-        output;
+        text := Text.replace(text, #text("gggg"), fullWeekYear);
+        text := Text.replace(text, #text("gg"), shortWeekYear);
+        text := Text.replace(text, #text("ww"), paddedWeekOfYear);
+        text := Text.replace(text, #text("w"), weekOfYear);
+        text := Text.replace(text, #text("e"), dayOfWeekIndex);
+        text := Text.replace(text, #text("dddd"), fullDayOfWeekName);
+        text := Text.replace(text, #text("ddd"), shortDayOfWeekName);
+        text := Text.replace(text, #text("GGGG"), fullIsoWeekYear);
+        text := Text.replace(text, #text("GG"), shortIsoWeekYear);
+        text := Text.replace(text, #text("WW"), paddedIsoWeekOfYear);
+        text := Text.replace(text, #text("W"), isoWeekOfYear);
+        text := Text.replace(text, #text("E"), isoDayOfWeek);
+
+        text;
+        // var output = "";
+        // var iter = Text.toIter(customFormat);
+        // label l loop {
+        //     switch (getNext(components, iter, timeZone)) {
+        //         case (null) break l;
+        //         case (?(next, newIter)) {
+        //             output #= next;
+        //             iter := newIter;
+        //         };
+        //     };
+        // };
+        // output;
 
     };
 
