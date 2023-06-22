@@ -1,35 +1,12 @@
 import IANATimezoneData from "iana-tz-data" assert { type: 'json' };
 import fs from "fs";
+import { MotokoWriter } from "./generate-common.js"
 
-var depth = 0;
 let nameMap = {};
 
-function getPadding() {
-    return "\t".repeat(depth);
-};
-
-function buildLine(t) {
-    return getPadding() + t + "\n";
-};
-
-function buildList(listName, items, func) {
-    let list = `${listName} = [`;
-    if (items.length == 0) {
-        return buildLine(list + `];`);
-    };
-    list = buildLine(list);
-    depth += 1;
-    for (let i = 0; i < items.length; i++) {
-        let v = func(items[i]);
-        list += `${v},\n`;
-    };
-    depth -= 1;
-    list += buildLine(`];`);
-    return list;
-};
 
 
-function buildRegion(regionId, region, parentRegionId, parentModuleName) {
+function buildRegion(writer, regionId, region, parentRegionId, parentModuleName) {
     let moduleName = normalizeText(regionId);
     let fullRegionId;
     let fullModuleName;
@@ -49,8 +26,8 @@ function buildRegion(regionId, region, parentRegionId, parentModuleName) {
         fullModuleName = moduleName;
         prefix = "";
     }
-    let obj = buildLine(prefix + `module ${moduleName} {`);
-    depth += 1;
+    writer.writeLine(prefix + `module ${moduleName} {`);
+    writer.depth += 1;
 
     let abbrs = region.abbrs || [];
     let untils = region.untils || [];
@@ -63,42 +40,40 @@ function buildRegion(regionId, region, parentRegionId, parentModuleName) {
 
     let indicies = Array.from({ length: abbrs.length }, (_, i) => i);
     if (indicies.length > 0) {
-        obj += buildLine(`public let region : Types.Region = {`);
-        depth += 1;
-        obj += buildLine(`id = "${fullRegionId}";`);
-        obj += buildList("timeZoneRules", indicies, (i) => {
-            let obj = buildLine("{");
-            depth += 1;
-            obj += buildLine(`abbreviation = "${abbrs[i]}";`);
-            obj += buildLine(`expiration = ${untils[i] == null ? "null" : "?" + untils[i]};`);
-            obj += buildLine(`isDaylightsSavings = ${isdsts[i] ? "true" : "false"};`);
+        writer.writeLine(`public let region : Types.Region = {`);
+        writer.depth += 1;
+        writer.writeLine(`id = "${fullRegionId}";`);
+        writer.writeList("timeZoneRules", indicies, (i) => {
+            writer.writeLine("{");
+            writer.depth += 1;
+            writer.writeLine(`abbreviation = "${abbrs[i]}";`);
+            writer.writeLine(`expiration = ${untils[i] == null ? "null" : "?" + untils[i]};`);
+            writer.writeLine(`isDaylightsSavings = ${isdsts[i] ? "true" : "false"};`);
             let offset = -1 * Math.round(offsets[i] * 60); // Convert to seconds int from minutes float
-            obj += buildLine(`offsetSeconds = ${offset};`);
-            depth -= 1;
-            obj += getPadding() + "}";
-            return obj;
+            writer.writeLine(`offsetSeconds = ${offset};`);
+            writer.depth -= 1;
+            writer.write("}");
         });
-        depth -= 1;
-        obj += buildLine(`};`);
+        writer.depth -= 1;
+        writer.writeLine(`};`);
     };
 
     for (let innerRegionId in region) {
         let innerRegion = region[innerRegionId];
-        obj += buildRegion(innerRegionId, innerRegion, fullRegionId, fullModuleName);
+        buildRegion(writer, innerRegionId, innerRegion, fullRegionId, fullModuleName);
     }
-    depth -= 1;
-    obj += buildLine("};");
-    return obj;
+    writer.depth -= 1;
+    writer.writeLine("};");
 };
 
 
 
 
 function buildFile(zoneId, zone, parentRegionId, parentModule) {
-    let fileText = "";
-    fileText += buildLine(`import Types "../Types";`);
-    fileText += buildRegion(zoneId, zone, parentRegionId, parentModule);
-    return fileText;
+    let writer = new MotokoWriter();
+    writer.writeLine(`import Types "../Types";`);
+    buildRegion(writer, zoneId, zone, parentRegionId, parentModule);
+    return writer.motoko;
 }
 
 function normalizeText(t) {
@@ -121,17 +96,18 @@ for (let zoneId in IANATimezoneData.zoneData) {
     fs.writeFile(fileName, fileText, (err) => { });
 };
 
-let regionMapText = "";
+let regionMapWriter = new MotokoWriter();
 for (let fileName of fileNames) {
-    regionMapText += buildLine(`import ${fileName} "timezones/${fileName}";`);
+    regionMapWriter.writeLine(`import ${fileName} "timezones/${fileName}";`);
 };
-regionMapText += buildLine(`module {`);
-depth += 1;
-regionMapText += buildList("public let regions", Object.keys(nameMap), (regionName) => {
+regionMapWriter.writeLine(`module {`);
+regionMapWriter.depth += 1;
+regionMapWriter.writeList("public let regions", Object.keys(nameMap), (regionName) => {
     let moduleName = nameMap[regionName];
-    return `\t\t${moduleName}.region`;
+    regionMapWriter.write(`${moduleName}.region`);
 });
-depth -= 1;
-regionMapText += buildLine(`};`);
+regionMapWriter.depth -= 1;
+regionMapWriter.writeLine(`};`);
 
+let regionMapText = regionMapWriter.motoko;
 fs.writeFileSync("RegionList.mo", regionMapText, (err) => { }); 
