@@ -1,6 +1,32 @@
 import Time "mo:base/Time";
 import Order "mo:base/Order";
 module {
+    public type Locale = {
+        id : Text;
+        weekdays : [Text];
+        weekdaysShort : [Text];
+        weekdaysMin : [Text];
+        months : [Text];
+        monthsShort : [Text];
+        firstDayOfWeek : Nat;
+        firstDayOfYear : Nat;
+        timeFormat : Text;
+        dateFormat : Text;
+        dateTimeFormat : Text;
+        longDateFormat : Text;
+    };
+
+    public type Region = {
+        id : Text;
+        timeZoneRules : [RegionTimeZoneRule];
+    };
+
+    public type RegionTimeZoneRule = {
+        abbreviation : Text;
+        expiration : ?Int;
+        isDaylightsSavings : Bool;
+        offsetSeconds : Int;
+    };
 
     public type Duration = {
         #nanoseconds : Int;
@@ -86,6 +112,6 @@ module {
     public type LocalDateTime = DateTimeType<LocalDateTime> and {
         toUtcDateTime : () -> DateTime;
 
-        getTimeZone: () -> TimeZone;
+        getTimeZone : () -> TimeZone;
     };
 };

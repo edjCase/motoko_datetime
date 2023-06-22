@@ -1,0 +1,67 @@
+import Types "../Types";
+module KM {
+	public let locale : Types.Locale = {
+		id = "KM";
+		weekdays = [
+			"អាទិត្យ",
+			"ច័ន្ទ",
+			"អង្គារ",
+			"ពុធ",
+			"ព្រហស្បតិ៍",
+			"សុក្រ",
+			"សៅរ៍",
+		];
+		weekdaysShort = [
+			"អា",
+			"ច",
+			"អ",
+			"ព",
+			"ព្រ",
+			"សុ",
+			"ស",
+		];
+		weekdaysMin = [
+			"អា",
+			"ច",
+			"អ",
+			"ព",
+			"ព្រ",
+			"សុ",
+			"ស",
+		];
+		months = [
+			"មករា",
+			"កុម្ភៈ",
+			"មីនា",
+			"មេសា",
+			"ឧសភា",
+			"មិថុនា",
+			"កក្កដា",
+			"សីហា",
+			"កញ្ញា",
+			"តុលា",
+			"វិច្ឆិកា",
+			"ធ្នូ",
+		];
+		monthsShort = [
+			"មករា",
+			"កុម្ភៈ",
+			"មីនា",
+			"មេសា",
+			"ឧសភា",
+			"មិថុនា",
+			"កក្កដា",
+			"សីហា",
+			"កញ្ញា",
+			"តុលា",
+			"វិច្ឆិកា",
+			"ធ្នូ",
+		];
+		firstDayOfWeek = 1;
+		firstDayOfYear = 4;
+		timeFormat = "HH:mm";
+		dateFormat = "DD/MM/YYYY";
+		dateTimeFormat = "HH:mm DD/MM/YYYY";
+		longDateFormat = "DD/MM/YYYY";
+	};
+};

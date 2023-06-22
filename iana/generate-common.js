@@ -23,6 +23,9 @@ export class MotokoWriter {
     };
 
     writeList(listName, items, func) {
+        if (items == null) {
+            throw "items cannot be null for " + listName;
+        };
         let line = `${listName} = [`;
         if (items.length == 0) {
             this.writeLine(line + `];`);

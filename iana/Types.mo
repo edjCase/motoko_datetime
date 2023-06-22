@@ -9,17 +9,6 @@ import InternalTimeZone "../internal/TimeZone";
 import DateTime "../src/DateTime";
 import Components "../src/Components";
 module {
-    public type Region = {
-        id : Text;
-        timeZoneRules : [RegionTimeZoneRule];
-    };
-
-    public type RegionTimeZoneRule = {
-        abbreviation : Text;
-        expiration : ?Int;
-        isDaylightsSavings : Bool;
-        offsetSeconds : Int;
-    };
 
     type Seconds = Int;
     type Year = Int;

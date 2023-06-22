@@ -93,69 +93,7 @@ module {
     /// let ?order : ?Time.Time = Components.toTime(c) else return #error("Components are invalid");
     /// ```
     public func toTime(components : Components) : ?Time.Time {
-        if (not isValid(components)) {
-            return null;
-        };
-        let nanosecondsInAMinute = 60 * 1000000000;
-        let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
-        let nanosecondsInADay = 24 * nanosecondsInAnHour;
-        var totalNanoseconds : Int = 0;
-
-        if (components.year < 1970) {
-            // For dates before the epoch, need to do the inverse
-            var currentYear : Int = 1969;
-            while (currentYear > components.year) {
-                totalNanoseconds -= InternalComponents.daysInYear(currentYear) * nanosecondsInADay;
-                currentYear -= 1;
-            };
-
-            // Month
-            let currentIsLeapYear = InternalComponents.isLeapYear(components.year);
-            var currentMonth = 12;
-            while (currentMonth > components.month) {
-                totalNanoseconds -= InternalComponents.daysInMonth(currentMonth, currentIsLeapYear) * nanosecondsInADay;
-                currentMonth -= 1;
-            };
-            let daysInMonthV = InternalComponents.daysInMonth(components.month, currentIsLeapYear);
-            // Day
-            totalNanoseconds -= (daysInMonthV - components.day) * nanosecondsInADay;
-            // Hour
-            totalNanoseconds -= (23 - components.hour) * nanosecondsInAnHour;
-
-            // Minute
-            totalNanoseconds -= (59 - components.minute) * nanosecondsInAMinute;
-
-            // Nanosecond
-            totalNanoseconds -= 60_000_000_000 - components.nanosecond;
-        } else {
-
-            var currentYear = 1970;
-            while (currentYear < components.year) {
-                totalNanoseconds += InternalComponents.daysInYear(currentYear) * nanosecondsInADay;
-                currentYear += 1;
-            };
-
-            // Month
-            let currentIsLeapYear = InternalComponents.isLeapYear(components.year);
-            var currentMonth = 1;
-            while (currentMonth < components.month) {
-                totalNanoseconds += InternalComponents.daysInMonth(currentMonth, currentIsLeapYear) * nanosecondsInADay;
-                currentMonth += 1;
-            };
-
-            // Day
-            totalNanoseconds += (components.day - 1) * nanosecondsInADay;
-
-            // Hour
-            totalNanoseconds += components.hour * nanosecondsInAnHour;
-
-            // Minute
-            totalNanoseconds += components.minute * nanosecondsInAMinute;
-
-            // Nanosecond
-            totalNanoseconds += components.nanosecond;
-        };
-        ?totalNanoseconds;
+        InternalComponents.toTime(components);
     };
 
     /// Converts the UTC time in nanoseconds since the epoch to the equivalent components.
@@ -180,27 +118,7 @@ module {
     /// let isValid : Bool = Components.isValid(c);
     /// ```
     public func isValid(components : Components) : Bool {
-        let leapYear = InternalComponents.isLeapYear(components.year);
-
-        let daysInM = InternalComponents.daysInMonth(components.month, leapYear);
-
-        if (components.day == 0 or components.day > daysInM) {
-            return false;
-        };
-
-        if (components.hour >= 24) {
-            return false;
-        };
-
-        if (components.minute >= 60) {
-            return false;
-        };
-
-        if (components.nanosecond >= 60_000_000_000) {
-            return false;
-        };
-
-        return true;
+        InternalComponents.isValid(components);
     };
 
     /// Converts datetime components to text in ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)

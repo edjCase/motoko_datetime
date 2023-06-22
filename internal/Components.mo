@@ -18,6 +18,7 @@ module Module {
     type Duration = InternalTypes.Duration;
     type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     type TimeZone = InternalTypes.TimeZone;
+    type Locale = InternalTypes.Locale;
 
     public type CalculatedDuration = {
         #adder : (Components) -> Components;
@@ -91,8 +92,105 @@ module Module {
         };
     };
 
-    public func toTextFormatted(components : Components, timeZone : TimeZone, format : InternalTypes.TextFormat) : Text {
+    public func isValid(components : Components) : Bool {
+        let leapYear = isLeapYear(components.year);
 
+        let daysInM = daysInMonth(components.month, leapYear);
+
+        if (components.day == 0 or components.day > daysInM) {
+            return false;
+        };
+
+        if (components.hour >= 24) {
+            return false;
+        };
+
+        if (components.minute >= 60) {
+            return false;
+        };
+
+        if (components.nanosecond >= 60_000_000_000) {
+            return false;
+        };
+
+        return true;
+    };
+
+    public func toTime(components : Components) : ?Time.Time {
+        if (not isValid(components)) {
+            return null;
+        };
+        let nanosecondsInAMinute = 60 * 1000000000;
+        let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
+        let nanosecondsInADay = 24 * nanosecondsInAnHour;
+        var totalNanoseconds : Int = 0;
+
+        if (components.year < 1970) {
+            // For dates before the epoch, need to do the inverse
+            var currentYear : Int = 1969;
+            while (currentYear > components.year) {
+                totalNanoseconds -= daysInYear(currentYear) * nanosecondsInADay;
+                currentYear -= 1;
+            };
+
+            // Month
+            let currentIsLeapYear = isLeapYear(components.year);
+            var currentMonth = 12;
+            while (currentMonth > components.month) {
+                totalNanoseconds -= daysInMonth(currentMonth, currentIsLeapYear) * nanosecondsInADay;
+                currentMonth -= 1;
+            };
+            let daysInMonthV = daysInMonth(components.month, currentIsLeapYear);
+            // Day
+            totalNanoseconds -= (daysInMonthV - components.day) * nanosecondsInADay;
+            // Hour
+            totalNanoseconds -= (23 - components.hour) * nanosecondsInAnHour;
+
+            // Minute
+            totalNanoseconds -= (59 - components.minute) * nanosecondsInAMinute;
+
+            // Nanosecond
+            totalNanoseconds -= 60_000_000_000 - components.nanosecond;
+        } else {
+
+            var currentYear = 1970;
+            while (currentYear < components.year) {
+                totalNanoseconds += daysInYear(currentYear) * nanosecondsInADay;
+                currentYear += 1;
+            };
+
+            // Month
+            let currentIsLeapYear = isLeapYear(components.year);
+            var currentMonth = 1;
+            while (currentMonth < components.month) {
+                totalNanoseconds += daysInMonth(currentMonth, currentIsLeapYear) * nanosecondsInADay;
+                currentMonth += 1;
+            };
+
+            // Day
+            totalNanoseconds += (components.day - 1) * nanosecondsInADay;
+
+            // Hour
+            totalNanoseconds += components.hour * nanosecondsInAnHour;
+
+            // Minute
+            totalNanoseconds += components.minute * nanosecondsInAMinute;
+
+            // Nanosecond
+            totalNanoseconds += components.nanosecond;
+        };
+        ?totalNanoseconds;
+    };
+
+    public func toTextFormatted(
+        components : Components,
+        timeZone : TimeZone,
+        locale : Locale,
+        format : InternalTypes.TextFormat,
+    ) : ?Text {
+        if (not isValid(components)) {
+            return null;
+        };
         let customFormat : Text = switch (format) {
             case (#iso8601) "%Y-%m-%dT%H:%M:%S.%N%z";
             case (#custom(customFormat)) customFormat;
@@ -102,13 +200,28 @@ module Module {
         text := Text.replace(text, #text("YYYY"), TextUtil.toTextPaddedSign(components.year, 4, false));
         text := Text.replace(text, #text("YY"), TextUtil.toTextPaddedSign(components.year % 100, 2, false));
         text := Text.replace(text, #text("Y"), TextUtil.toTextPaddedSign(components.year, 1, false));
-        text := Text.replace(text, #text("Q"), quarter);
+        let quarter = components.month / 3 + 1;
+        text := Text.replace(text, #text("Q"), TextUtil.toTextPadded(quarter, 1));
+        let fullMonth = locale.months[components.month - 1];
         text := Text.replace(text, #text("MMMM"), fullMonth);
+        let shortMonth = locale.monthsShort[components.month - 1];
         text := Text.replace(text, #text("MMM"), shortMonth);
         text := Text.replace(text, #text("MM"), TextUtil.toTextPadded(components.month, 2));
         text := Text.replace(text, #text("M"), TextUtil.toTextPadded(components.month, 1));
-        text := Text.replace(text, #text("DDDD"), paddedDayOfYear);
-        text := Text.replace(text, #text("DDD"), dayOfYear);
+        let ?startOfYear = toTime({
+            year = components.year;
+            month = 1;
+            day = 1;
+            hour = 0;
+            minute = 0;
+            second = 0;
+            nanosecond = 0;
+        }) else Prelude.unreachable();
+        let ?now = toTime(components) else Prelude.unreachable();
+
+        let dayOfYear = Int.abs(now - startOfYear) / 24 / 60 / 60 / 1_000_000_000;
+        text := Text.replace(text, #text("DDDD"), TextUtil.toTextPadded(dayOfYear, 3));
+        text := Text.replace(text, #text("DDD"), TextUtil.toTextPadded(dayOfYear, 1));
         text := Text.replace(text, #text("DD"), TextUtil.toTextPadded(components.day, 2));
         text := Text.replace(text, #text("D"), TextUtil.toTextPadded(components.day, 1));
         text := Text.replace(text, #text("Do"), dayWithOrdinal);
@@ -128,7 +241,7 @@ module Module {
         text := Text.replace(text, #text("W"), isoWeekOfYear);
         text := Text.replace(text, #text("E"), isoDayOfWeek);
 
-        text;
+        ?text;
         // var output = "";
         // var iter = Text.toIter(customFormat);
         // label l loop {

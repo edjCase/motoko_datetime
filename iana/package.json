@@ -1,7 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "gen": "node generate-tz-motoko.js"
+    "generate-timezones": "node generate-tz-motoko.js",
+    "generate-locales": "node generate-locale-motoko.js"
   },
   "dependencies": {
     "iana-tz-data": "^2019.1.0"
