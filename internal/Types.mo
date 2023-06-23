@@ -14,6 +14,18 @@ module {
         dateFormat : Text;
         dateTimeFormat : Text;
         longDateFormat : Text;
+        eras : [Era];
+        getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
+        getOrdinal : (num : Int) -> Text;
+    };
+
+    public type Era = {
+        start : ?Time.Time;
+        end : ?Time.Time;
+        offset : Int;
+        fullName : Text;
+        narrowName : Text;
+        abbreviatedName : Text;
     };
 
     public type Region = {
@@ -79,7 +91,7 @@ module {
     };
 
     public type DynamicTimeZone = {
-        toOffsetSeconds : (components : Components) -> Int;
+        get toOffsetSeconds : (components : Components) -> Int;
     };
 
     public type FixedTimeZone = {
