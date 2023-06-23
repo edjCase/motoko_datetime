@@ -63,5 +63,52 @@ module HY_AM {
 		dateFormat = "DD.MM.YYYY";
 		dateTimeFormat = "HH:mm DD.MM.YYYY";
 		longDateFormat = "DD.MM.YYYY";
+		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
+			let (lower, upper) = switch ((hour, minute)) {
+				case ((0, _)) ("գիշերվա", "գիշերվա");
+				case ((1, _)) ("գիշերվա", "գիշերվա");
+				case ((2, _)) ("գիշերվա", "գիշերվա");
+				case ((3, _)) ("գիշերվա", "գիշերվա");
+				case ((4, _)) ("առավոտվա", "առավոտվա");
+				case ((5, _)) ("առավոտվա", "առավոտվա");
+				case ((6, _)) ("առավոտվա", "առավոտվա");
+				case ((7, _)) ("առավոտվա", "առավոտվա");
+				case ((8, _)) ("առավոտվա", "առավոտվա");
+				case ((9, _)) ("առավոտվա", "առավոտվա");
+				case ((10, _)) ("առավոտվա", "առավոտվա");
+				case ((11, _)) ("առավոտվա", "առավոտվա");
+				case ((12, _)) ("ցերեկվա", "ցերեկվա");
+				case ((13, _)) ("ցերեկվա", "ցերեկվա");
+				case ((14, _)) ("ցերեկվա", "ցերեկվա");
+				case ((15, _)) ("ցերեկվա", "ցերեկվա");
+				case ((16, _)) ("ցերեկվա", "ցերեկվա");
+				case ((17, _)) ("երեկոյան", "երեկոյան");
+				case ((18, _)) ("երեկոյան", "երեկոյան");
+				case ((19, _)) ("երեկոյան", "երեկոյան");
+				case ((20, _)) ("երեկոյան", "երեկոյան");
+				case ((21, _)) ("երեկոյան", "երեկոյան");
+				case ((22, _)) ("երեկոյան", "երեկոյան");
+				case ((23, _)) ("երեկոյան", "երեկոյան");
+			};
+			if (isLower) lower else upper;
+		};
+		eras = [
+			{
+				start = -62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = -62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
 	};
 };

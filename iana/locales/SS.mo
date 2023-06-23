@@ -63,5 +63,52 @@ module SS {
 		dateFormat = "DD/MM/YYYY";
 		dateTimeFormat = "h:mm A DD/MM/YYYY";
 		longDateFormat = "DD/MM/YYYY";
+		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
+			let (lower, upper) = switch ((hour, minute)) {
+				case ((0, _)) ("ekuseni", "ekuseni");
+				case ((1, _)) ("ekuseni", "ekuseni");
+				case ((2, _)) ("ekuseni", "ekuseni");
+				case ((3, _)) ("ekuseni", "ekuseni");
+				case ((4, _)) ("ekuseni", "ekuseni");
+				case ((5, _)) ("ekuseni", "ekuseni");
+				case ((6, _)) ("ekuseni", "ekuseni");
+				case ((7, _)) ("ekuseni", "ekuseni");
+				case ((8, _)) ("ekuseni", "ekuseni");
+				case ((9, _)) ("ekuseni", "ekuseni");
+				case ((10, _)) ("ekuseni", "ekuseni");
+				case ((11, _)) ("emini", "emini");
+				case ((12, _)) ("emini", "emini");
+				case ((13, _)) ("emini", "emini");
+				case ((14, _)) ("emini", "emini");
+				case ((15, _)) ("entsambama", "entsambama");
+				case ((16, _)) ("entsambama", "entsambama");
+				case ((17, _)) ("entsambama", "entsambama");
+				case ((18, _)) ("entsambama", "entsambama");
+				case ((19, _)) ("ebusuku", "ebusuku");
+				case ((20, _)) ("ebusuku", "ebusuku");
+				case ((21, _)) ("ebusuku", "ebusuku");
+				case ((22, _)) ("ebusuku", "ebusuku");
+				case ((23, _)) ("ebusuku", "ebusuku");
+			};
+			if (isLower) lower else upper;
+		};
+		eras = [
+			{
+				start = -62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = -62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
 	};
 };

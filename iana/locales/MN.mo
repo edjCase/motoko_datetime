@@ -63,5 +63,52 @@ module MN {
 		dateFormat = "YYYY-MM-DD";
 		dateTimeFormat = "HH:mm YYYY-MM-DD";
 		longDateFormat = "YYYY-MM-DD";
+		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
+			let (lower, upper) = switch ((hour, minute)) {
+				case ((0, _)) ("ҮӨ", "ҮӨ");
+				case ((1, _)) ("ҮӨ", "ҮӨ");
+				case ((2, _)) ("ҮӨ", "ҮӨ");
+				case ((3, _)) ("ҮӨ", "ҮӨ");
+				case ((4, _)) ("ҮӨ", "ҮӨ");
+				case ((5, _)) ("ҮӨ", "ҮӨ");
+				case ((6, _)) ("ҮӨ", "ҮӨ");
+				case ((7, _)) ("ҮӨ", "ҮӨ");
+				case ((8, _)) ("ҮӨ", "ҮӨ");
+				case ((9, _)) ("ҮӨ", "ҮӨ");
+				case ((10, _)) ("ҮӨ", "ҮӨ");
+				case ((11, _)) ("ҮӨ", "ҮӨ");
+				case ((12, _)) ("ҮХ", "ҮХ");
+				case ((13, _)) ("ҮХ", "ҮХ");
+				case ((14, _)) ("ҮХ", "ҮХ");
+				case ((15, _)) ("ҮХ", "ҮХ");
+				case ((16, _)) ("ҮХ", "ҮХ");
+				case ((17, _)) ("ҮХ", "ҮХ");
+				case ((18, _)) ("ҮХ", "ҮХ");
+				case ((19, _)) ("ҮХ", "ҮХ");
+				case ((20, _)) ("ҮХ", "ҮХ");
+				case ((21, _)) ("ҮХ", "ҮХ");
+				case ((22, _)) ("ҮХ", "ҮХ");
+				case ((23, _)) ("ҮХ", "ҮХ");
+			};
+			if (isLower) lower else upper;
+		};
+		eras = [
+			{
+				start = -62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = -62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
 	};
 };

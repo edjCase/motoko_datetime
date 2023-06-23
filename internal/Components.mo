@@ -9,6 +9,8 @@ import InternalTimeZone "TimeZone";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Prelude "mo:base/Prelude";
+import Array "mo:base/Array";
+import Float "mo:base/Float";
 
 module Module {
 
@@ -19,6 +21,7 @@ module Module {
     type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     type TimeZone = InternalTypes.TimeZone;
     type Locale = InternalTypes.Locale;
+    type Era = InternalTypes.Era;
 
     public type CalculatedDuration = {
         #adder : (Components) -> Components;
@@ -116,10 +119,8 @@ module Module {
         return true;
     };
 
-    public func toTime(components : Components) : ?Time.Time {
-        if (not isValid(components)) {
-            return null;
-        };
+    public func toTime(components : Components) : Time.Time {
+        throwIfNotValid(components);
         let nanosecondsInAMinute = 60 * 1000000000;
         let nanosecondsInAnHour = 60 * nanosecondsInAMinute;
         let nanosecondsInADay = 24 * nanosecondsInAnHour;
@@ -179,7 +180,7 @@ module Module {
             // Nanosecond
             totalNanoseconds += components.nanosecond;
         };
-        ?totalNanoseconds;
+        totalNanoseconds;
     };
 
     public func toTextFormatted(
@@ -187,378 +188,225 @@ module Module {
         timeZone : TimeZone,
         locale : Locale,
         format : InternalTypes.TextFormat,
-    ) : ?Text {
-        if (not isValid(components)) {
-            return null;
-        };
+    ) : Text {
+        throwIfNotValid(components);
+
         let customFormat : Text = switch (format) {
             case (#iso8601) "%Y-%m-%dT%H:%M:%S.%N%z";
             case (#custom(customFormat)) customFormat;
         };
+
         // TODO optimize
         var text = customFormat;
-        text := Text.replace(text, #text("YYYY"), TextUtil.toTextPaddedSign(components.year, 4, false));
-        text := Text.replace(text, #text("YY"), TextUtil.toTextPaddedSign(components.year % 100, 2, false));
-        text := Text.replace(text, #text("Y"), TextUtil.toTextPaddedSign(components.year, 1, false));
-        let quarter = components.month / 3 + 1;
-        text := Text.replace(text, #text("Q"), TextUtil.toTextPadded(quarter, 1));
-        let fullMonth = locale.months[components.month - 1];
-        text := Text.replace(text, #text("MMMM"), fullMonth);
+
+        // Month
+        text := Text.replace(text, #text("M"), Nat.toText(components.month));
+
+        let monthWithOrdinal = locale.getOrdinal(components.month);
+        text := Text.replace(text, #text("Mo"), monthWithOrdinal);
+
+        text := Text.replace(text, #text("MM"), TextUtil.toTextPadded(components.month, 2));
+
         let shortMonth = locale.monthsShort[components.month - 1];
         text := Text.replace(text, #text("MMM"), shortMonth);
-        text := Text.replace(text, #text("MM"), TextUtil.toTextPadded(components.month, 2));
-        text := Text.replace(text, #text("M"), TextUtil.toTextPadded(components.month, 1));
-        let ?startOfYear = toTime({
-            year = components.year;
-            month = 1;
-            day = 1;
-            hour = 0;
-            minute = 0;
-            second = 0;
-            nanosecond = 0;
-        }) else Prelude.unreachable();
-        let ?now = toTime(components) else Prelude.unreachable();
 
-        let dayOfYear = Int.abs(now - startOfYear) / 24 / 60 / 60 / 1_000_000_000;
-        text := Text.replace(text, #text("DDDD"), TextUtil.toTextPadded(dayOfYear, 3));
-        text := Text.replace(text, #text("DDD"), TextUtil.toTextPadded(dayOfYear, 1));
-        text := Text.replace(text, #text("DD"), TextUtil.toTextPadded(components.day, 2));
-        text := Text.replace(text, #text("D"), TextUtil.toTextPadded(components.day, 1));
+        let fullMonth = locale.months[components.month - 1];
+        text := Text.replace(text, #text("MMMM"), fullMonth);
+
+        // Quarter
+        let quarter = components.month / 3 + 1;
+        text := Text.replace(text, #text("Q"), Nat.toText(quarter));
+
+        text := Text.replace(text, #text("Qo"), locale.getOrdinal(quarter));
+
+        // Day of Month
+        text := Text.replace(text, #text("D"), Nat.toText(components.day));
+
+        let dayWithOrdinal = locale.getOrdinal(components.day);
         text := Text.replace(text, #text("Do"), dayWithOrdinal);
+
+        text := Text.replace(text, #text("DD"), TextUtil.toTextPadded(components.day, 2));
+
+        // Day of Year
+        let dayOfYearValue = dayOfYear(components, locale.firstDayOfYear);
+        text := Text.replace(text, #text("DDD"), Nat.toText(dayOfYearValue));
+
+        let dayOfYearWithOrdinal = locale.getOrdinal(dayOfYearValue);
+        text := Text.replace(text, #text("DDDo"), dayOfYearWithOrdinal);
+
+        text := Text.replace(text, #text("DDDD"), TextUtil.toTextPadded(dayOfYearValue, 3));
+
+        // Day of Week
+        let dayOfWeek = dayOfWeekIndex(components);
+        text := Text.replace(text, #text("d"), Nat.toText(dayOfWeek));
+
+        let dayOfWeekWithOrdinal = locale.getOrdinal(dayOfWeek);
+        text := Text.replace(text, #text("do"), dayOfWeekWithOrdinal);
+
+        text := Text.replace(text, #text("dd"), locale.weekdaysMin[dayOfWeek]);
+
+        text := Text.replace(text, #text("ddd"), locale.weekdaysShort[dayOfWeek]);
+
+        text := Text.replace(text, #text("dddd"), locale.weekdays[dayOfWeek]);
+
+        // Day of Week (Locale)
+        text := Text.replace(text, #text("e"), Nat.toText(dayOfWeek + locale.firstDayOfWeek));
+
+        // Day of Week (ISO)
+        text := Text.replace(text, #text("E"), Nat.toText(dayOfWeek + 1));
+
+        // Week of Year
+        let localeWeekOfYear = weekOfYear(components, locale.firstDayOfWeek, locale.firstDayOfYear);
+        text := Text.replace(text, #text("w"), Nat.toText(localeWeekOfYear));
+
+        let localeWeekOfYearWithOrdinal = locale.getOrdinal(localeWeekOfYear);
+        text := Text.replace(text, #text("wo"), localeWeekOfYearWithOrdinal);
+
+        text := Text.replace(text, #text("ww"), TextUtil.toTextPaddedSign(localeWeekOfYear, 2, false));
+
+        // Week of Year (ISO)
+        let isoWeekOfYear = weekOfYear(components, 1, 4); // ISO week year starts on thursday (4)
+        text := Text.replace(text, #text("W"), Nat.toText(isoWeekOfYear));
+
+        let isoWeekOfYearWithOrdinal = locale.getOrdinal(isoWeekOfYear);
+        text := Text.replace(text, #text("Wo"), isoWeekOfYearWithOrdinal);
+
+        text := Text.replace(text, #text("WW"), TextUtil.toTextPaddedSign(isoWeekOfYear, 2, false));
+
+        // Year
+        text := Text.replace(text, #text("Y"), TextUtil.toTextPaddedSign(components.year, 1, components.year > 9999));
+
+        text := Text.replace(text, #text("YY"), TextUtil.toTextPaddedSign(components.year % 100, 2, false));
+
+        text := Text.replace(text, #text("YYYY"), TextUtil.toTextPaddedSign(components.year, 4, false));
+
+        text := Text.replace(text, #text("YYYYYY"), TextUtil.toTextPaddedSign(components.year, 6, true));
+
+        // Era Year
+        let now = toTime(components);
+        let ?era = Array.find<Era>(
+            locale.eras,
+            func(e) {
+                let onOrAfterStart = switch (e.start) {
+                    case (null) true;
+                    case (?start) now >= start;
+                };
+                let beforeEnd = switch (e.end) {
+                    case (null) true;
+                    case (?end) now < end;
+                };
+                return onOrAfterStart and beforeEnd;
+            },
+        ) else Debug.trap("No era found for date and locale. Date: " # debug_show (components) # ", Locale: " # locale.id);
+
+        let eraYear = Int.abs(components.year);
+
+        text := Text.replace(text, #text("y"), Nat.toText(eraYear));
+
+        text := Text.replace(text, #text("yo"), locale.getOrdinal(eraYear));
+
+        text := Text.replace(text, #text("yy"), Nat.toText(eraYear));
+
+        text := Text.replace(text, #text("yyy"), Nat.toText(eraYear));
+
+        text := Text.replace(text, #text("yyyy"), Nat.toText(eraYear));
+
+        text := Text.replace(text, #text("yyyyy"), Nat.toText(eraYear));
+
+        // Era
+        text := Text.replace(text, #text("N"), era.abbreviatedName);
+
+        text := Text.replace(text, #text("NN"), era.abbreviatedName);
+
+        text := Text.replace(text, #text("NNN"), era.abbreviatedName);
+
+        text := Text.replace(text, #text("NNNN"), era.fullName);
+
+        text := Text.replace(text, #text("NNNNN"), era.narrowName);
+
+        // Week Year
+        let localeWeekYear = weekYear(components, locale.firstDayOfYear);
+        text := Text.replace(text, #text("gg"), TextUtil.toTextPaddedSign(localeWeekYear % 100, 2, false));
+
+        text := Text.replace(text, #text("gggg"), TextUtil.toTextPaddedSign(localeWeekYear, 4, false));
+
+        // Week Year (ISO)
+        let isoWeekYear = weekYear(components, 4); // ISO week year starts on thursday (4)
+        text := Text.replace(text, #text("GG"), TextUtil.toTextPaddedSign(isoWeekYear % 100, 2, false));
+
+        text := Text.replace(text, #text("GGGG"), TextUtil.toTextPaddedSign(isoWeekYear, 4, false));
+
+        // AM/PM
+        text := Text.replace(text, #text("A"), locale.getMeridiem(components.hour, components.minute, true));
+
+        text := Text.replace(text, #text("a"), locale.getMeridiem(components.hour, components.minute, false));
+
+        // Hour
+        text := Text.replace(text, #text("H"), Nat.toText(components.hour));
+
+        text := Text.replace(text, #text("HH"), TextUtil.toTextPaddedSign(components.hour, 2, false));
+
+        text := Text.replace(text, #text("h"), Nat.toText(components.hour % 12 + 1));
+
+        text := Text.replace(text, #text("hh"), TextUtil.toTextPaddedSign(components.hour % 12 + 1, 2, false));
+
+        text := Text.replace(text, #text("k"), Nat.toText(components.hour + 1));
+
+        text := Text.replace(text, #text("kk"), TextUtil.toTextPaddedSign(components.hour + 1, 2, false));
+
+        // Minute
+        text := Text.replace(text, #text("m"), Nat.toText(components.minute));
+
+        text := Text.replace(text, #text("mm"), TextUtil.toTextPaddedSign(components.minute, 2, false));
+
+        // Second
+        let second = components.nanosecond / 1_000_000_000;
+        text := Text.replace(text, #text("s"), Nat.toText(second));
+
+        text := Text.replace(text, #text("ss"), TextUtil.toTextPaddedSign(second, 2, false));
+
+        // Fractional Second
+        let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+        text := Text.replace(text, #text("S"), Float.format(#fix(1), fractionalSecond));
+
+        text := Text.replace(text, #text("SS"), Float.format(#fix(2), fractionalSecond));
+
+        text := Text.replace(text, #text("SSS"), Float.format(#fix(3), fractionalSecond));
+
+        text := Text.replace(text, #text("SSSS"), Float.format(#fix(4), fractionalSecond));
+
+        text := Text.replace(text, #text("SSSSS"), Float.format(#fix(5), fractionalSecond));
+
+        text := Text.replace(text, #text("SSSSSS"), Float.format(#fix(6), fractionalSecond));
+
+        text := Text.replace(text, #text("SSSSSSS"), Float.format(#fix(7), fractionalSecond));
+
+        text := Text.replace(text, #text("SSSSSSSS"), Float.format(#fix(8), fractionalSecond));
+
+        text := Text.replace(text, #text("SSSSSSSSS"), Float.format(#fix(9), fractionalSecond));
+
+        // Time Zone
+        text := Text.replace(text, #text("z"), timeZone.abbreviatedName);
+
+        text := Text.replace(text, #text("zz"), timeZone.abbreviatedName);
+
+        text := Text.replace(text, #text("Z"), timeZone.getOffset());
+
+        text := Text.replace(text, #text("ZZ"), timeZone.getOffset("noColon"));
+
+        // Unix Timestamp
+        let unixTimestamp = Int.toText(now / 1_000_000_000);
         text := Text.replace(text, #text("X"), unixTimestamp);
+
+        // Unix Millisecond Timestamp
+        let unixMsTimestamp = Int.toText(now / 1_000_000);
         text := Text.replace(text, #text("x"), unixMsTimestamp);
 
-        text := Text.replace(text, #text("gggg"), fullWeekYear);
-        text := Text.replace(text, #text("gg"), shortWeekYear);
-        text := Text.replace(text, #text("ww"), paddedWeekOfYear);
-        text := Text.replace(text, #text("w"), weekOfYear);
-        text := Text.replace(text, #text("e"), dayOfWeekIndex);
-        text := Text.replace(text, #text("dddd"), fullDayOfWeekName);
-        text := Text.replace(text, #text("ddd"), shortDayOfWeekName);
-        text := Text.replace(text, #text("GGGG"), fullIsoWeekYear);
-        text := Text.replace(text, #text("GG"), shortIsoWeekYear);
-        text := Text.replace(text, #text("WW"), paddedIsoWeekOfYear);
-        text := Text.replace(text, #text("W"), isoWeekOfYear);
-        text := Text.replace(text, #text("E"), isoDayOfWeek);
-
-        ?text;
-        // var output = "";
-        // var iter = Text.toIter(customFormat);
-        // label l loop {
-        //     switch (getNext(components, iter, timeZone)) {
-        //         case (null) break l;
-        //         case (?(next, newIter)) {
-        //             output #= next;
-        //             iter := newIter;
-        //         };
-        //     };
-        // };
-        // output;
-
+        text;
     };
-
-    private func getNext(components : Components, format : Iter.Iter<Char>, timeZone : TimeZone) : ?(Text, Iter.Iter<Char>) {
-        let ?next = format.next() else return null;
-        if (next != '%') {
-            return ?(Text.fromChar(next), format);
-        };
-        let ?next2 = format.next() else return null;
-        switch (mapValue(next2, components, timeZone)) {
-            case (null) null;
-            case (?v) {
-                ?(v, format);
-            };
-        };
-    };
-
-    private func mapValue(formatChar : Char, components : Components, timeZone : TimeZone) : ?Text {
-        do ? {
-            // Derived from https://man7.org/linux/man-pages/man1/date.1.html
-            switch (formatChar) {
-                case ('a') {
-                    // Weekday as region’s abbreviated name (Sun)
-                    Prelude.nyi();
-                };
-                case ('A') {
-                    // Weekday as region’s full name (Sunday)
-                    Prelude.nyi();
-                };
-                case ('b') {
-                    // Month as region’s abbreviated name (Jan)
-                    Prelude.nyi();
-                };
-                case ('B') {
-                    // Month as region’s full name (January)
-                    Prelude.nyi();
-                };
-                case ('c') {
-                    // The preferred date and time representation for the current region
-                    Prelude.nyi();
-                };
-                case ('C') {
-                    // The century number (year/100) as a 2-digit integer (20)
-                    Prelude.nyi();
-                };
-                case ('d') {
-                    // Day of the month as a decimal number (01-31)
-                    TextUtil.toTextPadded(components.day, 2);
-                };
-                case ('D') {
-                    // Equivalent to %m/%d/%y
-                    let month = TextUtil.toTextPadded(components.month, 2);
-                    let day = TextUtil.toTextPadded(components.day, 2);
-                    let year = TextUtil.toTextPaddedSign(components.year % 100, 2, false);
-                    month # "/" # day # "/" # year;
-                };
-                case ('e') {
-                    // Day of the month as a decimal number (1-31); single digits are preceded by a blank
-                    TextUtil.toTextPaddedSymb(components.day, 2, " ");
-                };
-                // TODO?
-                // %f    026490000    The fractional seconds (in nanoseconds) since last whole second. 5
-                // %.f    .026490    Similar to .%f but left-aligned. These all consume the leading dot. 5
-                // %.3f    .026    Similar to .%f but left-aligned but fixed to a length of 3. 5
-                // %.6f    .026490    Similar to .%f but left-aligned but fixed to a length of 6. 5
-                // %.9f    .026490000    Similar to .%f but left-aligned but fixed to a length of 9. 5
-                // %3f    026    Similar to %.3f but without the leading dot. 5
-                // %6f    026490    Similar to %.6f but without the leading dot. 5
-                // %9f    026490000    Similar to %.9f but without the leading dot. 5
-                case ('F') {
-                    // Equivalent to %Y-%m-%d (the ISO 8601 date format)
-                    let year = TextUtil.toTextPaddedSign(components.year, 4, false);
-                    let month = TextUtil.toTextPadded(components.month, 2);
-                    let day = TextUtil.toTextPadded(components.day, 2);
-                    year # "-" # month # "-" # day;
-                };
-                case ('g') {
-                    // Like %G, but without the century
-                    Prelude.nyi();
-                };
-                case ('G') {
-                    // The ISO 8601 week-based year with century as a decimal number.
-                    // The 4-digit year corresponding to the ISO week number (see %V). This has
-                    // the same format and value as %Y, except that if the ISO week number belongs
-                    // to the previous or next year, that year is used instead.
-                    Prelude.nyi();
-                };
-                case ('h') {
-                    // Equivalent to %b
-                    Prelude.nyi();
-                };
-                case ('H') {
-                    // The hour as a decimal number using a 24-hour clock (range 00 to 23)
-                    TextUtil.toTextPadded(components.hour, 2);
-                };
-                case ('I') {
-                    // The hour as a decimal number using a 12-hour clock (range 01 to 12)
-                    TextUtil.toTextPadded((components.hour % 12) + 1, 2);
-                };
-                case ('j') {
-                    // The day of the year as a decimal number (range 001 to 366)
-                    Prelude.nyi();
-                };
-                case ('k') {
-                    // The hour (24-hour clock) as a decimal number (range 0 to 23); single digits
-                    // are preceded by a blank
-                    TextUtil.toTextPaddedSymb(components.hour, 2, " ");
-                };
-                case ('l') {
-                    // The hour (12-hour clock) as a decimal number (range 1 to 12); single digits
-                    // are preceded by a blank
-                    TextUtil.toTextPaddedSymb((components.hour % 12) + 1, 2, " ");
-                };
-                case ('m') {
-                    // The month as a decimal number (range 01 to 12)
-                    TextUtil.toTextPadded(components.month, 2);
-                };
-                case ('M') {
-                    // The minute as a decimal number (range 00 to 59)
-                    TextUtil.toTextPadded(components.minute, 2);
-                };
-                case ('n') {
-                    // A newline character (\n)
-                    "\n";
-                };
-                case ('N') {
-                    // The nanosecond as a decimal number (range 000000000 to 999999999). The
-                    // three least-significant digits are equivalent to %3f, %6f, and %9f.
-                    TextUtil.toTextPadded(components.nanosecond % 1_000_000_000, 9);
-                };
-                case ('p') {
-                    // Either "AM" or "PM" according to the given time value, or the corresponding
-                    // strings for the current region. Noon is treated as "PM" and midnight as "AM".
-                    Prelude.nyi();
-                };
-                case ('P') {
-                    // Like %p but in lowercase: "am" or "pm" or a corresponding string for the current region.
-                    Prelude.nyi();
-                };
-                case ('q') {
-                    // The quarter as a decimal number (range 1 to 4)
-                    if (components.month < 4) {
-                        "1";
-                    } else if (components.month < 7) {
-                        "2";
-                    } else if (components.month < 10) {
-                        "3";
-                    } else {
-                        "4";
-                    };
-                };
-                case ('r') {
-                    // The time in a.m. or p.m. notation. In the POSIX region this is equivalent to %I:%M:%S %p.
-                    Prelude.nyi();
-                };
-                case ('R') {
-                    // The time in 24-hour notation (%H:%M)
-                    let hour = TextUtil.toTextPadded(components.hour, 2);
-                    let minute = TextUtil.toTextPadded(components.minute, 2);
-                    hour # ":" # minute;
-                };
-                case ('s') {
-                    // The number of seconds since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
-                    // let seconds = Components.toTime(components) / 1_000_000_000;
-                    // TextUtil.toTextPadded(seconds, 2);
-                    Prelude.nyi();
-                };
-                case ('S') {
-                    // The second as a decimal number (range 00 to 60).  (The range is up to 60 to allow for occasional leap seconds.)
-                    let seconds = components.nanosecond / 1_000_000_000;
-                    TextUtil.toTextPadded(seconds, 2);
-                };
-                case ('t') {
-                    // A tab character (\t)
-                    "\t";
-                };
-                case ('T') {
-                    // The time in 24-hour notation (%H:%M:%S)
-                    // let hour = TextUtil.toTextPadded(components.hour, 2);
-                    // let minute = TextUtil.toTextPadded(components.minute, 2);
-                    // let second = TextUtil.toTextPadded(components.second, 2);
-                    // hour # ":" # minute # ":" # second;
-                    Prelude.nyi();
-                };
-                case ('u') {
-                    // The day of the week as a decimal, range 1 to 7, Monday being 1. See also %w.
-                    Prelude.nyi();
-                };
-                case ('U') {
-                    // The week number of the current year as a decimal number, range 00 to 53,
-                    // starting with the first Sunday as the first day of week 01. See also %V and %W.
-                    Prelude.nyi();
-                };
-                case ('v') {
-                    // TODO this is not from strftime, but https://docs.rs/chrono/latest/chrono/format/strftime/index.html
-                    //     Day-month-year format. Same as %e-%b-%Y.
-                    Prelude.nyi();
-                };
-                case ('V') {
-                    // The ISO 8601 week number (see NOTES) of the current year as a decimal number,
-                    // range 01 to 53, where week 1 is the first week that has at least 4 days in the
-                    // new year. See also %U and %W.
-                    Prelude.nyi();
-                };
-                case ('w') {
-                    // The day of the week as a decimal, range 0 to 6, Sunday being 0. See also %u
-                    switch (dayOfWeek(components)) {
-                        case (#sunday) "0";
-                        case (#monday) "1";
-                        case (#tuesday) "2";
-                        case (#wednesday) "3";
-                        case (#thursday) "4";
-                        case (#friday) "5";
-                        case (#saturday) "6";
-                    };
-                };
-                case ('W') {
-                    // The week number of the current year as a decimal number, range 00 to 53,
-                    // starting with the first Monday as the first day of week 01.
-                    Prelude.nyi();
-                };
-                case ('x') {
-                    // The preferred date representation for the current region without the time.
-                    // let year = TextUtil.toTextPaddedSign(components.year, 4, false);
-                    // let month = TextUtil.toTextPadded(components.month, 2);
-                    // let day = TextUtil.toTextPadded(components.day, 2);
-                    // year # "-" # month # "-" # day;
-                    Prelude.nyi();
-                };
-                case ('X') {
-                    // The preferred time representation for the current region without the date.
-                    // let hour = TextUtil.toTextPadded(components.hour, 2);
-                    // let minute = TextUtil.toTextPadded(components.minute, 2);
-                    // let second = TextUtil.toTextPadded(components.second, 2);
-                    // hour # ":" # minute # ":" # second;
-                    Prelude.nyi();
-                };
-                case ('y') {
-                    // The year as a decimal number without a century (range 00 to 99).
-                    TextUtil.toTextPaddedSign(components.year % 100, 2, false);
-                };
-                case ('Y') {
-                    // The year as a decimal number including the century
-                    TextUtil.toTextPaddedSign(components.year, 4, false);
-                };
-                case ('z') {
-                    // The +hhmm or -hhmm numeric timezone (that is, the hour and minute offset from UTC).
-                    // (SU) For example, "-0430" means 4 hours 30 minutes behind UTC (west of Greenwich).
-                    // If tm_isdst is zero, the standard time offset is used. If tm_isdst is positive,
-                    // the daylight saving time offset is used. If tm_isdst is negative, no timezone
-                    // conversion is performed.
-
-                    let offsetSeconds = InternalTimeZone.toOffsetSeconds(timeZone, components);
-                    let h = offsetSeconds / 3600;
-                    let m = (Int.abs(offsetSeconds) % 3600) / 60;
-                    let hours = TextUtil.toTextPaddedSign(h, 2, true);
-                    let minutes = TextUtil.toTextPaddedSign(m, 2, false);
-
-                    hours # ":" # minutes;
-                };
-                case ('Z') {
-                    // The alphabetic time zone abbreviation (e.g., EDT)
-                    Prelude.nyi();
-                };
-                // TODO?
-                // %z    +0930    Offset from the local time to UTC (with UTC being +0000).
-                // %:z    +09:30    Same as %z but with a colon.
-                // %::z    +09:30:00    Offset from the local time to UTC with seconds.
-                // %:::z    +09    Offset from the local time to UTC without minutes.
-                // %#z    +09    Parsing only: Same as %z but allows minutes to be missing or present.
-                case ('+') {
-                    // The date and time in 2001-07-08T00:34:60.026490+09:30 format.
-                    // let year = TextUtil.toTextPaddedSign(components.year, 4, false);
-                    // let month = TextUtil.toTextPadded(components.month, 2);
-                    // let day = TextUtil.toTextPadded(components.day, 2);
-                    // let hour = TextUtil.toTextPadded(components.hour, 2);
-                    // let minute = TextUtil.toTextPadded(components.minute, 2);
-                    // let second = TextUtil.toTextPadded(components.second, 2);
-                    // year # "-" # month # "-" # day # " " # hour # ":" # minute # ":" # second;
-                    Prelude.nyi();
-                };
-                case ('%') {
-                    // A literal '%' character.
-                    "%";
-                };
-                // TODO?
-                // %-?    Suppresses any padding including spaces and zeroes. (e.g. %j = 012, %-j = 12)
-                // %_?    Uses spaces as a padding. (e.g. %j = 012, %_j =  12)
-                // %0?    Uses zeroes as a padding. (e.g. %e =  9, %0e = 09)
-                case (_) {
-                    return null;
-                };
-            };
-        };
-    };
-
-    // array with leading number of days values
-    private let t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
 
     public func dayOfWeek(components : DateComponents) : DayOfWeek {
-        let d = components.day;
-        let m = components.month;
-        let y = if (m < 3) components.year else components.year - 1; // if month is less than 3 reduce year by 1
-
-        let intValue = (y + y / 4 - y / 100 + y / 400 + t[m - 1] + d) % 7;
+        let intValue = dayOfWeekIndex(components);
         switch (intValue) {
             case (0) #sunday;
             case (1) #monday;
@@ -569,6 +417,31 @@ module Module {
             case (6) #saturday;
             case _ Prelude.unreachable();
         };
+    };
+
+    public func throwIfNotValid(components : Components) : () {
+        if (not isValid(components)) {
+            Debug.trap("Invalid datetime components: " # debug_show (components));
+        };
+    };
+
+    // array with leading number of days values
+    private let monthLeadingValues = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
+
+    public func dayOfWeekIndex(components : DateComponents) : Nat {
+        let d = components.day;
+        let m = components.month;
+        let y = if (m < 3) components.year else components.year - 1; // if month is less than 3 reduce year by 1
+
+        let t = monthLeadingValues[m - 1];
+        let v : Int = if (components.year >= 1582) {
+            // Gregorian calendar rules
+            (y + y / 4 - y / 100 + y / 400 + t + d);
+        } else {
+            // Julian calendar rules
+            (y + y / 4 + t + d);
+        };
+        return Int.abs(v) % 7;
     };
 
     public func daysInYear(year : Int) : Nat {
@@ -590,6 +463,79 @@ module Module {
             case (1 or 3 or 5 or 7 or 8 or 10 or 12) 31;
             case _ Debug.trap("Invalid month: " # Nat.toText(month));
         };
+    };
+
+    public func weekYear(date : DateComponents, firstDayOfYear : Nat) : Int {
+        if (firstDayOfYear < 1 or firstDayOfYear > 7) {
+            Debug.trap("First day must be between 1 and 7. Value: " # Nat.toText(firstDayOfYear));
+        };
+        // Calculate the day of the year for the given date
+        let startOfYear = {
+            year = date.year;
+            month = 1;
+            day = 1;
+            hour = 0;
+            minute = 0;
+            nanosecond = 0;
+        };
+        let dateTime = { date with hour = 0; minute = 0; nanosecond = 0 };
+        let dayOfYear = timeBetween(startOfYear, dateTime) / 24 / 60 / 60 / 1_000_000_000;
+
+        // Calculate the day of the week for the given date (0 = Monday, 6 = Sunday)
+        let dayOfWeek = dayOfWeekIndex(date);
+
+        // Check if the date falls in the first week of the year
+        let firstDayOfYearIndex : Nat = firstDayOfYear - 1;
+        let inFirstWeek = dayOfYear < firstDayOfYear and dayOfWeek >= firstDayOfYearIndex;
+
+        // Check if the date falls in the last week of the previous year
+        let lastDayOfYear : Nat = 365 - (7 - firstDayOfYear);
+        let inLastWeekOfPrevYear = dayOfYear >= lastDayOfYear and dayOfWeek < firstDayOfYearIndex;
+
+        // Return the correct week year
+        if (inFirstWeek) {
+            return date.year;
+        } else if (inLastWeekOfPrevYear) {
+            return date.year - 1;
+        } else {
+            return date.year;
+        };
+    };
+
+    public func weekOfYear(components : DateComponents, firstDayOfWeek : Nat, firstDayOfYear : Nat) : Nat {
+        let dayOfYearValue = dayOfYear(components, firstDayOfYear);
+
+        // Calculate the week number
+        var weekNumber : Nat = (dayOfYearValue / 7) + 1;
+
+        // If the first day of the year was before the `firstDayOfYear`, add 1 to the week number
+        if (firstDayOfWeek < firstDayOfYear) {
+            weekNumber += 1;
+        };
+
+        return weekNumber;
+
+    };
+
+    public func dayOfYear(date : DateComponents, firstDayOfYear : Nat) : Nat {
+        let startOfYear = {
+            year = date.year;
+            month = 1;
+            day = 1;
+            hour = 0;
+            minute = 0;
+            second = 0;
+            nanosecond = 0;
+        };
+        let dateTime = { date with hour = 0; minute = 0; nanosecond = 0 };
+        let time = timeBetween(startOfYear, dateTime);
+        Int.abs(time) / 24 / 60 / 60 / 1_000_000_000;
+    };
+
+    public func timeBetween(start : Components, end : Components) : Int {
+        let startTime = toTime(start);
+        let endTime = toTime(end);
+        return endTime - startTime;
     };
 
 };

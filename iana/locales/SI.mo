@@ -63,5 +63,52 @@ module SI {
 		dateFormat = "YYYY/MM/DD";
 		dateTimeFormat = "a h:mm YYYY/MM/DD";
 		longDateFormat = "YYYY/MM/DD";
+		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
+			let (lower, upper) = switch ((hour, minute)) {
+				case ((0, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((1, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((2, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((3, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((4, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((5, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((6, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((7, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((8, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((9, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((10, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((11, _)) ("පෙ.ව.", "පෙර වරු");
+				case ((12, _)) ("ප.ව.", "පස් වරු");
+				case ((13, _)) ("ප.ව.", "පස් වරු");
+				case ((14, _)) ("ප.ව.", "පස් වරු");
+				case ((15, _)) ("ප.ව.", "පස් වරු");
+				case ((16, _)) ("ප.ව.", "පස් වරු");
+				case ((17, _)) ("ප.ව.", "පස් වරු");
+				case ((18, _)) ("ප.ව.", "පස් වරු");
+				case ((19, _)) ("ප.ව.", "පස් වරු");
+				case ((20, _)) ("ප.ව.", "පස් වරු");
+				case ((21, _)) ("ප.ව.", "පස් වරු");
+				case ((22, _)) ("ප.ව.", "පස් වරු");
+				case ((23, _)) ("ප.ව.", "පස් වරු");
+			};
+			if (isLower) lower else upper;
+		};
+		eras = [
+			{
+				start = -62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = -62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
 	};
 };

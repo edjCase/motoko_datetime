@@ -63,5 +63,52 @@ module GU {
 		dateFormat = "DD/MM/YYYY";
 		dateTimeFormat = "A h:mm વાગ્યે DD/MM/YYYY";
 		longDateFormat = "DD/MM/YYYY";
+		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
+			let (lower, upper) = switch ((hour, minute)) {
+				case ((0, _)) ("રાત", "રાત");
+				case ((1, _)) ("રાત", "રાત");
+				case ((2, _)) ("રાત", "રાત");
+				case ((3, _)) ("રાત", "રાત");
+				case ((4, _)) ("સવાર", "સવાર");
+				case ((5, _)) ("સવાર", "સવાર");
+				case ((6, _)) ("સવાર", "સવાર");
+				case ((7, _)) ("સવાર", "સવાર");
+				case ((8, _)) ("સવાર", "સવાર");
+				case ((9, _)) ("સવાર", "સવાર");
+				case ((10, _)) ("બપોર", "બપોર");
+				case ((11, _)) ("બપોર", "બપોર");
+				case ((12, _)) ("બપોર", "બપોર");
+				case ((13, _)) ("બપોર", "બપોર");
+				case ((14, _)) ("બપોર", "બપોર");
+				case ((15, _)) ("બપોર", "બપોર");
+				case ((16, _)) ("બપોર", "બપોર");
+				case ((17, _)) ("સાંજ", "સાંજ");
+				case ((18, _)) ("સાંજ", "સાંજ");
+				case ((19, _)) ("સાંજ", "સાંજ");
+				case ((20, _)) ("રાત", "રાત");
+				case ((21, _)) ("રાત", "રાત");
+				case ((22, _)) ("રાત", "રાત");
+				case ((23, _)) ("રાત", "રાત");
+			};
+			if (isLower) lower else upper;
+		};
+		eras = [
+			{
+				start = -62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = -62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
 	};
 };

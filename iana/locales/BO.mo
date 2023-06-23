@@ -63,5 +63,52 @@ module BO {
 		dateFormat = "DD/MM/YYYY";
 		dateTimeFormat = "A h:mm DD/MM/YYYY";
 		longDateFormat = "DD/MM/YYYY";
+		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
+			let (lower, upper) = switch ((hour, minute)) {
+				case ((0, _)) ("མཚན་མོ", "མཚན་མོ");
+				case ((1, _)) ("མཚན་མོ", "མཚན་མོ");
+				case ((2, _)) ("མཚན་མོ", "མཚན་མོ");
+				case ((3, _)) ("མཚན་མོ", "མཚན་མོ");
+				case ((4, _)) ("ཞོགས་ཀས", "ཞོགས་ཀས");
+				case ((5, _)) ("ཞོགས་ཀས", "ཞོགས་ཀས");
+				case ((6, _)) ("ཞོགས་ཀས", "ཞོགས་ཀས");
+				case ((7, _)) ("ཞོགས་ཀས", "ཞོགས་ཀས");
+				case ((8, _)) ("ཞོགས་ཀས", "ཞོགས་ཀས");
+				case ((9, _)) ("ཞོགས་ཀས", "ཞོགས་ཀས");
+				case ((10, _)) ("ཉིན་གུང", "ཉིན་གུང");
+				case ((11, _)) ("ཉིན་གུང", "ཉིན་གུང");
+				case ((12, _)) ("ཉིན་གུང", "ཉིན་གུང");
+				case ((13, _)) ("ཉིན་གུང", "ཉིན་གུང");
+				case ((14, _)) ("ཉིན་གུང", "ཉིན་གུང");
+				case ((15, _)) ("ཉིན་གུང", "ཉིན་གུང");
+				case ((16, _)) ("ཉིན་གུང", "ཉིན་གུང");
+				case ((17, _)) ("དགོང་དག", "དགོང་དག");
+				case ((18, _)) ("དགོང་དག", "དགོང་དག");
+				case ((19, _)) ("དགོང་དག", "དགོང་དག");
+				case ((20, _)) ("མཚན་མོ", "མཚན་མོ");
+				case ((21, _)) ("མཚན་མོ", "མཚན་མོ");
+				case ((22, _)) ("མཚན་མོ", "མཚན་མོ");
+				case ((23, _)) ("མཚན་མོ", "མཚན་མོ");
+			};
+			if (isLower) lower else upper;
+		};
+		eras = [
+			{
+				start = -62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = -62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
 	};
 };

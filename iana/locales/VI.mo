@@ -63,5 +63,52 @@ module VI {
 		dateFormat = "DD/MM/YYYY";
 		dateTimeFormat = "HH:mm DD/MM/YYYY";
 		longDateFormat = "DD/MM/YYYY";
+		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
+			let (lower, upper) = switch ((hour, minute)) {
+				case ((0, _)) ("sa", "SA");
+				case ((1, _)) ("sa", "SA");
+				case ((2, _)) ("sa", "SA");
+				case ((3, _)) ("sa", "SA");
+				case ((4, _)) ("sa", "SA");
+				case ((5, _)) ("sa", "SA");
+				case ((6, _)) ("sa", "SA");
+				case ((7, _)) ("sa", "SA");
+				case ((8, _)) ("sa", "SA");
+				case ((9, _)) ("sa", "SA");
+				case ((10, _)) ("sa", "SA");
+				case ((11, _)) ("sa", "SA");
+				case ((12, _)) ("ch", "CH");
+				case ((13, _)) ("ch", "CH");
+				case ((14, _)) ("ch", "CH");
+				case ((15, _)) ("ch", "CH");
+				case ((16, _)) ("ch", "CH");
+				case ((17, _)) ("ch", "CH");
+				case ((18, _)) ("ch", "CH");
+				case ((19, _)) ("ch", "CH");
+				case ((20, _)) ("ch", "CH");
+				case ((21, _)) ("ch", "CH");
+				case ((22, _)) ("ch", "CH");
+				case ((23, _)) ("ch", "CH");
+			};
+			if (isLower) lower else upper;
+		};
+		eras = [
+			{
+				start = -62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = -62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
 	};
 };

@@ -22,7 +22,7 @@ module {
     public func toTextPadded(value : Nat, length : Nat) : Text {
         toTextPaddedSymb(value, length, "0");
     };
-    
+
     public func toTextPaddedSymb(value : Nat, length : Nat, padChar : Text) : Text {
         var text = Nat.toText(value);
         if (text.size() < length) {
@@ -54,5 +54,20 @@ module {
         };
         return Nat.fromText(value);
     };
-    
+
+    public func getOrdinal(nat : Nat) : Text {
+        let lastDigit = nat % 10;
+        let lastTwoDigits = nat % 100;
+        if (lastTwoDigits >= 11 and lastTwoDigits <= 13) {
+            return "th";
+        } else {
+            switch (lastDigit) {
+                case (1) "st";
+                case (2) "nd";
+                case (3) "rd";
+                case (_) "th";
+            };
+        };
+    };
+
 };
