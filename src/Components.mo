@@ -140,7 +140,11 @@ module {
     /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
     /// let text : Text = Components.toTextFormatted(c, #iso8601, TimeZone.utc());
     /// ```
-    public func toTextFormatted(components : Components, timeZone : TimeZone, format : InternalTypes.TextFormat) : Text {
+    public func toTextFormatted(
+        components : Components,
+        timeZone : TimeZone,
+        format : InternalTypes.TextFormat,
+    ) : Text {
         InternalComponents.toTextFormatted(components, timeZone, format);
     };
 

@@ -76,13 +76,17 @@ module {
 
     public type TextFormat = {
         #iso8601;
-        #custom : Text;
+        #custom : {
+            format : Text;
+            locale : Locale;
+        };
     };
 
     public type TimeZoneDescriptor = {
         #unspecified;
         #utc;
         #fixed : FixedTimeZone;
+        #name : Text;
     };
 
     public type TimeZone = {
@@ -91,7 +95,8 @@ module {
     };
 
     public type DynamicTimeZone = {
-        get toOffsetSeconds : (components : Components) -> Int;
+        getAbbr : (components : Components) -> Text;
+        toOffsetSeconds : (components : Components) -> Int;
     };
 
     public type FixedTimeZone = {

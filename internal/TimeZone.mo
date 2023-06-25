@@ -2,6 +2,8 @@ import InternalTypes "Types";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
+import TextUtil "TextUtil";
+import Int "mo:base/Int";
 
 module {
     type Components = InternalTypes.Components;
@@ -59,6 +61,22 @@ module {
         switch (fixedTimeZone) {
             case (#seconds(s)) s;
             case (#hours(h)) h * 3600;
+        };
+    };
+
+    public func getOffsetText(offsetSeconds : Int) : Text {
+        let isNegative : Bool = offsetSeconds < 0;
+        let absOffsetSeconds : Nat = Int.abs(offsetSeconds);
+        let hours = absOffsetSeconds / 3600;
+        let minutes = (absOffsetSeconds % 3600) / 60;
+        let seconds = absOffsetSeconds % 60;
+        let sign = if (isNegative) "-" else "+";
+        let hoursText = TextUtil.toTextPadded(hours, 2);
+        let minutesText = TextUtil.toTextPadded(minutes, 2);
+        let text = sign # hoursText # ":" # minutesText;
+        switch (seconds) {
+            case (0) text;
+            case (s) text # ":" # TextUtil.toTextPadded(s, 2);
         };
     };
 

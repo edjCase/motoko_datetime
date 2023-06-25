@@ -12,6 +12,7 @@ import Int "mo:base/Int";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
+import Components "../internal/Components";
 module {
 
     public type TimeZone = InternalTypes.TimeZone;
@@ -59,5 +60,9 @@ module {
     /// ```
     public func toFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {
         InternalTimeZone.toFixedOffsetSeconds(fixedTimeZone);
+    };
+
+    public func getDescriptor(timeZone : TimeZone, components : Components) : TimeZoneDescriptor {
+        InternalTimeZone.getDescriptor(timeZone, components);
     };
 };

@@ -11,6 +11,8 @@ import Iter "mo:base/Iter";
 import Prelude "mo:base/Prelude";
 import Array "mo:base/Array";
 import Float "mo:base/Float";
+import TimeZone "TimeZone";
+import Components "Components";
 
 module Module {
 
@@ -186,223 +188,623 @@ module Module {
     public func toTextFormatted(
         components : Components,
         timeZone : TimeZone,
-        locale : Locale,
         format : InternalTypes.TextFormat,
     ) : Text {
         throwIfNotValid(components);
 
         let customFormat : Text = switch (format) {
             case (#iso8601) "%Y-%m-%dT%H:%M:%S.%N%z";
-            case (#custom(customFormat)) customFormat;
+            case (#custom({ format; locale })) format;
         };
+
+        let replacements = [
+            {
+                // Month
+                value = "M";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Nat.toText(components.month);
+                };
+            },
+            {
+                // Month with ordinal
+                value = "Mo";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.getOrdinal(components.month);
+                };
+            },
+            {
+                // Padded Month
+                value = "MM";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPadded(components.month, 2);
+                };
+            },
+            {
+                // Short Month
+                value = "MMM";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.monthsShort[components.month - 1];
+                };
+            },
+            {
+                // Full Month
+                value = "MMMM";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.months[components.month - 1];
+                };
+            },
+            {
+                // Quarter
+                value = "Q";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Nat.toText(components.month / 3 + 1);
+                };
+            },
+            {
+                // Quarter with ordinal
+                value = "Qo";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.getOrdinal(components.month / 3 + 1);
+                };
+            },
+            {
+                // Day of Month
+                value = "D";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Nat.toText(components.day);
+                };
+            },
+            {
+                // Day of Month with ordinal
+                value = "Do";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.getOrdinal(components.day);
+                };
+            },
+            {
+                // Padded Day of Month
+                value = "DD";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPadded(components.day, 2);
+                };
+            },
+            {
+                // Day of Year
+                value = "DDD";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    Nat.toText(dayOfYear(components, l.firstDayOfYear));
+                };
+            },
+            {
+                // Day of Year with ordinal
+                value = "DDDo";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.getOrdinal(dayOfYear(components, l.firstDayOfYear));
+                };
+            },
+            {
+                // Padded Day of Year
+                value = "DDDD";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    TextUtil.toTextPadded(dayOfYear(components, l.firstDayOfYear), 3);
+                };
+            },
+            {
+                // Day of Week
+                value = "d";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let dayOfWeek = dayOfWeekIndex(components);
+                    Nat.toText(dayOfWeek);
+                };
+            },
+            {
+                // Day of Week with ordinal
+                value = "do";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let dayOfWeek = dayOfWeekIndex(components);
+                    l.getOrdinal(dayOfWeek);
+                };
+            },
+            {
+                // Weekday Min
+                value = "dd";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let dayOfWeek = dayOfWeekIndex(components);
+                    l.weekdaysMin[dayOfWeek];
+                };
+            },
+            {
+                // Weekday Short
+                value = "ddd";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let dayOfWeek = dayOfWeekIndex(components);
+                    l.weekdaysShort[dayOfWeek];
+                };
+            },
+            {
+                // Weekday
+                value = "dddd";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let dayOfWeek = dayOfWeekIndex(components);
+                    l.weekdays[dayOfWeek];
+                };
+            },
+            {
+                // Day of Week (Locale)
+                value = "e";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let dayOfWeek = dayOfWeekIndex(components);
+                    Nat.toText(dayOfWeek + l.firstDayOfWeek);
+                };
+            },
+            {
+                // Day of Week (ISO)
+                value = "E";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let dayOfWeek = dayOfWeekIndex(components);
+                    Nat.toText(dayOfWeek + 1);
+                };
+            },
+            {
+                // Week of Year
+                value = "w";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
+                    Nat.toText(weekOfYearValue);
+                };
+            },
+            {
+                // Week of Year with ordinal
+                value = "wo";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
+                    l.getOrdinal(weekOfYearValue);
+                };
+            },
+            {
+                // Padded Week of Year
+                value = "ww";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
+                    TextUtil.toTextPaddedSign(weekOfYearValue, 2, false);
+                };
+            },
+            {
+                // Week of Year (ISO)
+                value = "W";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let weekOfYearValue = weekOfYear(components, 1, 4);
+                    Nat.toText(weekOfYearValue);
+                };
+            },
+            {
+                // Week of Year (ISO) with ordinal
+                value = "Wo";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let weekOfYearValue = weekOfYear(components, 1, 4);
+                    l.getOrdinal(weekOfYearValue);
+                };
+            },
+            {
+                // Padded Week of Year (ISO)
+                value = "WW";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let weekOfYearValue = weekOfYear(components, 1, 4);
+                    TextUtil.toTextPaddedSign(weekOfYearValue, 2, false);
+                };
+            },
+            {
+                // Year
+                value = "Y";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let showPositiveSign = components.year > 9999; // Show + sign for years > 9999
+                    TextUtil.toTextPaddedSign(components.year, 1, showPositiveSign);
+                };
+            },
+            {
+                // Padded Year without century
+                value = "YY";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPaddedSign(components.year % 100, 2, false);
+                };
+            },
+            {
+                // Padded Year
+                value = "YYYY";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPaddedSign(components.year, 4, false);
+                };
+            },
+            {
+                // Max Padded Year with sign
+                value = "YYYYYY";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPaddedSign(components.year, 6, true);
+                };
+            },
+            {
+                // Era year
+                value = "y";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    let eraYear = Int.abs(components.year);
+                    Nat.toText(eraYear);
+                };
+            },
+            {
+                // Era year with ordinal
+                value = "yo";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    let eraYear = Int.abs(components.year);
+                    l.getOrdinal(eraYear);
+                };
+            },
+            {
+                // Era year with ordinal
+                value = "yy";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    let eraYear = Int.abs(components.year);
+                    l.getOrdinal(eraYear);
+                };
+            },
+            {
+                // Era
+                value = "N";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    era.abbreviatedName;
+                };
+            },
+            {
+                // Era
+                value = "NN";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    era.abbreviatedName;
+                };
+            },
+            {
+                // Era
+                value = "NNN";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    era.abbreviatedName;
+                };
+            },
+            {
+                // Era Full Name
+                value = "NNNN";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    era.fullName;
+                };
+            },
+            {
+                // Era Narrow Name
+                value = "NNNNN";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let now = toTime(components);
+                    let era = getEra(now, locale);
+                    era.narrowName;
+                };
+            },
+            {
+                // Padded Week Year without century (Locale)
+                value = "gg";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let weekYearValue = weekYear(components, l.firstDayOfYear);
+                    TextUtil.toTextPaddedSign(weekYearValue % 100, 2, false);
+                };
+            },
+            {
+                // Padded Week Year (Locale)
+                value = "gggg";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    let weekYearValue = weekYear(components, l.firstDayOfYear);
+                    TextUtil.toTextPaddedSign(weekYearValue, 4, false);
+                };
+            },
+            {
+                // Padded Week Year without century (ISO)
+                value = "GG";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let weekYearValue = weekYear(components, 4); // ISO week year starts on thursday (4)
+                    TextUtil.toTextPaddedSign(weekYearValue % 100, 2, false);
+                };
+            },
+            {
+                // Padded Week Year (ISO)
+                value = "GGGG";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let weekYearValue = weekYear(components, 4); // ISO week year starts on thursday (4)
+                    TextUtil.toTextPaddedSign(weekYearValue, 4, false);
+                };
+            },
+            {
+                // Meridiem (UPPERCASE)
+                value = "A";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.getMeridiem(components.hour, components.minute, true);
+                };
+            },
+            {
+                // Meridiem (lowercase)
+                value = "a";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let l = requireLocale(locale);
+                    l.getMeridiem(components.hour, components.minute, false);
+                };
+            },
+            {
+                // Hour (0-23)
+                value = "H";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Nat.toText(components.hour);
+                };
+            },
+            {
+                // Hour Padded (0-23)
+                value = "HH";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPaddedSign(components.hour, 2, false);
+                };
+            },
+            {
+                // Hour (12 hour)
+                value = "h";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Nat.toText(components.hour % 12 + 1);
+                };
+            },
+            {
+                // Hour Padded (12 hour)
+                value = "hh";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPaddedSign(components.hour % 12 + 1, 2, false);
+                };
+            },
+            {
+                // Hour (1-24)
+                value = "k";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Nat.toText(components.hour + 1);
+                };
+            },
+            {
+                // Hour Padded (1-24)
+                value = "kk";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPaddedSign(components.hour + 1, 2, false);
+                };
+            },
+            {
+                // Minute
+                value = "m";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Nat.toText(components.minute);
+                };
+            },
+            {
+                // Minute Padded
+                value = "mm";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    TextUtil.toTextPaddedSign(components.minute, 2, false);
+                };
+            },
+            {
+                // Second
+                value = "s";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let second = components.nanosecond / 1_000_000_000;
+                    Nat.toText(second);
+                };
+            },
+            {
+                // Second Padded
+                value = "ss";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let second = components.nanosecond / 1_000_000_000;
+                    TextUtil.toTextPaddedSign(second, 2, false);
+                };
+            },
+            {
+                // Fractional Second (1 digit)
+                value = "S";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(1), fractionalSecond);
+                };
+            },
+            {
+                // Fractional Second (2 digits)
+                value = "SS";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(2), fractionalSecond);
+                };
+            },
+            {
+                // Fractional Second (3 digits)
+                value = "SSS";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(3), fractionalSecond);
+                };
+            },
+            {
+                // Fractional Second (4 digits)
+                value = "SSSS";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(4), fractionalSecond);
+                };
+            },
+            {
+                // Fractional Second (5 digits)
+                value = "SSSSS";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(5), fractionalSecond);
+                };
+            },
+            {
+                // Fractional Second (6 digits)
+                value = "SSSSSS";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(6), fractionalSecond);
+                };
+            },
+            {
+                // Fractional Second (7 digits)
+                value = "SSSSSSS";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(7), fractionalSecond);
+                };
+            },
+            {
+                // Fractional Second (8 digits)
+                value = "SSSSSSSS";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
+                    Float.format(#fix(8), fractionalSecond);
+                };
+            },
+            {
+                // Time Zone Name
+                value = "z";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    getTimeZoneInfo(components.timeZone).0;
+                };
+            },
+            {
+                // Time Zone Name
+                value = "zz";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    getTimeZoneInfo(components.timeZone).0;
+                };
+            },
+            {
+                // Time Zone Offset
+                value = "Z";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    getTimeZoneInfo(components.timeZone).1;
+                };
+            },
+            {
+                // Time Zone Offset, No Colon
+                value = "ZZ";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    let offset = getTimeZoneInfo(components.timeZone).1;
+                    Text.replace(offset, #char(':'), "");
+                };
+            },
+            {
+                // Unix Timestamp
+                value = "X";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Int.toText(now / 1_000_000_000);
+                };
+            },
+            {
+                // Unix Millisecond Timestamp
+                value = "x";
+                getter = func(components : Components, locale : ?Locale) : Text {
+                    Int.toText(now / 1_000_000);
+                };
+            },
+        ];
 
         // TODO optimize
         var text = customFormat;
-
-        // Month
-        text := Text.replace(text, #text("M"), Nat.toText(components.month));
-
-        let monthWithOrdinal = locale.getOrdinal(components.month);
-        text := Text.replace(text, #text("Mo"), monthWithOrdinal);
-
-        text := Text.replace(text, #text("MM"), TextUtil.toTextPadded(components.month, 2));
-
-        let shortMonth = locale.monthsShort[components.month - 1];
-        text := Text.replace(text, #text("MMM"), shortMonth);
-
-        let fullMonth = locale.months[components.month - 1];
-        text := Text.replace(text, #text("MMMM"), fullMonth);
-
-        // Quarter
-        let quarter = components.month / 3 + 1;
-        text := Text.replace(text, #text("Q"), Nat.toText(quarter));
-
-        text := Text.replace(text, #text("Qo"), locale.getOrdinal(quarter));
-
-        // Day of Month
-        text := Text.replace(text, #text("D"), Nat.toText(components.day));
-
-        let dayWithOrdinal = locale.getOrdinal(components.day);
-        text := Text.replace(text, #text("Do"), dayWithOrdinal);
-
-        text := Text.replace(text, #text("DD"), TextUtil.toTextPadded(components.day, 2));
-
-        // Day of Year
-        let dayOfYearValue = dayOfYear(components, locale.firstDayOfYear);
-        text := Text.replace(text, #text("DDD"), Nat.toText(dayOfYearValue));
-
-        let dayOfYearWithOrdinal = locale.getOrdinal(dayOfYearValue);
-        text := Text.replace(text, #text("DDDo"), dayOfYearWithOrdinal);
-
-        text := Text.replace(text, #text("DDDD"), TextUtil.toTextPadded(dayOfYearValue, 3));
-
-        // Day of Week
-        let dayOfWeek = dayOfWeekIndex(components);
-        text := Text.replace(text, #text("d"), Nat.toText(dayOfWeek));
-
-        let dayOfWeekWithOrdinal = locale.getOrdinal(dayOfWeek);
-        text := Text.replace(text, #text("do"), dayOfWeekWithOrdinal);
-
-        text := Text.replace(text, #text("dd"), locale.weekdaysMin[dayOfWeek]);
-
-        text := Text.replace(text, #text("ddd"), locale.weekdaysShort[dayOfWeek]);
-
-        text := Text.replace(text, #text("dddd"), locale.weekdays[dayOfWeek]);
-
-        // Day of Week (Locale)
-        text := Text.replace(text, #text("e"), Nat.toText(dayOfWeek + locale.firstDayOfWeek));
-
-        // Day of Week (ISO)
-        text := Text.replace(text, #text("E"), Nat.toText(dayOfWeek + 1));
-
-        // Week of Year
-        let localeWeekOfYear = weekOfYear(components, locale.firstDayOfWeek, locale.firstDayOfYear);
-        text := Text.replace(text, #text("w"), Nat.toText(localeWeekOfYear));
-
-        let localeWeekOfYearWithOrdinal = locale.getOrdinal(localeWeekOfYear);
-        text := Text.replace(text, #text("wo"), localeWeekOfYearWithOrdinal);
-
-        text := Text.replace(text, #text("ww"), TextUtil.toTextPaddedSign(localeWeekOfYear, 2, false));
-
-        // Week of Year (ISO)
-        let isoWeekOfYear = weekOfYear(components, 1, 4); // ISO week year starts on thursday (4)
-        text := Text.replace(text, #text("W"), Nat.toText(isoWeekOfYear));
-
-        let isoWeekOfYearWithOrdinal = locale.getOrdinal(isoWeekOfYear);
-        text := Text.replace(text, #text("Wo"), isoWeekOfYearWithOrdinal);
-
-        text := Text.replace(text, #text("WW"), TextUtil.toTextPaddedSign(isoWeekOfYear, 2, false));
-
-        // Year
-        text := Text.replace(text, #text("Y"), TextUtil.toTextPaddedSign(components.year, 1, components.year > 9999));
-
-        text := Text.replace(text, #text("YY"), TextUtil.toTextPaddedSign(components.year % 100, 2, false));
-
-        text := Text.replace(text, #text("YYYY"), TextUtil.toTextPaddedSign(components.year, 4, false));
-
-        text := Text.replace(text, #text("YYYYYY"), TextUtil.toTextPaddedSign(components.year, 6, true));
-
-        // Era Year
-        let now = toTime(components);
-        let ?era = Array.find<Era>(
-            locale.eras,
-            func(e) {
-                let onOrAfterStart = switch (e.start) {
-                    case (null) true;
-                    case (?start) now >= start;
-                };
-                let beforeEnd = switch (e.end) {
-                    case (null) true;
-                    case (?end) now < end;
-                };
-                return onOrAfterStart and beforeEnd;
-            },
-        ) else Debug.trap("No era found for date and locale. Date: " # debug_show (components) # ", Locale: " # locale.id);
-
-        let eraYear = Int.abs(components.year);
-
-        text := Text.replace(text, #text("y"), Nat.toText(eraYear));
-
-        text := Text.replace(text, #text("yo"), locale.getOrdinal(eraYear));
-
-        text := Text.replace(text, #text("yy"), Nat.toText(eraYear));
-
-        text := Text.replace(text, #text("yyy"), Nat.toText(eraYear));
-
-        text := Text.replace(text, #text("yyyy"), Nat.toText(eraYear));
-
-        text := Text.replace(text, #text("yyyyy"), Nat.toText(eraYear));
-
-        // Era
-        text := Text.replace(text, #text("N"), era.abbreviatedName);
-
-        text := Text.replace(text, #text("NN"), era.abbreviatedName);
-
-        text := Text.replace(text, #text("NNN"), era.abbreviatedName);
-
-        text := Text.replace(text, #text("NNNN"), era.fullName);
-
-        text := Text.replace(text, #text("NNNNN"), era.narrowName);
-
-        // Week Year
-        let localeWeekYear = weekYear(components, locale.firstDayOfYear);
-        text := Text.replace(text, #text("gg"), TextUtil.toTextPaddedSign(localeWeekYear % 100, 2, false));
-
-        text := Text.replace(text, #text("gggg"), TextUtil.toTextPaddedSign(localeWeekYear, 4, false));
-
-        // Week Year (ISO)
-        let isoWeekYear = weekYear(components, 4); // ISO week year starts on thursday (4)
-        text := Text.replace(text, #text("GG"), TextUtil.toTextPaddedSign(isoWeekYear % 100, 2, false));
-
-        text := Text.replace(text, #text("GGGG"), TextUtil.toTextPaddedSign(isoWeekYear, 4, false));
-
-        // AM/PM
-        text := Text.replace(text, #text("A"), locale.getMeridiem(components.hour, components.minute, true));
-
-        text := Text.replace(text, #text("a"), locale.getMeridiem(components.hour, components.minute, false));
-
-        // Hour
-        text := Text.replace(text, #text("H"), Nat.toText(components.hour));
-
-        text := Text.replace(text, #text("HH"), TextUtil.toTextPaddedSign(components.hour, 2, false));
-
-        text := Text.replace(text, #text("h"), Nat.toText(components.hour % 12 + 1));
-
-        text := Text.replace(text, #text("hh"), TextUtil.toTextPaddedSign(components.hour % 12 + 1, 2, false));
-
-        text := Text.replace(text, #text("k"), Nat.toText(components.hour + 1));
-
-        text := Text.replace(text, #text("kk"), TextUtil.toTextPaddedSign(components.hour + 1, 2, false));
-
-        // Minute
-        text := Text.replace(text, #text("m"), Nat.toText(components.minute));
-
-        text := Text.replace(text, #text("mm"), TextUtil.toTextPaddedSign(components.minute, 2, false));
-
-        // Second
-        let second = components.nanosecond / 1_000_000_000;
-        text := Text.replace(text, #text("s"), Nat.toText(second));
-
-        text := Text.replace(text, #text("ss"), TextUtil.toTextPaddedSign(second, 2, false));
-
-        // Fractional Second
-        let fractionalSecond = Float.fromInt(components.nanosecond) / 60_000_000_000.0;
-        text := Text.replace(text, #text("S"), Float.format(#fix(1), fractionalSecond));
-
-        text := Text.replace(text, #text("SS"), Float.format(#fix(2), fractionalSecond));
-
-        text := Text.replace(text, #text("SSS"), Float.format(#fix(3), fractionalSecond));
-
-        text := Text.replace(text, #text("SSSS"), Float.format(#fix(4), fractionalSecond));
-
-        text := Text.replace(text, #text("SSSSS"), Float.format(#fix(5), fractionalSecond));
-
-        text := Text.replace(text, #text("SSSSSS"), Float.format(#fix(6), fractionalSecond));
-
-        text := Text.replace(text, #text("SSSSSSS"), Float.format(#fix(7), fractionalSecond));
-
-        text := Text.replace(text, #text("SSSSSSSS"), Float.format(#fix(8), fractionalSecond));
-
-        text := Text.replace(text, #text("SSSSSSSSS"), Float.format(#fix(9), fractionalSecond));
-
-        // Time Zone
-        text := Text.replace(text, #text("z"), timeZone.abbreviatedName);
-
-        text := Text.replace(text, #text("zz"), timeZone.abbreviatedName);
-
-        text := Text.replace(text, #text("Z"), timeZone.getOffset());
-
-        text := Text.replace(text, #text("ZZ"), timeZone.getOffset("noColon"));
-
-        // Unix Timestamp
-        let unixTimestamp = Int.toText(now / 1_000_000_000);
-        text := Text.replace(text, #text("X"), unixTimestamp);
-
-        // Unix Millisecond Timestamp
-        let unixMsTimestamp = Int.toText(now / 1_000_000);
-        text := Text.replace(text, #text("x"), unixMsTimestamp);
-
+        let charBuffer = Buffer.Buffer<Char>(value);
+        for (replacement in replacements) {
+            // TODO optimize
+            let replacementValue = replacement.getter(components, locale);
+            text := Text.replace(text, #text(replacement.value), replacementValue);
+        };
         text;
+    };
+
+    public func getTimeZoneInfo(components : Components, timeZone : TimeZone) : (Text, Text) {
+        switch (timeZone) {
+            case (#fixed(#seconds(s))) {
+                let offset = TimeZone.getOffsetText(s);
+                (offset, offset);
+            };
+            case (#fixed(#hours(h))) {
+                let offset = TimeZone.getOffsetText(h * 60 * 60);
+                (offset, offset);
+            };
+            case (#dynamic(d)) {
+                let name = d.getAbbr(components);
+                let offset = TimeZone.getOffsetText(d.toOffsetSeconds(components));
+                (name, offset);
+            };
+        };
+    };
+
+    public func getEra(time : Time.Time, locale : ?Locale) : Era {
+        let l = requireLocale(locale);
+        let eraFilter = func(e : Era) : Bool {
+            let onOrAfterStart = switch (e.start) {
+                case (null) true;
+                case (?start) time >= start;
+            };
+            let beforeEnd = switch (e.end) {
+                case (null) true;
+                case (?end) time < end;
+            };
+            return onOrAfterStart and beforeEnd;
+        };
+        switch (Array.find<Era>(l.eras, eraFilter)) {
+            case (?era) era;
+            case (null) Debug.trap("No era found for time and locale. Time: " # debug_show (time) # ", Locale: " # locale.id);
+        };
+    };
+
+    private func requireLocale(locale : ?Locale) : Locale {
+        switch (locale) {
+            case (?l) l;
+            case (null) Debug.trap("Locale is required to output the specified date format");
+        };
     };
 
     public func dayOfWeek(components : DateComponents) : DayOfWeek {
