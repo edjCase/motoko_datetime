@@ -158,7 +158,7 @@ for (testCase in Iter.fromArray(testCases)) {
     "fromComponents (Components -> LocalDateTime)",
     func() {
       // From date components
-      let ?dateTime = DateTime.fromComponents(testCase.dateTime) else Debug.trap("Could not parse date time components to a datetime");
+      let dateTime = DateTime.fromComponents(testCase.dateTime);
       assertDateTime(dateTime, expectedDateTime);
     },
   );

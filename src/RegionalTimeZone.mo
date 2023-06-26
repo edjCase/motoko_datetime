@@ -10,12 +10,24 @@ import Float "mo:base/Float";
 import Prelude "mo:base/Prelude";
 
 module {
-    type Region = IanaTypes.Region;
+    type Region = InternalTypes.Region;
 
     public class RegionalTimeZone(region : Region) : InternalTypes.DynamicTimeZone {
 
+        public func getAbbr(dateTime : InternalTypes.Components) : Text {
+            let rule = getRule(dateTime);
+            rule.abbreviation;
+        };
+
         public func toOffsetSeconds(dateTime : InternalTypes.Components) : Int {
-            let ?utcTime = Components.toTime(dateTime) else Debug.trap("Invalid datetime components: " # debug_show (dateTime));
+            let utcTime = Components.toTime(dateTime);
+            let utcSeconds = utcTime / 1000000;
+            let rule = getRule(dateTime);
+            rule.offsetSeconds;
+        };
+
+        private func getRule(components : InternalTypes.Components) : InternalTypes.RegionTimeZoneRule {
+            let utcTime = Components.toTime(components);
             let utcSeconds = utcTime / 1000000;
             label f for (rule in Iter.fromArray(region.timeZoneRules)) {
                 switch (rule.expiration) {
@@ -28,7 +40,7 @@ module {
                         // Skip, no expiration
                     };
                 };
-                return rule.offsetSeconds;
+                return rule;
             };
             Prelude.unreachable();
         };

@@ -32,6 +32,7 @@ module {
     public type Duration = InternalTypes.Duration;
     public type TextFormat = InternalTypes.TextFormat;
     public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
+    public type Locale = InternalTypes.Locale;
 
     public type FromTextResult = {
         components : Components;
@@ -55,34 +56,17 @@ module {
     };
 
     /// Compares two components, returning the order between them.
-    /// Will return null if either of the components are invalid
+    /// Will trap if either of the components are invalid
     ///
     /// ```motoko include=import
     /// let c1 : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
     /// let c2 : Components.Components = {year = 2020; month = 2; day = 1; hour = 0; minute = 0; nanosecond = 0};
     /// let ?order : ?Order.Order = Components.compare(c1, c2) else return #error("One or both components are invalid");
     /// ```
-    public func compare(c1 : Components, c2 : Components) : ?Order.Order {
-        do ? {
-            let t1 = toTime(c1)!;
-            let t2 = toTime(c2)!;
-            Int.compare(t1, t2);
-        };
-    };
-
-    /// Compares two components, returning the order between them.
-    /// Will trap if either of the components are invalid
-    ///
-    /// ```motoko include=import
-    /// let c1 : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
-    /// let c2 : Components.Components = {year = 2020; month = 2; day = 1; hour = 0; minute = 0; nanosecond = 0};
-    /// let order : Order.Order = Components.compareOrTrap(c1, c2);
-    /// ```
-    public func compareOrTrap(c1 : Components, c2 : Components) : Order.Order {
-        switch (compare(c1, c2)) {
-            case (null) Debug.trap("One or both components are invalid");
-            case (?o) o;
-        };
+    public func compare(c1 : Components, c2 : Components) : Order.Order {
+        let t1 = toTime(c1);
+        let t2 = toTime(c2);
+        Int.compare(t1, t2);
     };
 
     /// Converts the components to the equivalent UTC time in nanoseconds since the epoch.
@@ -92,7 +76,7 @@ module {
     /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
     /// let ?order : ?Time.Time = Components.toTime(c) else return #error("Components are invalid");
     /// ```
-    public func toTime(components : Components) : ?Time.Time {
+    public func toTime(components : Components) : Time.Time {
         InternalComponents.toTime(components);
     };
 
@@ -159,11 +143,11 @@ module {
     public func fromTextFormatted(text : Text, format : TextFormat) : ?FromTextResult {
         switch (format) {
             case (#iso8601) fromTextISO8601(text);
-            case (#custom(customFormat)) fromTextCustomFormat(text, customFormat);
+            case (#custom({ format; locale })) fromTextCustomFormat(text, format, locale);
         };
     };
 
-    private func fromTextCustomFormat(text : Text, customFormat : Text) : ?FromTextResult {
+    private func fromTextCustomFormat(text : Text, customFormat : Text, locale : Locale) : ?FromTextResult {
         // TODO
         Prelude.nyi();
     };

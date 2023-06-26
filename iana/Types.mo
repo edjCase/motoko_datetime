@@ -8,7 +8,11 @@ import Debug "mo:base/Debug";
 import InternalTimeZone "../internal/TimeZone";
 import DateTime "../src/DateTime";
 import Components "../src/Components";
+import InternalTypes "../internal/Types";
+
 module {
+
+    public type Region = InternalTypes.Region;
 
     type Seconds = Int;
     type Year = Int;

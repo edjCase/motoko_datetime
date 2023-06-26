@@ -101,8 +101,7 @@ module {
         public func toTime() : Time.Time {
             let offset = TimeZone.toOffsetSeconds(timeZone, components);
             let newComponents = Components.addTime(components, -offset * 1_000_000_000);
-            let ?time = Components.toTime(newComponents) else Prelude.unreachable();
-            time;
+            Components.toTime(newComponents);
         };
 
         /// Formats the `LocalDateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000+03:00`)
@@ -291,6 +290,7 @@ module {
                 case (#utc) TimeZone.utc();
                 case (#fixed(f)) #fixed(f);
                 case (#unspecified) TimeZone.utc(); // TODO is this the best way to handle it?
+                case (#name(n)) TimeZone.utc(); // TODO fix
             };
             LocalDateTime(result.components, timeZone);
         };

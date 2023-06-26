@@ -61,8 +61,4 @@ module {
     public func toFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {
         InternalTimeZone.toFixedOffsetSeconds(fixedTimeZone);
     };
-
-    public func getDescriptor(timeZone : TimeZone, components : Components) : TimeZoneDescriptor {
-        InternalTimeZone.getDescriptor(timeZone, components);
-    };
 };

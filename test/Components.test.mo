@@ -8,6 +8,8 @@ import Text "mo:base/Text";
 import Types "../internal/Types";
 import Time "mo:base/Time";
 import TimeZone "../src/TimeZone";
+import EN "../iana/locales/EN";
+import JA "../iana/locales/JA";
 
 test(
     "epoch",
@@ -462,7 +464,10 @@ test(
                     nanosecond = 0;
                 };
                 timeZone = #fixed(#seconds(0));
-                expectedIso8601 = "1970-01-01T00:00:00.000000000Z";
+                expected = [
+                    (#iso8601, "1970-01-01T00:00:00.000000000Z"),
+                    (#custom({ format = "D/M/YYYY, hh:mm:ss A"; locale = EN.locale }), "1/1/1970, 12:00:00 AM"),
+                ];
             },
             {
                 components = {
@@ -474,7 +479,10 @@ test(
                     nanosecond = 0;
                 };
                 timeZone = #fixed(#seconds(-25_320));
-                expectedIso8601 = "1970-01-01T00:00:00.000000000-07:02";
+                expected = [
+                    (#iso8601, "1970-01-01T00:00:00.000000000-07:02"),
+                    (#custom({ format = "D/M/YYYY, hh:mm:ss A"; locale = JA.locale }), "1/1/1970, 12:00:00 AM"),
+                ];
             },
             {
                 components = {
@@ -486,7 +494,10 @@ test(
                     nanosecond = 0;
                 };
                 timeZone = #fixed(#seconds(-25_321));
-                expectedIso8601 = "1970-01-01T00:00:00.000000000-07:02:01";
+                expected = [
+                    (#iso8601, "1970-01-01T00:00:00.000000000-07:02:01"),
+                    (#custom({ format = "D/M/YYYY, hh:mm:ss A"; locale = EN.locale }), "1/1/1970, 12:00:00 AM"),
+                ];
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {

@@ -54,8 +54,7 @@ module D {
                 case (#adder(adder)) {
                     let components = toComponents();
                     let newComponents = adder(components);
-                    let ?newDateTime = fromComponents(newComponents) else Prelude.unreachable();
-                    newDateTime;
+                    fromComponents(newComponents);
                 };
             };
         };
@@ -262,11 +261,9 @@ module D {
     /// let components : Components.Components = ...;
     /// let ?dateTime : ?DateTime.DateTime = DateTime.fromComponents(components) else return #error("Invalid date");
     /// ```
-    public func fromComponents(components : Components) : ?DateTime {
-        do ? {
-            let totalNanoseconds = Components.toTime(components)!;
-            DateTime(totalNanoseconds);
-        };
+    public func fromComponents(components : Components) : DateTime {
+        let totalNanoseconds = Components.toTime(components);
+        DateTime(totalNanoseconds);
     };
 
     /// Formats the `DateTime` as Text value using the ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
@@ -306,19 +303,19 @@ module D {
     public func fromTextFormatted(text : Text, format : TextFormat) : ?DateTime {
 
         do ? {
-            let {components; timeZoneDescriptor} : Components.FromTextResult = Components.fromTextFormatted(text, format)!;
+            let { components; timeZoneDescriptor } : Components.FromTextResult = Components.fromTextFormatted(text, format)!;
             let offset : ?Time.Time = switch (timeZoneDescriptor) {
                 case (#utc) null;
                 case (#unspecified) null;
                 case (#fixed(f)) ?TimeZone.toFixedOffsetSeconds(f);
+                case (#name(n)) null; // TODO
             };
             switch (offset) {
                 case (null) {
-                    let ?dt = fromComponents(components) else return null;
-                    dt;
+                    fromComponents(components);
                 };
                 case (?offsetSeconds) {
-                    let localTime = Components.toTime(components)!;
+                    let localTime = Components.toTime(components);
                     let utcTime = localTime - (offsetSeconds * 1_000_000_000);
                     DateTime(utcTime);
                 };
