@@ -16,7 +16,8 @@ module {
         longDateFormat : Text;
         eras : [Era];
         getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
-        getOrdinal : (num : Int) -> Text;
+        getOrdinal : (num : Nat) -> Text;
+
     };
 
     public type Era = {

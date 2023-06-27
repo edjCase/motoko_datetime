@@ -1,4 +1,7 @@
 import Types "../Types";
+import Prelude "mo:base/Prelude";
+import Text "mo:base/Text";
+import Nat "mo:base/Nat";
 module JA {
 	public let locale : Types.Locale = {
 		id = "ja";
@@ -63,8 +66,66 @@ module JA {
 		dateFormat = "YYYY/MM/DD";
 		dateTimeFormat = "HH:mm YYYY/MM/DD";
 		longDateFormat = "YYYY/MM/DD";
-		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
-			let (lower, upper) = switch ((hour, minute)) {
+		eras = [
+			{
+				start = ?1556694000000000;
+				end = null;
+				offset = 1;
+				fullName = "令和";
+				narrowName = "㋿";
+				abbreviatedName = "R";
+			},
+			{
+				start = ?600249600000000;
+				end = ?1556607600000000;
+				offset = 1;
+				fullName = "平成";
+				narrowName = "㍻";
+				abbreviatedName = "H";
+			},
+			{
+				start = ?-1357574400000000;
+				end = ?600163200000000;
+				offset = 1;
+				fullName = "昭和";
+				narrowName = "㍼";
+				abbreviatedName = "S";
+			},
+			{
+				start = ?-1812124800000000;
+				end = ?-1357660800000000;
+				offset = 1;
+				fullName = "大正";
+				narrowName = "㍽";
+				abbreviatedName = "T";
+			},
+			{
+				start = ?-3060950822000000;
+				end = ?-1812211200000000;
+				offset = 6;
+				fullName = "明治";
+				narrowName = "㍾";
+				abbreviatedName = "M";
+			},
+			{
+				start = ?-62135568422000000;
+				end = ?-3029501222000000;
+				offset = 1;
+				fullName = "西暦";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = ?-62135654822000000;
+				offset = 1;
+				fullName = "紀元前";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
+		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
+			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
 				case ((0, _)) ("午前", "午前");
 				case ((1, _)) ("午前", "午前");
 				case ((2, _)) ("午前", "午前");
@@ -89,66 +150,12 @@ module JA {
 				case ((21, _)) ("午後", "午後");
 				case ((22, _)) ("午後", "午後");
 				case ((23, _)) ("午後", "午後");
+				case (_) Prelude.unreachable();
 			};
 			if (isLower) lower else upper;
 		};
-		eras = [
-			{
-				start = 1556694000000000;
-				end = null;
-				offset = 1;
-				fullName = "令和";
-				narrowName = "㋿";
-				abbreviatedName = "R";
-			},
-			{
-				start = 600249600000000;
-				end = 1556607600000000;
-				offset = 1;
-				fullName = "平成";
-				narrowName = "㍻";
-				abbreviatedName = "H";
-			},
-			{
-				start = -1357574400000000;
-				end = 600163200000000;
-				offset = 1;
-				fullName = "昭和";
-				narrowName = "㍼";
-				abbreviatedName = "S";
-			},
-			{
-				start = -1812124800000000;
-				end = -1357660800000000;
-				offset = 1;
-				fullName = "大正";
-				narrowName = "㍽";
-				abbreviatedName = "T";
-			},
-			{
-				start = -3060950822000000;
-				end = -1812211200000000;
-				offset = 6;
-				fullName = "明治";
-				narrowName = "㍾";
-				abbreviatedName = "M";
-			},
-			{
-				start = -62135568422000000;
-				end = -3029501222000000;
-				offset = 1;
-				fullName = "西暦";
-				narrowName = "AD";
-				abbreviatedName = "AD";
-			},
-			{
-				start = null;
-				end = -62135654822000000;
-				offset = 1;
-				fullName = "紀元前";
-				narrowName = "BC";
-				abbreviatedName = "BC";
-			},
-		];
+		getOrdinal = func (num : Nat) : Text {
+			Prelude.unreachable();
+		};
 	};
 };

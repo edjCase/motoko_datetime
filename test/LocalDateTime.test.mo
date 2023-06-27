@@ -7,7 +7,6 @@ import Int "mo:base/Int";
 import Text "mo:base/Text";
 import Types "../internal/Types";
 
-
 test(
     "compare, equal, timeBetween",
     func() {
@@ -187,42 +186,42 @@ test(
                 tz2 = #seconds(-1);
                 expected = #less;
                 diff = -1_000_000_000;
-            }
+            },
         ];
-        for (testCase in Iter.fromArray(testCases)){
+        for (testCase in Iter.fromArray(testCases)) {
             let a = LocalDateTime.LocalDateTime(testCase.c1, #fixed(testCase.tz1));
             let b = LocalDateTime.LocalDateTime(testCase.c2, #fixed(testCase.tz2));
             let order = a.compare(b);
-            
+
             let expected = testCase.expected;
             if (order != expected) {
                 Debug.print("Failed a.compare(b)");
-                Debug.print("a: " # debug_show(a.toText()));
-                Debug.print("b: " # debug_show(b.toText()));
-                Debug.print("Expected " # debug_show(expected));
-                Debug.print("Actual " # debug_show(order));
+                Debug.print("a: " # debug_show (a.toText()));
+                Debug.print("b: " # debug_show (b.toText()));
+                Debug.print("Expected " # debug_show (expected));
+                Debug.print("Actual " # debug_show (order));
                 assert false;
             };
             let expectedEqual = expected == #equal;
             let areEqual = a.equal(b);
             if (areEqual != expectedEqual) {
                 Debug.print("Failed a.equal(b)");
-                Debug.print("a: " # debug_show(a.toText()));
-                Debug.print("b: " # debug_show(b.toText()));
-                Debug.print("Expected " # debug_show(expected));
-                Debug.print("Actual " # debug_show(order));
+                Debug.print("a: " # debug_show (a.toText()));
+                Debug.print("b: " # debug_show (b.toText()));
+                Debug.print("Expected " # debug_show (expected));
+                Debug.print("Actual " # debug_show (order));
                 assert false;
             };
 
             let diff = a.timeBetween(b);
             if (diff != testCase.diff) {
                 Debug.print("Failed a.timeBetween(b)");
-                Debug.print("a: " # debug_show(a.toText()));
-                Debug.print("b: " # debug_show(b.toText()));
-                Debug.print("Expected " # debug_show(testCase.diff));
-                Debug.print("Actual " # debug_show(diff));
+                Debug.print("a: " # debug_show (a.toText()));
+                Debug.print("b: " # debug_show (b.toText()));
+                Debug.print("Expected " # debug_show (testCase.diff));
+                Debug.print("Actual " # debug_show (diff));
                 assert false;
-            }
+            };
         };
     },
 );
@@ -230,7 +229,7 @@ test(
 test(
     "isInLeapYear",
     func() {
-        
+
         let testCases = [
             {
                 dateTime = {
@@ -267,27 +266,26 @@ test(
                 };
                 timeZone = #seconds(0);
                 expected = false;
-            }
+            },
         ];
-        for (testCase in Iter.fromArray(testCases)){
-            
-            let dateTime = LocalDateTime.LocalDateTime(testCase.dateTime, #fixed(testCase.timeZone)); 
+        for (testCase in Iter.fromArray(testCases)) {
+
+            let dateTime = LocalDateTime.LocalDateTime(testCase.dateTime, #fixed(testCase.timeZone));
             let isInLeapYear = dateTime.isInLeapYear();
             let expected = testCase.expected;
             if (isInLeapYear != expected) {
-                Debug.print("Expected isInLeapYear: " # debug_show(expected) # " but got " # debug_show(isInLeapYear) # " for " # dateTime.toText());
+                Debug.print("Expected isInLeapYear: " # debug_show (expected) # " but got " # debug_show (isInLeapYear) # " for " # dateTime.toText());
                 assert false;
             };
         };
-    }
+    },
 );
-
 
 test(
     "add",
     func() {
-        
-        let testCases= [
+
+        let testCases = [
             {
                 dateTime = {
                     year = 1970;
@@ -449,7 +447,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                addValue = #years(+9);                
+                addValue = #years(+9);
                 expected = {
                     year = 1979;
                     month = 1;
@@ -468,7 +466,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                addValue = #nanoseconds(-1);                
+                addValue = #nanoseconds(-1);
                 expected = {
                     year = 2020;
                     month = 2;
@@ -515,25 +513,22 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-            }
+            },
         ];
-        for (testCase in Iter.fromArray(testCases)) {            
-            let actual = LocalDateTime.LocalDateTime(testCase.dateTime, #fixed(#seconds(0)))
-                .add(testCase.addValue)
-                .toComponents();
-                
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual = LocalDateTime.LocalDateTime(testCase.dateTime, #fixed(#seconds(0))).add(testCase.addValue).toComponents();
+
             if (actual != testCase.expected) {
                 Debug.print("Failed a.add(b)");
-                Debug.print("a: " # debug_show(testCase.dateTime));
-                Debug.print("b: " # debug_show(testCase.addValue));
-                Debug.print("Expected " # debug_show(testCase.expected));
-                Debug.print("Actual " # debug_show(actual));
+                Debug.print("a: " # debug_show (testCase.dateTime));
+                Debug.print("b: " # debug_show (testCase.addValue));
+                Debug.print("Expected " # debug_show (testCase.expected));
+                Debug.print("Actual " # debug_show (actual));
                 assert false;
             };
         };
-    }
+    },
 );
-
 
 func assertText(expected : Text, actual : Text) {
     if (expected != actual) {
@@ -591,7 +586,7 @@ test(
                     Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectedIso8601));
                     assert false;
                 };
-                case (?actualDateTime) {  
+                case (?actualDateTime) {
                     let expected = LocalDateTime.LocalDateTime(testCase.dateTime, #fixed(testCase.timeZone));
 
                     if (not expected.equal(actualDateTime)) {
@@ -600,7 +595,7 @@ test(
                         Debug.print("Actual:   " # debug_show (actualDateTime.toText()));
                         assert false;
                     };
-                }
+                };
             };
         };
     },

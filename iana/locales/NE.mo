@@ -1,4 +1,7 @@
 import Types "../Types";
+import Prelude "mo:base/Prelude";
+import Text "mo:base/Text";
+import Nat "mo:base/Nat";
 module NE {
 	public let locale : Types.Locale = {
 		id = "ne";
@@ -63,8 +66,26 @@ module NE {
 		dateFormat = "DD/MM/YYYY";
 		dateTimeFormat = "Aको h:mm बजे DD/MM/YYYY";
 		longDateFormat = "DD/MM/YYYY";
-		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
-			let (lower, upper) = switch ((hour, minute)) {
+		eras = [
+			{
+				start = ?-62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = ?-62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
+		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
+			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
 				case ((0, _)) ("राति", "राति");
 				case ((1, _)) ("राति", "राति");
 				case ((2, _)) ("राति", "राति");
@@ -89,26 +110,12 @@ module NE {
 				case ((21, _)) ("राति", "राति");
 				case ((22, _)) ("राति", "राति");
 				case ((23, _)) ("राति", "राति");
+				case (_) Prelude.unreachable();
 			};
 			if (isLower) lower else upper;
 		};
-		eras = [
-			{
-				start = -62135568422000000;
-				end = null;
-				offset = 1;
-				fullName = "Anno Domini";
-				narrowName = "AD";
-				abbreviatedName = "AD";
-			},
-			{
-				start = null;
-				end = -62135654822000000;
-				offset = 1;
-				fullName = "Before Christ";
-				narrowName = "BC";
-				abbreviatedName = "BC";
-			},
-		];
+		getOrdinal = func (num : Nat) : Text {
+			Prelude.unreachable();
+		};
 	};
 };

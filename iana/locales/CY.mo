@@ -1,4 +1,7 @@
 import Types "../Types";
+import Prelude "mo:base/Prelude";
+import Text "mo:base/Text";
+import Nat "mo:base/Nat";
 module CY {
 	public let locale : Types.Locale = {
 		id = "cy";
@@ -63,8 +66,26 @@ module CY {
 		dateFormat = "DD/MM/YYYY";
 		dateTimeFormat = "HH:mm DD/MM/YYYY";
 		longDateFormat = "DD/MM/YYYY";
-		meridiems = func (hour : Nat, minute : Nat, isLower : Bool) : Bool {
-			let (lower, upper) = switch ((hour, minute)) {
+		eras = [
+			{
+				start = ?-62135568422000000;
+				end = null;
+				offset = 1;
+				fullName = "Anno Domini";
+				narrowName = "AD";
+				abbreviatedName = "AD";
+			},
+			{
+				start = null;
+				end = ?-62135654822000000;
+				offset = 1;
+				fullName = "Before Christ";
+				narrowName = "BC";
+				abbreviatedName = "BC";
+			},
+		];
+		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
+			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
 				case ((0, _)) ("am", "AM");
 				case ((1, _)) ("am", "AM");
 				case ((2, _)) ("am", "AM");
@@ -89,26 +110,84 @@ module CY {
 				case ((21, _)) ("pm", "PM");
 				case ((22, _)) ("pm", "PM");
 				case ((23, _)) ("pm", "PM");
+				case (_) Prelude.unreachable();
 			};
 			if (isLower) lower else upper;
 		};
-		eras = [
-			{
-				start = -62135568422000000;
-				end = null;
-				offset = 1;
-				fullName = "Anno Domini";
-				narrowName = "AD";
-				abbreviatedName = "AD";
-			},
-			{
-				start = null;
-				end = -62135654822000000;
-				offset = 1;
-				fullName = "Before Christ";
-				narrowName = "BC";
-				abbreviatedName = "BC";
-			},
-		];
+		getOrdinal = func (num : Nat) : Text {
+			if (num == 0) {
+				return Text.replace("_~_", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 1) {
+				return Text.replace("_~_af", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 2) {
+				return Text.replace("_~_il", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 3 and num < 5) {
+				return Text.replace("_~_ydd", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 5 and num < 8) {
+				return Text.replace("_~_ed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 8 and num < 11) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 11) {
+				return Text.replace("_~_eg", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 12) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 13 and num < 15) {
+				return Text.replace("_~_eg", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 15) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 16 and num < 18) {
+				return Text.replace("_~_eg", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 18) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 19) {
+				return Text.replace("_~_eg", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 20) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 21 and num < 40) {
+				return Text.replace("_~_ain", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 40) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 41 and num < 50) {
+				return Text.replace("_~_ain", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 50) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 51 and num < 60) {
+				return Text.replace("_~_ain", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 60) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 61 and num < 80) {
+				return Text.replace("_~_ain", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 80) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			if (num > 81 and num < 100) {
+				return Text.replace("_~_ain", #text("_~_"), Nat.toText(num));
+			};
+			if (num == 100) {
+				return Text.replace("_~_fed", #text("_~_"), Nat.toText(num));
+			};
+			Prelude.unreachable();
+		};
 	};
 };

@@ -48,7 +48,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                order = ? #equal;
+                order = #equal;
             },
             {
                 c1 = {
@@ -67,7 +67,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                order = ? #less;
+                order = #less;
             },
             {
                 c1 = {
@@ -86,45 +86,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                order = ? #greater;
-            },
-            {
-                c1 = {
-                    year = 1970;
-                    month = 1;
-                    day = 1;
-                    hour = 0;
-                    minute = 0;
-                    nanosecond = 0;
-                };
-                c2 = {
-                    year = 1970;
-                    month = 2;
-                    day = 30; // Invalid day
-                    hour = 0;
-                    minute = 0;
-                    nanosecond = 0;
-                };
-                order = null;
-            },
-            {
-                c1 = {
-                    year = 1970;
-                    month = 1;
-                    day = 32; // Invalid day
-                    hour = 0;
-                    minute = 0;
-                    nanosecond = 0;
-                };
-                c2 = {
-                    year = 1970;
-                    month = 1;
-                    day = 1;
-                    hour = 0;
-                    minute = 0;
-                    nanosecond = 0;
-                };
-                order = null;
+                order = #greater;
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
@@ -147,7 +109,7 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                expected = ?0;
+                expected = 0;
             },
             {
                 components = {
@@ -158,7 +120,7 @@ test(
                     minute = 2;
                     nanosecond = 12345;
                 };
-                expected = ?658_382_520_000_012_345;
+                expected = 658_382_520_000_012_345;
             },
             {
                 components = {
@@ -169,40 +131,24 @@ test(
                     minute = 1;
                     nanosecond = 2;
                 };
-                expected = ?-62_477_380_739_999_999_998;
-            },
-            {
-                components = {
-                    year = 2020;
-                    month = 1;
-                    day = 32; // Invalid day
-                    hour = 4;
-                    minute = 1;
-                    nanosecond = 2;
-                };
-                expected = null;
+                expected = -62_477_380_739_999_999_998;
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
-            let actual : ?Time.Time = Components.toTime(testCase.components);
+            let actual : Time.Time = Components.toTime(testCase.components);
             let matched = testCase.expected == actual;
             if (not matched) {
                 Debug.print("Expected: " # debug_show (testCase.expected));
                 Debug.print("Actual:   " # debug_show (actual));
                 assert false;
             };
-            switch (actual) {
-                case (null) {};
-                case (?a) {
-                    let actualComponents = Components.fromTime(a);
-                    let matched2 = testCase.components == actualComponents;
+            let actualComponents = Components.fromTime(actual);
+            let matched2 = testCase.components == actualComponents;
 
-                    if (not matched2) {
-                        Debug.print("Expected: " # debug_show (testCase.components));
-                        Debug.print("Actual:   " # debug_show (actualComponents));
-                        assert false;
-                    };
-                };
+            if (not matched2) {
+                Debug.print("Expected: " # debug_show (testCase.components));
+                Debug.print("Actual:   " # debug_show (actualComponents));
+                assert false;
             };
         };
     },
@@ -501,23 +447,47 @@ test(
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
-            let actual : Text = Components.toTextFormatted(testCase.components, testCase.timeZone, #iso8601);
-            assertText(testCase.expectedIso8601, actual);
+            for ((format, expectedText) in Iter.fromArray(testCase.expected)) {
+                let actual : Text = Components.toTextFormatted(testCase.components, testCase.timeZone, format);
+                assertText(expectedText, actual);
 
-            let fromTextResult = Components.fromTextFormatted(testCase.expectedIso8601, #iso8601);
-            switch (fromTextResult) {
-                case (null) {
-                    Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectedIso8601));
-                    assert false;
-                };
-                case (?r) {
-                    let matched2 = testCase.components == r.components and testCase.timeZone == r.timeZoneDescriptor;
-
-                    if (not matched2) {
-                        Debug.print("Text: " # debug_show (testCase.expectedIso8601));
-                        Debug.print("Expected: " # debug_show (testCase.components) # " - " # debug_show (testCase.timeZone));
-                        Debug.print("Actual:   " # debug_show (r.components) # " - " # debug_show (r.timeZoneDescriptor));
+                let fromTextResult = Components.fromTextFormatted(expectedText, format);
+                switch (fromTextResult) {
+                    case (null) {
+                        let formatName = switch (format) {
+                            case (#iso8601) "ISO";
+                            case (#custom({ format })) format;
+                        };
+                        Debug.print("Failed to parse '" # formatName # "' datetime: " # debug_show (expectedText));
                         assert false;
+                    };
+                    case (?r) {
+
+                        let timeZoneEqual = switch ((testCase.timeZone, r.timeZoneDescriptor)) {
+                            case ((#fixed(f1), de)) {
+                                let offset1 = TimeZone.toFixedOffsetSeconds(f1);
+                                let offset2 = switch (de) {
+                                    case (#fixed(f2)) {
+                                        offset1 == TimeZone.toFixedOffsetSeconds(f2);
+                                    };
+                                    case (#utc) {
+                                        offset1 == 0;
+                                    };
+                                    case (#name(d2)) {
+                                        false;
+                                    };
+                                    case (#unspecified) {
+                                        false;
+                                    };
+                                };
+                            };
+                        };
+                        if (testCase.components != r.components or not timeZoneEqual) {
+                            Debug.print("Text: " # debug_show (expectedText));
+                            Debug.print("Expected: " # debug_show (testCase.components) # " - " # debug_show (testCase.timeZone));
+                            Debug.print("Actual:   " # debug_show (r.components) # " - " # debug_show (r.timeZoneDescriptor));
+                            assert false;
+                        };
                     };
                 };
             };

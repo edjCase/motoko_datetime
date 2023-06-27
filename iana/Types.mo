@@ -14,6 +14,8 @@ module {
 
     public type Region = InternalTypes.Region;
 
+    public type Locale = InternalTypes.Locale;
+
     type Seconds = Int;
     type Year = Int;
 

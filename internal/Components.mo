@@ -13,6 +13,7 @@ import Array "mo:base/Array";
 import Float "mo:base/Float";
 import Buffer "mo:base/Buffer";
 import TimeZone "TimeZone";
+import Bool "mo:base/Bool";
 
 module Module {
 
@@ -234,12 +235,59 @@ module Module {
             length := 1;
         };
 
+        let matchAppendAndReset = func(exact : Bool) {
+            if (length == 0) {
+                return;
+            };
+            let buffer : Buffer.Buffer<Char> = Buffer.subBuffer(formatBuffer, startIndex, length);
+            let value : Text = Text.fromIter(buffer.vals());
+            let filterFunc = if (exact) {
+                func(token : TokenInfo) : Bool {
+                    value == token.value;
+                };
+            } else {
+                func(token : TokenInfo) : Bool {
+                    Text.startsWith(token.value, #text(value));
+                };
+            };
+            // Filter matches down by starts with
+            let fitleredTokens = Array.filter(tokenMatches, filterFunc);
+            switch (fitleredTokens.size()) {
+                case (0) {
+                    // If not matches, then try to find an exact match with last value
+                    if (length > 1) {
+                        length -= 1;
+                        matchAppendAndReset(true);
+                        return;
+                    };
+                    // No matches, so just append the text
+                    text #= value;
+                    startIndex += length;
+                    length := 1;
+                    tokenMatches := tokens;
+                };
+                case (1) {
+                    // Exactly one match, so append the replacement value
+                    let token = fitleredTokens.get(0);
+                    let replacementValue = token.getter(components, timeZone, locale);
+                    text #= replacementValue;
+                    startIndex += length;
+                    length := 1;
+                    tokenMatches := tokens;
+                };
+                case (_) {
+                    // Multiple matches, so keep going
+                    length += 1;
+                    tokenMatches := fitleredTokens;
+                };
+            };
+        };
+
         label l loop {
-            if (length + startIndex >= formatBuffer.size()) {
+            if (length + startIndex > formatBuffer.size()) {
                 // We've reached the end of the string
-                let lastLength : Nat = length - 1;
-                let subBuffer : Buffer.Buffer<Char> = Buffer.subBuffer(formatBuffer, startIndex, lastLength);
-                appendTextAndReset(subBuffer, false);
+                length -= 1;
+                matchAppendAndReset(true);
                 break l;
             };
 
@@ -270,59 +318,7 @@ module Module {
                 appendTextAndReset(subBuffer, false);
                 continue l;
             };
-            let value : Text = Text.fromIter(subBuffer.vals());
-            // Filter matches down by starts with
-            let newTokenMatches = Array.filter(
-                tokenMatches,
-                func(token : TokenInfo) : Bool {
-                    Text.startsWith(token.value, #text(value));
-                },
-            );
-            switch (newTokenMatches.size()) {
-                case (0) {
-                    // If not matches, then try to find an exact match with last value
-                    if (length > 1) {
-                        let lastLength : Nat = length - 1;
-                        let previousValue = Text.fromIter(Buffer.subBuffer(formatBuffer, startIndex, lastLength).vals());
-                        let exactMatch = Array.find(
-                            tokenMatches,
-                            func(token : TokenInfo) : Bool {
-                                token.value == previousValue;
-                            },
-                        );
-                        switch (exactMatch) {
-                            case (null) {
-                                // No matches, so just append the text
-                                text #= value;
-                                startIndex += length;
-                            };
-                            case (?m) {
-                                // Use previous exact match
-                                let replacementValue = m.getter(components, timeZone, locale);
-                                text #= replacementValue;
-                                startIndex += length - 1; // Retry the last letter, since it was skipped
-                            };
-                        };
-                    } else {
-                        // No matches, so just append the text
-                        text #= value;
-                        startIndex += length;
-                    };
-                    length := 1;
-                };
-                case (1) {
-                    // Exactly one match, so append the replacement value
-                    let token = newTokenMatches.get(0);
-                    let replacementValue = token.getter(components, timeZone, locale);
-                    text #= replacementValue;
-                    startIndex += length;
-                    length := 1;
-                };
-                case (_) {
-                    // Multiple matches, so keep going
-                    length += 1;
-                };
-            };
+            matchAppendAndReset(false);
         };
         text;
     };
@@ -868,7 +864,7 @@ module Module {
             value = "A";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                l.getMeridiem(components.hour, components.minute, true);
+                l.getMeridiem(components.hour, components.minute, false);
             };
         },
         {
@@ -876,7 +872,7 @@ module Module {
             value = "a";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                l.getMeridiem(components.hour, components.minute, false);
+                l.getMeridiem(components.hour, components.minute, true);
             };
         },
         {
@@ -897,14 +893,18 @@ module Module {
             // Hour Padded (12 hour)
             value = "hh";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                TextUtil.toTextPaddedSign(components.hour % 12 + 1, 2, false);
+                let hour12Value = components.hour % 12;
+                let value = if (hour12Value == 0) 12 else hour12Value;
+                TextUtil.toTextPaddedSign(value, 2, false);
             };
         },
         {
             // Hour (12 hour)
             value = "h";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                Nat.toText(components.hour % 12 + 1);
+                let hour12Value = components.hour % 12;
+                let value = if (hour12Value == 0) 12 else hour12Value;
+                Nat.toText(value);
             };
         },
         {
