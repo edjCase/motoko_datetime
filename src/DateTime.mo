@@ -23,7 +23,6 @@ import Components "Components";
 import TimeZone "TimeZone";
 
 module D {
-
     public type Duration = InternalTypes.Duration;
     public type TextFormat = InternalTypes.TextFormat;
     public type DateTime = InternalTypes.DateTime;

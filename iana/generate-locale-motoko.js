@@ -83,8 +83,8 @@ function writeLocale(writer, localName, locale) {
         let minutesDiffer = false;
         let minutesTextList = [];
         for (let minute = 0; minute < 60; minute++) {
-            let lower = locale.meridiem(hour, minute, true);
-            let upper = locale.meridiem(hour, minute, false);
+            let lower = locale.meridiem(hour, minute, true).replace("\"", "\\\"");
+            let upper = locale.meridiem(hour, minute, false).replace("\"", "\\\"");
             if (minutesTextList.length >= 1) {
                 let last = minutesTextList[minutesTextList.length - 1];
                 if (last[0] !== lower || last[1] !== upper) {
@@ -120,7 +120,7 @@ function writeLocale(writer, localName, locale) {
         if (!ordinal) {
             break;
         }
-        let generic = ordinal.replace(day, "_~_");
+        let generic = ordinal.replace(day, "_~_").replace(`"`, `\"`);
         if (currentOrdinal == null) {
             currentOrdinal = {
                 generic: generic,
@@ -170,9 +170,11 @@ try {
 fs.mkdirSync("locales");
 
 
+let localeNames = [];
 for (let localeId of moment.locales()) {
     let locale = moment.localeData(localeId);
     let localName = localeId.toUpperCase().replace('-', '_');
+    localeNames.push(localName);
     let writer = new MotokoWriter();
     writer.writeLine(`import Types "../Types";`);
     writer.writeLine(`import Prelude "mo:base/Prelude";`);
@@ -182,3 +184,20 @@ for (let localeId of moment.locales()) {
     let fileName = `locales/${localName}.mo`;
     fs.writeFile(fileName, writer.motoko, (err) => { });
 };
+
+
+
+let localeListWriter = new MotokoWriter();
+for (let localeName of localeNames) {
+    localeListWriter.writeLine(`import ${localeName} "locales/${localeName}";`);
+};
+localeListWriter.writeLine(`module {`);
+localeListWriter.depth += 1;
+localeListWriter.writeList("public let locales", localeNames, (localeName) => {
+    localeListWriter.write(`${localeName}.locale`);
+});
+localeListWriter.depth -= 1;
+localeListWriter.writeLine(`};`);
+
+let regionMapText = localeListWriter.motoko;
+fs.writeFileSync("LocaleList.mo", regionMapText, (err) => { }); 

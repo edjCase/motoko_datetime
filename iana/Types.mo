@@ -6,7 +6,6 @@ import Int "mo:base/Int";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import InternalTimeZone "../internal/TimeZone";
-import DateTime "../src/DateTime";
 import Components "../src/Components";
 import InternalTypes "../internal/Types";
 
