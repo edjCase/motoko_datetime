@@ -31,8 +31,5 @@ jobs:
       - name: Download MOPS packages
         run: mops install
 
-      - name: Use Specific Compiler Version
-        run: npx mocv use 0.9.3
-
       - name: Run Tests
         run: make test
