@@ -1,14 +1,15 @@
 import Types "../Types";
 module Zulu {
-	public let region : Types.Region = {
-		id = "Zulu";
-		timeZoneRules = [
-			{
-				abbreviation = "UTC";
-				expiration = null;
-				isDaylightsSavings = false;
-				offsetSeconds = 0;
-			},
-		];
+	public module Zulu {
+		public let region : Types.Region = {
+			id = "Zulu";
+			timeZoneRules = [
+				{
+					abbreviation = "UTC";
+					expiration = null;
+					offsetSeconds = 0;
+				},
+			];
+		};
 	};
-};
+}

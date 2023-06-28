@@ -1,44 +1,45 @@
 import Types "../Types";
 module Kwajalein {
-	public let region : Types.Region = {
-		id = "Kwajalein";
-		timeZoneRules = [
-			{
-				abbreviation = "+11";
-				expiration = ?-1041418800000;
-				isDaylightsSavings = false;
-				offsetSeconds = 39600;
-			},
-			{
-				abbreviation = "+10";
-				expiration = ?-907408800000;
-				isDaylightsSavings = false;
-				offsetSeconds = 36000;
-			},
-			{
-				abbreviation = "+09";
-				expiration = ?-817462800000;
-				isDaylightsSavings = false;
-				offsetSeconds = 32400;
-			},
-			{
-				abbreviation = "+11";
-				expiration = ?-7988400000;
-				isDaylightsSavings = false;
-				offsetSeconds = 39600;
-			},
-			{
-				abbreviation = "-12";
-				expiration = ?745934400000;
-				isDaylightsSavings = false;
-				offsetSeconds = -43200;
-			},
-			{
-				abbreviation = "+12";
-				expiration = null;
-				isDaylightsSavings = false;
-				offsetSeconds = 43200;
-			},
-		];
+	public module Kwajalein {
+		public let region : Types.Region = {
+			id = "Kwajalein";
+			timeZoneRules = [
+				{
+					abbreviation = "LMT";
+					expiration = ?-2177492960000;
+					offsetSeconds = 40160;
+				},
+				{
+					abbreviation = "+11";
+					expiration = ?-1041418800000;
+					offsetSeconds = 39600;
+				},
+				{
+					abbreviation = "+10";
+					expiration = ?-907408800000;
+					offsetSeconds = 36000;
+				},
+				{
+					abbreviation = "+09";
+					expiration = ?-817462800000;
+					offsetSeconds = 32400;
+				},
+				{
+					abbreviation = "+11";
+					expiration = ?-7988400000;
+					offsetSeconds = 39600;
+				},
+				{
+					abbreviation = "-12";
+					expiration = ?745934400000;
+					offsetSeconds = -43200;
+				},
+				{
+					abbreviation = "+12";
+					expiration = null;
+					offsetSeconds = 43200;
+				},
+			];
+		};
 	};
-};
+}

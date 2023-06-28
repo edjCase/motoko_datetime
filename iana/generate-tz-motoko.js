@@ -1,4 +1,4 @@
-import IANATimezoneData from "iana-tz-data" assert { type: 'json' };
+import moment from "moment-timezone/builds/moment-timezone-with-data.min.js";
 import fs from "fs";
 import { MotokoWriter } from "./generate-common.js"
 
@@ -6,49 +6,25 @@ let nameMap = {};
 
 
 
-function buildRegion(writer, regionId, region, parentRegionId, parentModuleName) {
-    let moduleName = normalizeText(regionId);
-    let fullRegionId;
-    let fullModuleName;
-    let prefix;
-    if (!!parentRegionId) {
-        parentRegionId = parentRegionId + "/";
-        parentModuleName = parentModuleName + ".";
-        fullRegionId = parentRegionId + regionId;
-        fullModuleName = parentModuleName + moduleName;
-        if (region.abbrs?.length > 0) {
-            nameMap[fullRegionId] = fullModuleName;
-        }
-        prefix = `public `;
-    }
-    else {
-        fullRegionId = regionId;
-        fullModuleName = moduleName;
-        prefix = "";
-    }
-    writer.writeLine(prefix + `module ${moduleName} {`);
+function buildRegion(writer, region, moduleName) {
+    writer.writeLine(`public module ${moduleName} {`);
     writer.depth += 1;
 
     let abbrs = region.abbrs || [];
     let untils = region.untils || [];
-    let isdsts = region.isdsts || [];
     let offsets = region.offsets || [];
-    delete region.abbrs;
-    delete region.untils;
-    delete region.isdsts;
-    delete region.offsets;
 
     let indicies = Array.from({ length: abbrs.length }, (_, i) => i);
+
     if (indicies.length > 0) {
         writer.writeLine(`public let region : Types.Region = {`);
         writer.depth += 1;
-        writer.writeLine(`id = "${fullRegionId}";`);
+        writer.writeLine(`id = "${region.name}";`);
         writer.writeList("timeZoneRules", indicies, (i) => {
             writer.writeLine("{");
             writer.depth += 1;
             writer.writeLine(`abbreviation = "${abbrs[i]}";`);
-            writer.writeLine(`expiration = ${untils[i] == null ? "null" : "?" + untils[i]};`);
-            writer.writeLine(`isDaylightsSavings = ${isdsts[i] ? "true" : "false"};`);
+            writer.writeLine(`expiration = ${untils[i] == null || untils[i] == Infinity ? "null" : "?" + untils[i]};`);
             let offset = -1 * Math.round(offsets[i] * 60); // Convert to seconds int from minutes float
             writer.writeLine(`offsetSeconds = ${offset};`);
             writer.depth -= 1;
@@ -58,23 +34,12 @@ function buildRegion(writer, regionId, region, parentRegionId, parentModuleName)
         writer.writeLine(`};`);
     };
 
-    for (let innerRegionId in region) {
-        let innerRegion = region[innerRegionId];
-        buildRegion(writer, innerRegionId, innerRegion, fullRegionId, fullModuleName);
-    }
     writer.depth -= 1;
     writer.writeLine("};");
 };
 
 
 
-
-function buildFile(zoneId, zone, parentRegionId, parentModule) {
-    let writer = new MotokoWriter();
-    writer.writeLine(`import Types "../Types";`);
-    buildRegion(writer, zoneId, zone, parentRegionId, parentModule);
-    return writer.motoko;
-}
 
 function normalizeText(t) {
     return t.replace(/\//g, "_").replace(/-/g, "_").replace(/\+/g, "__").replace(/ /g, "_");
@@ -86,12 +51,38 @@ try {
 
 fs.mkdirSync("timezones");
 
+
+let zones = moment.tz.names().reduce((zoneMap, name) => {
+    let zoneInfo = moment.tz.zone(name);
+    let parts = name.split("/");
+    let topName = parts[0];
+    if (!zoneMap[topName]) {
+        zoneMap[topName] = [];
+    }
+    zoneMap[topName].push(zoneInfo);
+    return zoneMap;
+}, {});
+
 let fileNames = [];
-for (let zoneId in IANATimezoneData.zoneData) {
-    let zone = IANATimezoneData.zoneData[zoneId];
+for (let zoneId in zones) {
+    let subZones = zones[zoneId];
     let moduleName = normalizeText(zoneId);
     fileNames.push(moduleName);
-    let fileText = buildFile(zoneId, zone, "", "");
+
+    let writer = new MotokoWriter();
+    writer.writeLine(`import Types "../Types";`);
+    writer.writeLine(`module ${moduleName} {`);
+    writer.depth += 1;
+    for (let subZone of subZones) {
+        let subZoneId = subZone.name.replace(zoneId + "/", "");
+        let subModuleName = normalizeText(subZoneId);
+        nameMap[subZoneId] = moduleName + "." + subModuleName;
+        buildRegion(writer, subZone, subModuleName);
+    };
+    writer.depth -= 1;
+    writer.writeLine(`}`);
+    let fileText = writer.motoko;
+
     let fileName = `timezones/${moduleName}.mo`;
     fs.writeFile(fileName, fileText, (err) => { });
 };

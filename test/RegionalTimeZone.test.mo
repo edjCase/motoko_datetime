@@ -25,7 +25,7 @@ let testCases = [
     {
         region = Africa.Accra.region;
         dateTime = {
-            year = 1942;
+            year = 1911;
             month = 12;
             day = 1;
             hour = 0;
@@ -33,7 +33,7 @@ let testCases = [
             second = 0;
             nanosecond = 0;
         };
-        expected = 1200;
+        expected = -968;
     },
     {
         region = America.Santiago.region;
@@ -46,7 +46,7 @@ let testCases = [
             second = 0;
             nanosecond = 0;
         };
-        expected = -16966;
+        expected = -16965;
     },
 ];
 
@@ -58,7 +58,7 @@ test(
             let dateTime = testCase.dateTime;
             let actual = dynamicTimeZone.toOffsetSeconds(dateTime);
             if (actual != testCase.expected) {
-                Debug.print("toOffsetSeconds failed");
+                Debug.print("toOffsetSeconds failed for region: " # debug_show (testCase.region) # " and dateTime: " # debug_show (dateTime));
                 Debug.print("Expected: " # debug_show (testCase.expected));
                 Debug.print("Actual: " # debug_show (actual));
                 assert false;

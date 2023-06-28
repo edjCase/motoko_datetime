@@ -1,5 +1,17 @@
 import Types "../Types";
 module Etc {
+	public module GMT {
+		public let region : Types.Region = {
+			id = "Etc/GMT";
+			timeZoneRules = [
+				{
+					abbreviation = "GMT";
+					expiration = null;
+					offsetSeconds = 0;
+				},
+			];
+		};
+	};
 	public module GMT__0 {
 		public let region : Types.Region = {
 			id = "Etc/GMT+0";
@@ -7,7 +19,6 @@ module Etc {
 				{
 					abbreviation = "GMT";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
@@ -20,7 +31,6 @@ module Etc {
 				{
 					abbreviation = "-01";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -3600;
 				},
 			];
@@ -33,7 +43,6 @@ module Etc {
 				{
 					abbreviation = "-10";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -36000;
 				},
 			];
@@ -46,7 +55,6 @@ module Etc {
 				{
 					abbreviation = "-11";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -39600;
 				},
 			];
@@ -59,7 +67,6 @@ module Etc {
 				{
 					abbreviation = "-12";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -43200;
 				},
 			];
@@ -72,7 +79,6 @@ module Etc {
 				{
 					abbreviation = "-02";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -7200;
 				},
 			];
@@ -85,7 +91,6 @@ module Etc {
 				{
 					abbreviation = "-03";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -10800;
 				},
 			];
@@ -98,7 +103,6 @@ module Etc {
 				{
 					abbreviation = "-04";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -14400;
 				},
 			];
@@ -111,7 +115,6 @@ module Etc {
 				{
 					abbreviation = "-05";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -18000;
 				},
 			];
@@ -124,7 +127,6 @@ module Etc {
 				{
 					abbreviation = "-06";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -21600;
 				},
 			];
@@ -137,7 +139,6 @@ module Etc {
 				{
 					abbreviation = "-07";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -25200;
 				},
 			];
@@ -150,7 +151,6 @@ module Etc {
 				{
 					abbreviation = "-08";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -28800;
 				},
 			];
@@ -163,7 +163,6 @@ module Etc {
 				{
 					abbreviation = "-09";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = -32400;
 				},
 			];
@@ -176,7 +175,6 @@ module Etc {
 				{
 					abbreviation = "GMT";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
@@ -189,7 +187,6 @@ module Etc {
 				{
 					abbreviation = "+01";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 3600;
 				},
 			];
@@ -202,7 +199,6 @@ module Etc {
 				{
 					abbreviation = "+10";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 36000;
 				},
 			];
@@ -215,7 +211,6 @@ module Etc {
 				{
 					abbreviation = "+11";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 39600;
 				},
 			];
@@ -228,7 +223,6 @@ module Etc {
 				{
 					abbreviation = "+12";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 43200;
 				},
 			];
@@ -241,7 +235,6 @@ module Etc {
 				{
 					abbreviation = "+13";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 46800;
 				},
 			];
@@ -254,7 +247,6 @@ module Etc {
 				{
 					abbreviation = "+14";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 50400;
 				},
 			];
@@ -267,7 +259,6 @@ module Etc {
 				{
 					abbreviation = "+02";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 7200;
 				},
 			];
@@ -280,7 +271,6 @@ module Etc {
 				{
 					abbreviation = "+03";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 10800;
 				},
 			];
@@ -293,7 +283,6 @@ module Etc {
 				{
 					abbreviation = "+04";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 14400;
 				},
 			];
@@ -306,7 +295,6 @@ module Etc {
 				{
 					abbreviation = "+05";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 18000;
 				},
 			];
@@ -319,7 +307,6 @@ module Etc {
 				{
 					abbreviation = "+06";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 21600;
 				},
 			];
@@ -332,7 +319,6 @@ module Etc {
 				{
 					abbreviation = "+07";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 25200;
 				},
 			];
@@ -345,7 +331,6 @@ module Etc {
 				{
 					abbreviation = "+08";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 28800;
 				},
 			];
@@ -358,21 +343,7 @@ module Etc {
 				{
 					abbreviation = "+09";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 32400;
-				},
-			];
-		};
-	};
-	public module GMT {
-		public let region : Types.Region = {
-			id = "Etc/GMT";
-			timeZoneRules = [
-				{
-					abbreviation = "GMT";
-					expiration = null;
-					isDaylightsSavings = false;
-					offsetSeconds = 0;
 				},
 			];
 		};
@@ -384,7 +355,6 @@ module Etc {
 				{
 					abbreviation = "GMT";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
@@ -397,7 +367,6 @@ module Etc {
 				{
 					abbreviation = "GMT";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
@@ -410,7 +379,6 @@ module Etc {
 				{
 					abbreviation = "UTC";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
@@ -423,7 +391,6 @@ module Etc {
 				{
 					abbreviation = "UTC";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
@@ -436,7 +403,6 @@ module Etc {
 				{
 					abbreviation = "UTC";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
@@ -449,10 +415,9 @@ module Etc {
 				{
 					abbreviation = "UTC";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 0;
 				},
 			];
 		};
 	};
-};
+}

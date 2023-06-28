@@ -1,14 +1,15 @@
 import Types "../Types";
 module MST {
-	public let region : Types.Region = {
-		id = "MST";
-		timeZoneRules = [
-			{
-				abbreviation = "MST";
-				expiration = null;
-				isDaylightsSavings = false;
-				offsetSeconds = -25200;
-			},
-		];
+	public module MST {
+		public let region : Types.Region = {
+			id = "MST";
+			timeZoneRules = [
+				{
+					abbreviation = "MST";
+					expiration = null;
+					offsetSeconds = -25200;
+				},
+			];
+		};
 	};
-};
+}

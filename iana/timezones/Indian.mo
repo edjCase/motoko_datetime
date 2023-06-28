@@ -6,32 +6,32 @@ module Indian {
 			timeZoneRules = [
 				{
 					abbreviation = "LMT";
-					expiration = ?-1309746436000;
-					isDaylightsSavings = false;
+					expiration = ?-1946168836000;
 					offsetSeconds = 8836;
 				},
 				{
+					abbreviation = "+0230";
+					expiration = ?-1309746600000;
+					offsetSeconds = 9000;
+				},
+				{
 					abbreviation = "EAT";
-					expiration = ?-1262314800000;
-					isDaylightsSavings = false;
+					expiration = ?-1261969200000;
 					offsetSeconds = 10800;
 				},
 				{
 					abbreviation = "+0230";
-					expiration = ?-946780200000;
-					isDaylightsSavings = false;
+					expiration = ?-1041388200000;
 					offsetSeconds = 9000;
 				},
 				{
 					abbreviation = "+0245";
-					expiration = ?-315629100000;
-					isDaylightsSavings = false;
+					expiration = ?-865305900000;
 					offsetSeconds = 9900;
 				},
 				{
 					abbreviation = "EAT";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 10800;
 				},
 			];
@@ -44,19 +44,16 @@ module Indian {
 				{
 					abbreviation = "LMT";
 					expiration = ?-1988167780000;
-					isDaylightsSavings = false;
 					offsetSeconds = 17380;
 				},
 				{
 					abbreviation = "+05";
 					expiration = ?820436400000;
-					isDaylightsSavings = false;
 					offsetSeconds = 18000;
 				},
 				{
 					abbreviation = "+06";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 21600;
 				},
 			];
@@ -67,9 +64,18 @@ module Indian {
 			id = "Indian/Christmas";
 			timeZoneRules = [
 				{
+					abbreviation = "LMT";
+					expiration = ?-2840164924000;
+					offsetSeconds = 24124;
+				},
+				{
+					abbreviation = "BMT";
+					expiration = ?-1570084924000;
+					offsetSeconds = 24124;
+				},
+				{
 					abbreviation = "+07";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 25200;
 				},
 			];
@@ -80,9 +86,28 @@ module Indian {
 			id = "Indian/Cocos";
 			timeZoneRules = [
 				{
+					abbreviation = "LMT";
+					expiration = ?-2840163887000;
+					offsetSeconds = 23087;
+				},
+				{
+					abbreviation = "RMT";
+					expiration = ?-1577946287000;
+					offsetSeconds = 23087;
+				},
+				{
+					abbreviation = "+0630";
+					expiration = ?-873268200000;
+					offsetSeconds = 23400;
+				},
+				{
+					abbreviation = "+09";
+					expiration = ?-778410000000;
+					offsetSeconds = 32400;
+				},
+				{
 					abbreviation = "+0630";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 23400;
 				},
 			];
@@ -94,32 +119,32 @@ module Indian {
 			timeZoneRules = [
 				{
 					abbreviation = "LMT";
-					expiration = ?-1309746436000;
-					isDaylightsSavings = false;
+					expiration = ?-1946168836000;
 					offsetSeconds = 8836;
 				},
 				{
+					abbreviation = "+0230";
+					expiration = ?-1309746600000;
+					offsetSeconds = 9000;
+				},
+				{
 					abbreviation = "EAT";
-					expiration = ?-1262314800000;
-					isDaylightsSavings = false;
+					expiration = ?-1261969200000;
 					offsetSeconds = 10800;
 				},
 				{
 					abbreviation = "+0230";
-					expiration = ?-946780200000;
-					isDaylightsSavings = false;
+					expiration = ?-1041388200000;
 					offsetSeconds = 9000;
 				},
 				{
 					abbreviation = "+0245";
-					expiration = ?-315629100000;
-					isDaylightsSavings = false;
+					expiration = ?-865305900000;
 					offsetSeconds = 9900;
 				},
 				{
 					abbreviation = "EAT";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 10800;
 				},
 			];
@@ -130,15 +155,18 @@ module Indian {
 			id = "Indian/Kerguelen";
 			timeZoneRules = [
 				{
-					abbreviation = "-00";
-					expiration = ?-631152000000;
-					isDaylightsSavings = false;
-					offsetSeconds = 0;
+					abbreviation = "LMT";
+					expiration = ?-2840158440000;
+					offsetSeconds = 17640;
+				},
+				{
+					abbreviation = "MMT";
+					expiration = ?-315636840000;
+					offsetSeconds = 17640;
 				},
 				{
 					abbreviation = "+05";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 18000;
 				},
 			];
@@ -150,14 +178,12 @@ module Indian {
 			timeZoneRules = [
 				{
 					abbreviation = "LMT";
-					expiration = ?-2006653308000;
-					isDaylightsSavings = false;
-					offsetSeconds = 13308;
+					expiration = ?-1577936472000;
+					offsetSeconds = 13272;
 				},
 				{
 					abbreviation = "+04";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 14400;
 				},
 			];
@@ -168,15 +194,18 @@ module Indian {
 			id = "Indian/Maldives";
 			timeZoneRules = [
 				{
+					abbreviation = "LMT";
+					expiration = ?-2840158440000;
+					offsetSeconds = 17640;
+				},
+				{
 					abbreviation = "MMT";
 					expiration = ?-315636840000;
-					isDaylightsSavings = false;
 					offsetSeconds = 17640;
 				},
 				{
 					abbreviation = "+05";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 18000;
 				},
 			];
@@ -189,37 +218,31 @@ module Indian {
 				{
 					abbreviation = "LMT";
 					expiration = ?-1988164200000;
-					isDaylightsSavings = false;
 					offsetSeconds = 13800;
 				},
 				{
 					abbreviation = "+04";
 					expiration = ?403041600000;
-					isDaylightsSavings = false;
 					offsetSeconds = 14400;
 				},
 				{
 					abbreviation = "+05";
 					expiration = ?417034800000;
-					isDaylightsSavings = true;
 					offsetSeconds = 18000;
 				},
 				{
 					abbreviation = "+04";
 					expiration = ?1224972000000;
-					isDaylightsSavings = false;
 					offsetSeconds = 14400;
 				},
 				{
 					abbreviation = "+05";
 					expiration = ?1238274000000;
-					isDaylightsSavings = true;
 					offsetSeconds = 18000;
 				},
 				{
 					abbreviation = "+04";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 14400;
 				},
 			];
@@ -231,32 +254,32 @@ module Indian {
 			timeZoneRules = [
 				{
 					abbreviation = "LMT";
-					expiration = ?-1309746436000;
-					isDaylightsSavings = false;
+					expiration = ?-1946168836000;
 					offsetSeconds = 8836;
 				},
 				{
+					abbreviation = "+0230";
+					expiration = ?-1309746600000;
+					offsetSeconds = 9000;
+				},
+				{
 					abbreviation = "EAT";
-					expiration = ?-1262314800000;
-					isDaylightsSavings = false;
+					expiration = ?-1261969200000;
 					offsetSeconds = 10800;
 				},
 				{
 					abbreviation = "+0230";
-					expiration = ?-946780200000;
-					isDaylightsSavings = false;
+					expiration = ?-1041388200000;
 					offsetSeconds = 9000;
 				},
 				{
 					abbreviation = "+0245";
-					expiration = ?-315629100000;
-					isDaylightsSavings = false;
+					expiration = ?-865305900000;
 					offsetSeconds = 9900;
 				},
 				{
 					abbreviation = "EAT";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 10800;
 				},
 			];
@@ -268,17 +291,15 @@ module Indian {
 			timeZoneRules = [
 				{
 					abbreviation = "LMT";
-					expiration = ?-1848886912000;
-					isDaylightsSavings = false;
-					offsetSeconds = 13312;
+					expiration = ?-1577936472000;
+					offsetSeconds = 13272;
 				},
 				{
 					abbreviation = "+04";
 					expiration = null;
-					isDaylightsSavings = false;
 					offsetSeconds = 14400;
 				},
 			];
 		};
 	};
-};
+}

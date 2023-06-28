@@ -37,7 +37,6 @@ module {
     public type RegionTimeZoneRule = {
         abbreviation : Text;
         expiration : ?Int;
-        isDaylightsSavings : Bool;
         offsetSeconds : Int;
     };
 

@@ -1,5 +1,5 @@
 
-import moment from "../moment/min/moment-with-locales.min.js";
+import moment from "moment/min/moment-with-locales.min.js";
 import { MotokoWriter } from "./generate-common.js"
 import fs from "fs";
 

@@ -1,14 +1,15 @@
 import Types "../Types";
 module Greenwich {
-	public let region : Types.Region = {
-		id = "Greenwich";
-		timeZoneRules = [
-			{
-				abbreviation = "GMT";
-				expiration = null;
-				isDaylightsSavings = false;
-				offsetSeconds = 0;
-			},
-		];
+	public module Greenwich {
+		public let region : Types.Region = {
+			id = "Greenwich";
+			timeZoneRules = [
+				{
+					abbreviation = "GMT";
+					expiration = null;
+					offsetSeconds = 0;
+				},
+			];
+		};
 	};
-};
+}

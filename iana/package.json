@@ -5,6 +5,6 @@
     "generate-locales": "node generate-locale-motoko.js"
   },
   "dependencies": {
-    "iana-tz-data": "^2019.1.0"
+    "moment-timezone": "0.5.43"
   }
 }
