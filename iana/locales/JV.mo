@@ -84,38 +84,5 @@ module JV {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("enjing", "enjing");
-				case ((1, _)) ("enjing", "enjing");
-				case ((2, _)) ("enjing", "enjing");
-				case ((3, _)) ("enjing", "enjing");
-				case ((4, _)) ("enjing", "enjing");
-				case ((5, _)) ("enjing", "enjing");
-				case ((6, _)) ("enjing", "enjing");
-				case ((7, _)) ("enjing", "enjing");
-				case ((8, _)) ("enjing", "enjing");
-				case ((9, _)) ("enjing", "enjing");
-				case ((10, _)) ("enjing", "enjing");
-				case ((11, _)) ("siyang", "siyang");
-				case ((12, _)) ("siyang", "siyang");
-				case ((13, _)) ("siyang", "siyang");
-				case ((14, _)) ("siyang", "siyang");
-				case ((15, _)) ("sonten", "sonten");
-				case ((16, _)) ("sonten", "sonten");
-				case ((17, _)) ("sonten", "sonten");
-				case ((18, _)) ("sonten", "sonten");
-				case ((19, _)) ("ndalu", "ndalu");
-				case ((20, _)) ("ndalu", "ndalu");
-				case ((21, _)) ("ndalu", "ndalu");
-				case ((22, _)) ("ndalu", "ndalu");
-				case ((23, _)) ("ndalu", "ndalu");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };

@@ -84,38 +84,5 @@ module HU {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("de", "DE");
-				case ((1, _)) ("de", "DE");
-				case ((2, _)) ("de", "DE");
-				case ((3, _)) ("de", "DE");
-				case ((4, _)) ("de", "DE");
-				case ((5, _)) ("de", "DE");
-				case ((6, _)) ("de", "DE");
-				case ((7, _)) ("de", "DE");
-				case ((8, _)) ("de", "DE");
-				case ((9, _)) ("de", "DE");
-				case ((10, _)) ("de", "DE");
-				case ((11, _)) ("de", "DE");
-				case ((12, _)) ("du", "DU");
-				case ((13, _)) ("du", "DU");
-				case ((14, _)) ("du", "DU");
-				case ((15, _)) ("du", "DU");
-				case ((16, _)) ("du", "DU");
-				case ((17, _)) ("du", "DU");
-				case ((18, _)) ("du", "DU");
-				case ((19, _)) ("du", "DU");
-				case ((20, _)) ("du", "DU");
-				case ((21, _)) ("du", "DU");
-				case ((22, _)) ("du", "DU");
-				case ((23, _)) ("du", "DU");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };

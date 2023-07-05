@@ -3,10 +3,32 @@ import moment from "moment/min/moment-with-locales.min.js";
 import { MotokoWriter } from "./generate-common.js"
 import fs from "fs";
 
+function getRegexStringValue(v) {
+    if (!v) {
+        return [null, null];
+    }
+    let options = [];
+    let unescaped = unescapeRegex(v);
+    if (unescaped.includes('(')) {
 
+        // Extract the part within parentheses and split it into an array
+        options = unescaped.match(/\(([^)]+)\)/)[1].split('|');
 
+        // Replace the part within parentheses with "%o"
+        unescaped = unescaped.replace(/\(([^)]+)\)/, "%o");
+    };
+    return [unescaped, options]
+};
 
+function unescapeRegex(regexSource) {
+    return unescapeUnicode(regexSource).replace(/\\(.)/g, "$1");
+}
 
+function unescapeUnicode(str) {
+    return str.replace(/\\u([a-fA-F0-9]{4})/g, function (_, hex) {
+        return String.fromCharCode(parseInt(hex, 16));
+    });
+}
 
 function writeLocale(writer, localName, locale) {
     writer.writeLine(`module ${localName} {`);
@@ -73,86 +95,125 @@ function writeLocale(writer, localName, locale) {
         writer.write(`}`);
     });
 
-    // Meridiem
-    writer.writeLine(`getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {`);
-    writer.depth += 1;
-    // TODO optimize
-    writer.writeLine(`let (lower, upper) : (Text, Text) = switch ((hour, minute)) {`);
-    writer.depth += 1;
-    for (let hour = 0; hour < 24; hour++) {
-        let minutesDiffer = false;
-        let minutesTextList = [];
-        for (let minute = 0; minute < 60; minute++) {
-            let lower = locale.meridiem(hour, minute, true).replace("\"", "\\\"");
-            let upper = locale.meridiem(hour, minute, false).replace("\"", "\\\"");
-            if (minutesTextList.length >= 1) {
-                let last = minutesTextList[minutesTextList.length - 1];
-                if (last[0] !== lower || last[1] !== upper) {
-                    minutesDiffer = true;
-                }
-            };
-            minutesTextList.push([lower, upper]);
-        }
-        if (minutesDiffer) {
-            for (let minute = 0; minute < 60; minute++) {
-                let minutesText = minutesTextList[minute];
-                writer.writeLine(`case ((${hour}, ${minute})) ("${minutesText[0]}", "${minutesText[1]}");`);
-            }
-        } else {
-            let minutesText = minutesTextList[0];
-            writer.writeLine(`case ((${hour}, _)) ("${minutesText[0]}", "${minutesText[1]}");`);
-        };
-    }
-    writer.writeLine(`case (_) Prelude.unreachable();`);
-    writer.depth -= 1;
-    writer.writeLine(`};`);
-    writer.writeLine(`if (isLower) lower else upper;`);
-    writer.depth -= 1;
-    writer.writeLine(`};`);
+    // TODO Meridiem
+    // writer.writeLine(`getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {`);
+    // writer.depth += 1;
+    // // TODO optimize
+    // writer.writeLine(`let (lower, upper) : (Text, Text) = switch ((hour, minute)) {`);
+    // writer.depth += 1;
 
-    // Ordinal    
-    writer.writeLine(`getOrdinal = func (num : Nat) : Text {`);
-    writer.depth += 1;
+    // let meridiemSet = {};
 
-    let currentOrdinal = null;
-    for (let day = 0; day < 366; day++) {
-        let ordinal = locale.ordinal(day);
-        if (!ordinal) {
-            break;
-        }
-        let generic = ordinal.replace(day, "_~_").replace(`"`, `\"`);
-        if (currentOrdinal == null) {
-            currentOrdinal = {
-                generic: generic,
-                startDay: day
-            };
-        } else if (currentOrdinal.generic == generic) {
-            continue;
-        } else {
-            // Change in suffix
-            let firstDay = currentOrdinal.startDay;
-            let days = day - firstDay;
-            let expr;
-            if (days > 1) {
-                expr = `num > ${firstDay} and num < ${day}`;
-            }
-            else {
-                expr = `num == ${firstDay}`;
-            }
-            writer.writeLine(`if (${expr}) {`);
-            writer.depth += 1;
-            writer.writeLine(`return Text.replace("${currentOrdinal.generic}", #text("_~_"), Nat.toText(num));`); // TODO better?
-            writer.depth -= 1;
-            writer.writeLine(`};`);
-            currentOrdinal = {
-                generic: generic,
-                startDay: day
-            };
-        };
-    }
-    writer.writeLine(`Prelude.unreachable();`);
-    writer.depth -= 1;
-    writer.writeLine(`};`);
+    // for (let hour = 0; hour < 24; hour++) {
+    //     let minutesDiffer = false;
+    //     let minutesTextList = [];
+    //     for (let minute = 0; minute < 60; minute++) {
+    //         let lower = locale.meridiem(hour, minute, true).replace("\"", "\\\"");
+    //         let upper = locale.meridiem(hour, minute, false).replace("\"", "\\\"");
+    //         if (minutesTextList.length >= 1) {
+    //             let last = minutesTextList[minutesTextList.length - 1];
+    //             if (last[0] !== lower || last[1] !== upper) {
+    //                 minutesDiffer = true;
+    //             }
+    //         };
+    //         minutesTextList.push([lower, upper]);
+    //         meridiemSet[lower] = upper;
+    //     }
+    //     if (minutesDiffer) {
+    //         for (let minute = 0; minute < 60; minute++) {
+    //             let minutesText = minutesTextList[minute];
+    //             writer.writeLine(`case ((${hour}, ${minute})) ("${minutesText[0]}", "${minutesText[1]}");`);
+    //         }
+    //     } else {
+    //         let minutesText = minutesTextList[0];
+    //         writer.writeLine(`case ((${hour}, _)) ("${minutesText[0]}", "${minutesText[1]}");`);
+    //     };
+    // }
+    // writer.writeLine(`case (_) Prelude.unreachable();`);
+    // writer.depth -= 1;
+    // writer.writeLine(`};`);
+    // writer.writeLine(`if (isLower) lower else upper;`);
+    // writer.depth -= 1;
+    // writer.writeLine(`};`);
+
+    // TODO Ordinal
+    // if (!locale._dayOfMonthOrdinalParse) {
+    //     writer.writeLine(`ordinalInfo = null;`);
+    // } else {
+    //     let parts = locale._dayOfMonthOrdinalParse.
+    //     let parts = locale._dayOfMonthOrdinalParse.source.split("\\d{1,2}");
+    //     let [prefix, pOptions] = getRegexStringValue(parts[0]);
+    //     let [suffix, sOptions] = getRegexStringValue(parts[1]);
+
+    //     if (!!pOptions && !!sOptions) {
+    //         throw new Error("Ordinal parsing with both prefix and suffix is not supported. Problem with locale: " + locale._abbr);
+    //     };
+    //     let ordinalOptions;
+    //     if (!!pOptions) {
+    //         ordinalOptions = pOptions;
+    //     } else if (!!sOptions) {
+    //         ordinalOptions = sOptions;
+    //     }
+
+
+    //     writer.writeLine(`ordinalInfo = {`);
+    //     writer.depth += 1;
+    //     writer.writeLine(`prefix = ${prefix};`);
+    //     writer.writeLine(`suffix = ${suffix};`);
+    //     writer.writeLine(`options = [`);
+    //     writer.depth += 1;
+    //     for (let ordinalOption in ordinalOptions) {
+    //         writer.writeLine(`"${ordinalOption}",`);
+    //     };
+    //     writer.depth -= 1;
+    //     writer.writeLine(`];`);
+    //     writer.depth -= 1;
+    //     writer.writeLine(`};`);
+    // };
+    // writer.writeLine(`getOrdinal = func (num : Nat) : Text {`);
+    // writer.depth += 1;
+
+    // let currentOrdinal = null;
+    // for (let day = 0; day < 366; day++) {
+    //     let ordinal = locale.ordinal(day);
+    //     if (!ordinal) {
+    //         break;
+    //     }
+    //     let generic = ordinal.replace(day, "%d").replace(`"`, `\"`);
+    //     if (currentOrdinal == null) {
+    //         currentOrdinal = {
+    //             generic: generic,
+    //             startDay: day
+    //         };
+    //     } else if (currentOrdinal.generic == generic) {
+    //         continue;
+    //     } else {
+    //         // Change in suffix
+    //         let firstDay = currentOrdinal.startDay;
+    //         let days = day - firstDay;
+    //         let expr;
+    //         if (days > 1) {
+    //             expr = `num > ${firstDay} and num < ${day}`;
+    //         }
+    //         else {
+    //             expr = `num == ${firstDay}`;
+    //         }
+    //         writer.writeLine(`if (${expr}) {`);
+    //         writer.depth += 1;
+    //         writer.writeLine(`return Text.replace("${currentOrdinal.generic}", #text("%d"), Nat.toText(num));`); // TODO better?
+    //         writer.depth -= 1;
+    //         writer.writeLine(`};`);
+    //         currentOrdinal = {
+    //             generic: generic,
+    //             startDay: day
+    //         };
+    //     };
+    // }
+    // writer.writeLine(`Prelude.unreachable();`);
+    // writer.depth -= 1;
+    // writer.writeLine(`};`);
+
+
     writer.depth -= 1;
     writer.writeLine(`};`);
 
@@ -200,4 +261,4 @@ localeListWriter.depth -= 1;
 localeListWriter.writeLine(`};`);
 
 let regionMapText = localeListWriter.motoko;
-fs.writeFileSync("LocaleList.mo", regionMapText, (err) => { }); 
+fs.writeFileSync("LocaleList.mo", regionMapText, (err) => { });

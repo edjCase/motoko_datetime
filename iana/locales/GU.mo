@@ -84,38 +84,5 @@ module GU {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("રાત", "રાત");
-				case ((1, _)) ("રાત", "રાત");
-				case ((2, _)) ("રાત", "રાત");
-				case ((3, _)) ("રાત", "રાત");
-				case ((4, _)) ("સવાર", "સવાર");
-				case ((5, _)) ("સવાર", "સવાર");
-				case ((6, _)) ("સવાર", "સવાર");
-				case ((7, _)) ("સવાર", "સવાર");
-				case ((8, _)) ("સવાર", "સવાર");
-				case ((9, _)) ("સવાર", "સવાર");
-				case ((10, _)) ("બપોર", "બપોર");
-				case ((11, _)) ("બપોર", "બપોર");
-				case ((12, _)) ("બપોર", "બપોર");
-				case ((13, _)) ("બપોર", "બપોર");
-				case ((14, _)) ("બપોર", "બપોર");
-				case ((15, _)) ("બપોર", "બપોર");
-				case ((16, _)) ("બપોર", "બપોર");
-				case ((17, _)) ("સાંજ", "સાંજ");
-				case ((18, _)) ("સાંજ", "સાંજ");
-				case ((19, _)) ("સાંજ", "સાંજ");
-				case ((20, _)) ("રાત", "રાત");
-				case ((21, _)) ("રાત", "રાત");
-				case ((22, _)) ("રાત", "રાત");
-				case ((23, _)) ("રાત", "રાત");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };

@@ -84,44 +84,5 @@ module BR {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("a.m.", "a.m.");
-				case ((1, _)) ("a.m.", "a.m.");
-				case ((2, _)) ("a.m.", "a.m.");
-				case ((3, _)) ("a.m.", "a.m.");
-				case ((4, _)) ("a.m.", "a.m.");
-				case ((5, _)) ("a.m.", "a.m.");
-				case ((6, _)) ("a.m.", "a.m.");
-				case ((7, _)) ("a.m.", "a.m.");
-				case ((8, _)) ("a.m.", "a.m.");
-				case ((9, _)) ("a.m.", "a.m.");
-				case ((10, _)) ("a.m.", "a.m.");
-				case ((11, _)) ("a.m.", "a.m.");
-				case ((12, _)) ("g.m.", "g.m.");
-				case ((13, _)) ("g.m.", "g.m.");
-				case ((14, _)) ("g.m.", "g.m.");
-				case ((15, _)) ("g.m.", "g.m.");
-				case ((16, _)) ("g.m.", "g.m.");
-				case ((17, _)) ("g.m.", "g.m.");
-				case ((18, _)) ("g.m.", "g.m.");
-				case ((19, _)) ("g.m.", "g.m.");
-				case ((20, _)) ("g.m.", "g.m.");
-				case ((21, _)) ("g.m.", "g.m.");
-				case ((22, _)) ("g.m.", "g.m.");
-				case ((23, _)) ("g.m.", "g.m.");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			if (num == 0) {
-				return Text.replace("_~_vet", #text("_~_"), Nat.toText(num));
-			};
-			if (num == 1) {
-				return Text.replace("_~_añ", #text("_~_"), Nat.toText(num));
-			};
-			Prelude.unreachable();
-		};
 	};
 };

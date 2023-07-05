@@ -84,38 +84,5 @@ module SD {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("صبح", "صبح");
-				case ((1, _)) ("صبح", "صبح");
-				case ((2, _)) ("صبح", "صبح");
-				case ((3, _)) ("صبح", "صبح");
-				case ((4, _)) ("صبح", "صبح");
-				case ((5, _)) ("صبح", "صبح");
-				case ((6, _)) ("صبح", "صبح");
-				case ((7, _)) ("صبح", "صبح");
-				case ((8, _)) ("صبح", "صبح");
-				case ((9, _)) ("صبح", "صبح");
-				case ((10, _)) ("صبح", "صبح");
-				case ((11, _)) ("صبح", "صبح");
-				case ((12, _)) ("شام", "شام");
-				case ((13, _)) ("شام", "شام");
-				case ((14, _)) ("شام", "شام");
-				case ((15, _)) ("شام", "شام");
-				case ((16, _)) ("شام", "شام");
-				case ((17, _)) ("شام", "شام");
-				case ((18, _)) ("شام", "شام");
-				case ((19, _)) ("شام", "شام");
-				case ((20, _)) ("شام", "شام");
-				case ((21, _)) ("شام", "شام");
-				case ((22, _)) ("شام", "شام");
-				case ((23, _)) ("شام", "شام");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };

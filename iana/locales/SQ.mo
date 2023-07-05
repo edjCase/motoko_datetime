@@ -84,38 +84,5 @@ module SQ {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("PD", "PD");
-				case ((1, _)) ("PD", "PD");
-				case ((2, _)) ("PD", "PD");
-				case ((3, _)) ("PD", "PD");
-				case ((4, _)) ("PD", "PD");
-				case ((5, _)) ("PD", "PD");
-				case ((6, _)) ("PD", "PD");
-				case ((7, _)) ("PD", "PD");
-				case ((8, _)) ("PD", "PD");
-				case ((9, _)) ("PD", "PD");
-				case ((10, _)) ("PD", "PD");
-				case ((11, _)) ("PD", "PD");
-				case ((12, _)) ("MD", "MD");
-				case ((13, _)) ("MD", "MD");
-				case ((14, _)) ("MD", "MD");
-				case ((15, _)) ("MD", "MD");
-				case ((16, _)) ("MD", "MD");
-				case ((17, _)) ("MD", "MD");
-				case ((18, _)) ("MD", "MD");
-				case ((19, _)) ("MD", "MD");
-				case ((20, _)) ("MD", "MD");
-				case ((21, _)) ("MD", "MD");
-				case ((22, _)) ("MD", "MD");
-				case ((23, _)) ("MD", "MD");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };

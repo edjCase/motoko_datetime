@@ -84,38 +84,5 @@ module GOM_LATN {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("rati", "rati");
-				case ((1, _)) ("rati", "rati");
-				case ((2, _)) ("rati", "rati");
-				case ((3, _)) ("rati", "rati");
-				case ((4, _)) ("sokallim", "sokallim");
-				case ((5, _)) ("sokallim", "sokallim");
-				case ((6, _)) ("sokallim", "sokallim");
-				case ((7, _)) ("sokallim", "sokallim");
-				case ((8, _)) ("sokallim", "sokallim");
-				case ((9, _)) ("sokallim", "sokallim");
-				case ((10, _)) ("sokallim", "sokallim");
-				case ((11, _)) ("sokallim", "sokallim");
-				case ((12, _)) ("donparam", "donparam");
-				case ((13, _)) ("donparam", "donparam");
-				case ((14, _)) ("donparam", "donparam");
-				case ((15, _)) ("donparam", "donparam");
-				case ((16, _)) ("sanje", "sanje");
-				case ((17, _)) ("sanje", "sanje");
-				case ((18, _)) ("sanje", "sanje");
-				case ((19, _)) ("sanje", "sanje");
-				case ((20, _)) ("rati", "rati");
-				case ((21, _)) ("rati", "rati");
-				case ((22, _)) ("rati", "rati");
-				case ((23, _)) ("rati", "rati");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };

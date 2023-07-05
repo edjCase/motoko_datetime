@@ -84,38 +84,5 @@ module TZL {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("d'a", "D'A");
-				case ((1, _)) ("d'a", "D'A");
-				case ((2, _)) ("d'a", "D'A");
-				case ((3, _)) ("d'a", "D'A");
-				case ((4, _)) ("d'a", "D'A");
-				case ((5, _)) ("d'a", "D'A");
-				case ((6, _)) ("d'a", "D'A");
-				case ((7, _)) ("d'a", "D'A");
-				case ((8, _)) ("d'a", "D'A");
-				case ((9, _)) ("d'a", "D'A");
-				case ((10, _)) ("d'a", "D'A");
-				case ((11, _)) ("d'a", "D'A");
-				case ((12, _)) ("d'o", "D'O");
-				case ((13, _)) ("d'o", "D'O");
-				case ((14, _)) ("d'o", "D'O");
-				case ((15, _)) ("d'o", "D'O");
-				case ((16, _)) ("d'o", "D'O");
-				case ((17, _)) ("d'o", "D'O");
-				case ((18, _)) ("d'o", "D'O");
-				case ((19, _)) ("d'o", "D'O");
-				case ((20, _)) ("d'o", "D'O");
-				case ((21, _)) ("d'o", "D'O");
-				case ((22, _)) ("d'o", "D'O");
-				case ((23, _)) ("d'o", "D'O");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };

@@ -82,6 +82,11 @@ module {
         };
     };
 
+    public type FromTextResult = {
+        components : Components;
+        timeZoneDescriptor : TimeZoneDescriptor;
+    };
+
     public type TimeZoneDescriptor = {
         #unspecified;
         #utc;

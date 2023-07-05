@@ -84,38 +84,5 @@ module KO {
 				abbreviatedName = "BC";
 			},
 		];
-		getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
-			let (lower, upper) : (Text, Text) = switch ((hour, minute)) {
-				case ((0, _)) ("오전", "오전");
-				case ((1, _)) ("오전", "오전");
-				case ((2, _)) ("오전", "오전");
-				case ((3, _)) ("오전", "오전");
-				case ((4, _)) ("오전", "오전");
-				case ((5, _)) ("오전", "오전");
-				case ((6, _)) ("오전", "오전");
-				case ((7, _)) ("오전", "오전");
-				case ((8, _)) ("오전", "오전");
-				case ((9, _)) ("오전", "오전");
-				case ((10, _)) ("오전", "오전");
-				case ((11, _)) ("오전", "오전");
-				case ((12, _)) ("오후", "오후");
-				case ((13, _)) ("오후", "오후");
-				case ((14, _)) ("오후", "오후");
-				case ((15, _)) ("오후", "오후");
-				case ((16, _)) ("오후", "오후");
-				case ((17, _)) ("오후", "오후");
-				case ((18, _)) ("오후", "오후");
-				case ((19, _)) ("오후", "오후");
-				case ((20, _)) ("오후", "오후");
-				case ((21, _)) ("오후", "오후");
-				case ((22, _)) ("오후", "오후");
-				case ((23, _)) ("오후", "오후");
-				case (_) Prelude.unreachable();
-			};
-			if (isLower) lower else upper;
-		};
-		getOrdinal = func (num : Nat) : Text {
-			Prelude.unreachable();
-		};
 	};
 };
