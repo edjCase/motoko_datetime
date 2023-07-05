@@ -37,26 +37,32 @@ module Module {
 
     type ExtractResult = {
         remainingText : Text;
-        value : {
-            #year : Nat;
-            #quarter : Nat;
-            #month : Nat;
-            #dayOfYear : Nat;
-            #dayOfMonth : Nat;
-            #dayOfWeek : Nat;
-            #weekOfYear : Nat;
-            #hour : Nat;
-            #minute : Nat;
-            #nanosecond : Nat;
-            #timeZoneDescriptor : TimeZoneDescriptor;
-            #time : Time.Time;
-        };
+        value : ExtractedValue;
+    };
+    type ExtractedValue = {
+        #year : Int;
+        #yearWithoutCentury : Nat;
+        #quarter : Nat;
+        #month : Nat;
+        #dayOfYear : Nat;
+        #dayOfMonth : Nat;
+        #dayOfWeek : Nat;
+        #weekOfYear : { value : Nat; firstDayOfYear : Nat };
+        #weekYear : { value : Int; firstDayOfYear : Nat };
+        #weekYearWithoutCentury : { value : Nat; firstDayOfYear : Nat };
+        #hour : Nat;
+        #hour12 : Nat;
+        #minute : Nat;
+        #nanosecond : Nat;
+        #timeZoneDescriptor : TimeZoneDescriptor;
+        #time : Time.Time;
+        #era : Era;
     };
 
     type TokenInfo = {
         value : Text;
         getter : (components : Components, timeZone : TimeZone, locale : ?Locale) -> Text;
-        extract : (text : Text, components : Components, locale : ?Locale) -> ?ExtractResult;
+        extract : (text : Text, locale : ?Locale) -> ?ExtractResult;
     };
 
     type TokenOrText = {
@@ -268,68 +274,195 @@ module Module {
             case (#iso8601)("YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ", null);
             case (#custom({ format; locale }))(format, ?locale);
         };
-        var components : Components = {
-            year = 0;
-            month = 1;
-            day = 1;
-            hour = 0;
-            minute = 0;
-            second = 0;
-            nanosecond = 0;
-        };
 
-        var timeZoneDescriptor : TimeZoneDescriptor = #unspecified;
-
-        var currentText = text;
-        let tokens : Buffer.Buffer<TokenOrText> = parseFormatText(formatText);
-        for (token in tokens.vals()) {
-            switch (token) {
+        var remainingText = text;
+        let tokenOrTextBuffer : Buffer.Buffer<TokenOrText> = parseFormatText(formatText);
+        let extractedValueHelper = ExtractedValueHelper();
+        for (tokenOrText in tokenOrTextBuffer.vals()) {
+            switch (tokenOrText) {
                 case (#text(t)) {
-                    // skip
+                    // skip text
+                    let ?v = Text.stripStart(remainingText, #text(t)) else return null;
+                    remainingText := v;
                 };
                 case (#token(tokenInfo)) {
-                    let ?result = tokenInfo.extract(currentText, components, locale) else return null;
-                    currentText := result.remainingText;
-                    switch (result.value) {
-                        case (#year(y)) components := {
-                            components with year = y
-                        };
-                        case (#quarter(q)) {
-                            // Skip, not enough information
-                        };
-                        case (#month(m)) components := {
-                            components with month = m
-                        };
-                        case (#hour(h)) components := {
-                            components with hour = h
-                        };
-                        case (#minute(m)) components := {
-                            components with minute = m
-                        };
-                        case (#nanosecond(s)) components := {
-                            components with nanosecond = s;
-                        };
-                        case (#dayOfYear(d)) {
-                            // TODO
-                        };
-                        case (#dayOfMonth(d)) components := {
-                            components with day = d
-                        };
-                        case (#dayOfWeek(d)) {
-                            // Skip, not enough information
-                        };
-                        case (#time(t)) components := fromTime(t);
-                        case (#weekOfYear(w)) {
-                            // Skip, not enough information
-                        };
-                        case (#timeZoneDescriptor(tzd)) timeZoneDescriptor := tzd;
-                    };
+                    let ?result = tokenInfo.extract(remainingText, locale) else return null;
+                    extractedValueHelper.add(result.value);
+                    remainingText := result.remainingText;
                 };
             };
         };
+        let ?(components, timeZoneDescriptor) = extractedValueHelper.resolve() else return null;
         ?{
             components;
             timeZoneDescriptor;
+        };
+    };
+
+    private class ExtractedValueHelper() {
+        let extractedValues : Buffer.Buffer<ExtractedValue> = Buffer.Buffer<ExtractedValue>(10);
+
+        type State = {
+            year : ?Int;
+            month : ?Nat;
+            day : ?Nat;
+            hour : ?Nat;
+            minute : ?Nat;
+            second : ?Nat;
+            nanosecond : ?Nat;
+            tz : ?TimeZoneDescriptor;
+            isPM : ?Bool;
+        };
+
+        public func add(value : ExtractedValue) : () {
+            extractedValues.add(value);
+        };
+
+        public func resolve() : ?(Components, TimeZoneDescriptor) {
+
+            var state : State = {
+                year = null;
+                month = null;
+                day = null;
+                hour = null;
+                minute = null;
+                second = null;
+                nanosecond = null;
+                tz = null;
+                isPM = null;
+            };
+
+            var requeueCount = 0;
+            label l loop {
+                switch (extractedValues.removeLast()) {
+                    case (null) break l;
+                    case (?v) {
+                        switch (updateState(state, v.value)) {
+                            case (null) {
+                                extractedValues.insert(0, v.value); // Add to the front, to be processed after others
+                                requeueCount += 1;
+                                if (requeueCount >= extractedValues.size()) {
+                                    return null;
+                                };
+                            };
+                            case (newState) {
+                                state := newState;
+                                requeueCount := 0; // Reset requeue count because something changed
+                            };
+                        };
+                    };
+                }
+
+            };
+            let components : Components = {
+                year = state.year;
+                month = state.month;
+                day = state.day;
+                hour = state.hour;
+                minute = state.minute;
+                nanosecond = state.nanosecond;
+            };
+            let timeZoneDescriptor = switch (state.tz) {
+                case (null) #unspecified;
+                case (?tz) tz;
+            };
+            ?(components, timeZoneDescriptor);
+        };
+
+        func updateState(state : State, value : ExtractedValue) : ?State {
+
+            switch (value) {
+                case (#year(y)) {
+                    ?{ state with year = ?y };
+                };
+                case (#yearWithoutCentury(y)) {
+                    // Skip, not enough information
+                    ?state;
+                };
+                case (#quarter(q)) {
+                    // Skip, not enough information
+                    ?state;
+                };
+                case (#month(m)) {
+                    ?{ state with month = ?m };
+                };
+                case (#hour(h)) {
+                    ?{ state with hour = ?h };
+                };
+                case (#hour12(h)) {
+                    switch (state.isPM) {
+                        case (null) null; // Need to know if AM or PM
+                        case (?true) {
+                            ?{ state with hour = ?(h + 12) };
+                        };
+                        case (?false) {
+                            ?{ state with hour = ?h };
+                        };
+                    };
+                };
+                case (#minute(m)) {
+                    ?{ state with minute = ?m };
+                };
+                case (#nanosecond(s)) {
+                    ?{ state with nanosecond = ?s };
+                };
+                case (#dayOfYear(d)) {
+                    let ?year = state.year else return null;
+                    var month = 1;
+                    var remainingDays = d;
+                    label l loop {
+                        let daysInMonthValue = daysInMonth(month, isLeapYear(year));
+                        if (remainingDays <= daysInMonthValue) {
+                            break l;
+                        };
+                        remainingDays -= daysInMonthValue;
+                        month += 1;
+                    };
+                    ?{
+                        state with
+                        day = ?remainingDays;
+                        month = ?month;
+                    };
+                };
+                case (#dayOfMonth(d)) {
+                    ?{ state with day = ?d };
+                };
+                case (#dayOfWeek(d)) {
+                    // Skip, not enough information
+                    ?state;
+                };
+                case (#time(t)) {
+                    let components = fromTime(t);
+                    ?{
+                        state with
+                        year = ?components.year;
+                        month = ?components.month;
+                        day = ?components.day;
+                        hour = ?components.hour;
+                        minute = ?components.minute;
+                        nanosecond = ?components.nanosecond;
+                    };
+                };
+                case (#weekOfYear(w)) {
+                    // Skip, not enough information
+                    ?state;
+                };
+                case (#timeZoneDescriptor(tzd)) {
+                    ?{ state with tz = ?tzd };
+                };
+                case (#era(e)) {
+                    // Skip, not enough information
+                    ?state;
+                };
+                case (#weekYear(wy)) {
+                    // Skip, not enough information
+                    ?state;
+                };
+                case (#weekYearWithoutCentury(wy)) {
+                    // Skip, not enough information
+                    ?state;
+                };
+            };
         };
     };
 
@@ -969,38 +1102,62 @@ module Module {
         let optionIndex = 0;
         for (option in Iter.fromArray(options)) {
             if (Text.startsWith(text, #text(option))) {
-                let otherText = skip(text, option.size());
-                return ?(optionIndex, otherText);
+                let (_, remainingText) = take<Char>(text.chars(), option.size());
+                return ?(optionIndex, Text.fromIter(remainingText));
             };
         };
         null;
     };
 
-    private func skip(text : Text, count : Nat) : Text {
-        let textIter = Text.toIter(text);
+    private func take<T>(iter : Iter.Iter<T>, count : Nat) : (Buffer.Buffer<T>, Iter.Iter<T>) {
+        var takenBuffer = Buffer.Buffer<T>(count);
         let i = 0;
         label l loop {
             if (i >= count) {
                 break l;
             };
-            let _ = textIter.next();
+            switch (iter.next()) {
+                case (?c) takenBuffer.add(c);
+                case (null) break l;
+            };
         };
-        Text.fromIter(textIter);
+        (takenBuffer, iter);
+    };
+
+    private func extractInt(text : Text, maxDigits : Nat, strict : Bool) : ?(Int, Text) {
+        let textIter = text.chars();
+        let (isNegative, textWithoutSign) = switch (textIter.next()) {
+            case (?'-')(true, Text.fromIter(textIter));
+            case (?'+')(false, Text.fromIter(textIter));
+            case (_)(false, text);
+        };
+        let ?(natValue, remainingText) = extractNat(textWithoutSign, maxDigits, strict) else return null;
+        let intValue : Int = if (isNegative) -natValue else natValue;
+        ?(intValue, remainingText);
+    };
+
+    private func getNextWord(text : Text) : (Text, Text) {
+        var word = "";
+        let iter = text.chars();
+        label l loop {
+            switch (iter.next()) {
+                case (?c) {
+                    if (Char.isWhitespace(c)) break l;
+                    word #= Text.fromChar(c);
+                };
+                case (null) break l;
+            };
+        };
+        let remainingText = Text.fromIter(iter);
+        (word, remainingText);
     };
 
     private func extractNat(text : Text, maxDigits : Nat, strict : Bool) : ?(Nat, Text) {
-        let textIter = Text.toIter(text);
-        var i = 0;
+        let (taken, remainingText) = take<Char>(text.chars(), maxDigits);
+        var lastUsedTakenIndex = 0;
         var value : Nat = 0;
-        label l loop {
-            if (i >= maxDigits) {
-                break l;
-            };
-            let char = switch (textIter.next()) {
-                case (?c) c;
-                case (null) break l;
-            };
-            let isDigit = Char.isDigit(char);
+        label l for (c in taken.vals()) {
+            let isDigit = Char.isDigit(c);
             if (not isDigit) {
                 if (strict) {
                     return null;
@@ -1008,11 +1165,19 @@ module Module {
                     break l;
                 };
             };
-            value := value * 10 + Nat32.toNat(Char.toNat32(char));
-            i += 1;
+            value := value * 10 + Nat32.toNat(Char.toNat32(c));
+            lastUsedTakenIndex += 1;
         };
-        let otherText = skip(text, i);
-        ?(value, otherText);
+        let lastTakenIndex : Nat = taken.size() - 1;
+        let r = if (lastUsedTakenIndex >= lastTakenIndex) {
+            Text.fromIter(remainingText);
+        } else {
+            let unusedTakenLength : Nat = taken.size() - lastUsedTakenIndex;
+            let unusedTakenBuffer = Buffer.subBuffer(taken, lastUsedTakenIndex, unusedTakenLength);
+            let unusedTakenText = Text.fromIter(unusedTakenBuffer.vals());
+            unusedTakenText # Text.fromIter(remainingText);
+        };
+        ?(value, r);
     };
 
     // Tokens are ordered by length so that the longest token is matched first
@@ -1024,12 +1189,12 @@ module Module {
                 let l = requireLocale(locale);
                 l.months[components.month - 1];
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let l = requireLocale(locale);
-                let ?(index, subText) = findAndExtractStart(text, l.months) else return null;
+                let ?(index, remainingText) = findAndExtractStart(text, l.months) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #month(index + 1);
                 };
             };
@@ -1041,11 +1206,11 @@ module Module {
                 let l = requireLocale(locale);
                 l.monthsShort[components.month - 1];
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let l = requireLocale(locale);
-                let ?(index, subText) = findAndExtractStart(text, l.months) else return null;
+                let ?(index, remainingText) = findAndExtractStart(text, l.months) else return null;
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #month(index + 1);
                 };
             };
@@ -1056,10 +1221,10 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPadded(components.month, 2);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(month, subText) = extractNat(text, 2, true) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(month, remainingText) = extractNat(text, 2, true) else return null;
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #month(month);
                 };
             };
@@ -1072,7 +1237,7 @@ module Module {
         //         let l = requireLocale(locale);
         //         l.getOrdinal(components.month);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1082,10 +1247,10 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 Nat.toText(components.month);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(month, subText) = extractNat(text, 2, false) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(month, remainingText) = extractNat(text, 2, false) else return null;
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #month(month);
                 };
             };
@@ -1098,7 +1263,7 @@ module Module {
         //         let l = requireLocale(locale);
         //         l.getOrdinal(components.month / 3 + 1);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1108,11 +1273,11 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 Nat.toText(components.month / 3 + 1);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(quarter, subText) = extractNat(text, 1, false) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(quarter, remainingText) = extractNat(text, 1, false) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #quarter(quarter);
                 };
             };
@@ -1122,13 +1287,13 @@ module Module {
             value = "DDDD";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                TextUtil.toTextPadded(dayOfYear(components, l.firstDayOfYear), 3);
+                TextUtil.toTextPadded(dayOfYear(components, 1), 3);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(dayOfYear, subText) = extractNat(text, 4, true) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(dayOfYear, remainingText) = extractNat(text, 4, true) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfYear(dayOfYear);
                 };
             };
@@ -1141,7 +1306,7 @@ module Module {
         //         let l = requireLocale(locale);
         //         l.getOrdinal(dayOfYear(components, l.firstDayOfYear));
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1150,13 +1315,13 @@ module Module {
             value = "DDD";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                Nat.toText(dayOfYear(components, l.firstDayOfYear));
+                Nat.toText(dayOfYear(components, 1));
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(dayOfYear, subText) = extractNat(text, 4, false) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(dayOfYear, remainingText) = extractNat(text, 4, false) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfYear(dayOfYear);
                 };
             };
@@ -1167,11 +1332,11 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPadded(components.day, 2);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(dayOfMonth, subText) = extractNat(text, 2, true) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(dayOfMonth, remainingText) = extractNat(text, 2, true) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfMonth(dayOfMonth);
                 };
             };
@@ -1184,7 +1349,7 @@ module Module {
         //         let l = requireLocale(locale);
         //         l.getOrdinal(components.day);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1194,11 +1359,11 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 Nat.toText(components.day);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(dayOfMonth, subText) = extractNat(text, 2, false) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(dayOfMonth, remainingText) = extractNat(text, 2, false) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfMonth(dayOfMonth);
                 };
             };
@@ -1211,11 +1376,11 @@ module Module {
                 let dayOfWeek = dayOfWeekIndex(components);
                 l.weekdays[dayOfWeek];
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let l = requireLocale(locale);
-                let ?(index, subText) = findAndExtractStart(text, l.weekdays) else return null;
+                let ?(index, remainingText) = findAndExtractStart(text, l.weekdays) else return null;
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfWeek(index + 1);
                 };
             };
@@ -1228,11 +1393,11 @@ module Module {
                 let dayOfWeek = dayOfWeekIndex(components);
                 l.weekdaysShort[dayOfWeek];
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let l = requireLocale(locale);
-                let ?(index, subText) = findAndExtractStart(text, l.weekdaysShort) else return null;
+                let ?(index, remainingText) = findAndExtractStart(text, l.weekdaysShort) else return null;
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfWeek(index + 1);
                 };
             };
@@ -1245,11 +1410,11 @@ module Module {
                 let dayOfWeek = dayOfWeekIndex(components);
                 l.weekdaysMin[dayOfWeek];
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let l = requireLocale(locale);
-                let ?(index, subText) = findAndExtractStart(text, l.weekdaysMin) else return null;
+                let ?(index, remainingText) = findAndExtractStart(text, l.weekdaysMin) else return null;
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfWeek(index + 1);
                 };
             };
@@ -1263,7 +1428,7 @@ module Module {
         //         let dayOfWeek = dayOfWeekIndex(components);
         //         l.getOrdinal(dayOfWeek);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1274,11 +1439,11 @@ module Module {
                 let dayOfWeek = dayOfWeekIndex(components);
                 Nat.toText(dayOfWeek);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(dayOfWeek, subText) = extractNat(text, 1, true) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(dayOfWeek, remainingText) = extractNat(text, 1, true) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfWeek(dayOfWeek);
                 };
             };
@@ -1291,12 +1456,12 @@ module Module {
                 let dayOfWeek = dayOfWeekIndex(components);
                 Nat.toText(dayOfWeek + l.firstDayOfWeek);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let l = requireLocale(locale);
-                let ?(dayOfWeek, subText) = extractNat(text, 1, true) else return null;
+                let ?(dayOfWeek, remainingText) = extractNat(text, 1, true) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfWeek(dayOfWeek - l.firstDayOfWeek);
                 };
             };
@@ -1308,11 +1473,11 @@ module Module {
                 let dayOfWeek = dayOfWeekIndex(components);
                 Nat.toText(dayOfWeek + 1);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(dayOfWeek, subText) = extractNat(text, 1, true) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(dayOfWeek, remainingText) = extractNat(text, 1, true) else return null;
 
                 ?{
-                    remainingText = subText;
+                    remainingText = remainingText;
                     value = #dayOfWeek(dayOfWeek - 1);
                 };
             };
@@ -1325,12 +1490,17 @@ module Module {
                 let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
                 TextUtil.toTextPaddedSign(weekOfYearValue, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(weekOfYear, subText) = extractNat(text, 2, true) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?(weekOfYear, remainingText) = extractNat(text, 2, true) else return null;
 
                 ?{
-                    remainingText = subText;
-                    value = #weekOfYear(weekOfYear);
+                    remainingText = remainingText;
+                    value = #weekOfYear({
+                        value = weekOfYear;
+                        firstDayOfWeek = l.firstDayOfWeek;
+                        firstDayOfYear = l.firstDayOfYear;
+                    });
                 };
             };
         },
@@ -1343,7 +1513,7 @@ module Module {
         //         let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
         //         l.getOrdinal(weekOfYearValue);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1355,12 +1525,17 @@ module Module {
                 let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
                 Nat.toText(weekOfYearValue);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                let ?(weekOfYear, subText) = extractNat(text, 2, false) else return null;
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?(weekOfYear, remainingText) = extractNat(text, 2, false) else return null;
 
                 ?{
-                    remainingText = subText;
-                    value = #weekOfYear(weekOfYear);
+                    remainingText = remainingText;
+                    value = #weekOfYear({
+                        value = weekOfYear;
+                        firstDayOfWeek = l.firstDayOfWeek;
+                        firstDayOfYear = l.firstDayOfYear;
+                    });
                 };
             };
         },
@@ -1371,8 +1546,17 @@ module Module {
                 let weekOfYearValue = weekOfYear(components, 1, 4);
                 TextUtil.toTextPaddedSign(weekOfYearValue, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(weekOfYear, remainingText) = extractNat(text, 2, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #weekOfYear({
+                        value = weekOfYear;
+                        firstDayOfWeek = 1;
+                        firstDayOfYear = 4;
+                    });
+                };
             };
         },
         // TODO
@@ -1384,7 +1568,7 @@ module Module {
         //         let weekOfYearValue = weekOfYear(components, 1, 4);
         //         l.getOrdinal(weekOfYearValue);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1395,8 +1579,17 @@ module Module {
                 let weekOfYearValue = weekOfYear(components, 1, 4);
                 Nat.toText(weekOfYearValue);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(weekOfYear, remainingText) = extractNat(text, 2, false) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #weekOfYear({
+                        value = weekOfYear;
+                        firstDayOfWeek = 1;
+                        firstDayOfYear = 4;
+                    });
+                };
             };
         },
         {
@@ -1405,8 +1598,13 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPaddedSign(components.year, 6, true);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(year, remainingText) = extractInt(text, 6, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #year(year);
+                };
             };
         },
         {
@@ -1415,8 +1613,13 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPaddedSign(components.year, 4, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(year, remainingText) = extractInt(text, 4, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #year(year);
+                };
             };
         },
         {
@@ -1425,8 +1628,13 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPaddedSign(components.year % 100, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(year, remainingText) = extractNat(text, 2, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #yearWithoutCentury(year);
+                };
             };
         },
         {
@@ -1436,8 +1644,13 @@ module Module {
                 let showPositiveSign = components.year > 9999; // Show + sign for years > 9999
                 TextUtil.toTextPaddedSign(components.year, 1, showPositiveSign);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(year, remainingText) = extractInt(text, 4, false) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #year(year);
+                };
             };
         },
         // TODO
@@ -1451,23 +1664,24 @@ module Module {
         //         let eraYear = Int.abs(components.year);
         //         l.getOrdinal(eraYear);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
-        {
-            // Era year
-            value = "y";
-            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                let now = toTime(components);
-                let era = getEra(now, locale);
-                let eraYear = Int.abs(components.year);
-                Nat.toText(eraYear);
-            };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
-            };
-        },
+        // TODO
+        // {
+        //     // Era year
+        //     value = "y";
+        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+        //         let now = toTime(components);
+        //         let era = getEra(now, locale);
+        //         let eraYear = era
+        //         Nat.toText(eraYear);
+        //     };
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+        //         // TODO
+        //     };
+        // },
         {
             // Era Narrow Name
             value = "NNNNN";
@@ -1477,8 +1691,15 @@ module Module {
                 let era = getEra(now, locale);
                 era.narrowName;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let options = Array.map(l.eras, func(e : Era) : Text = e.narrowName);
+                let ?(index, remainingText) = findAndExtractStart(text, options) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #era(l.eras[index]);
+                };
             };
         },
         {
@@ -1490,8 +1711,15 @@ module Module {
                 let era = getEra(now, locale);
                 era.fullName;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let options = Array.map(l.eras, func(e : Era) : Text = e.fullName);
+                let ?(index, remainingText) = findAndExtractStart(text, options) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #era(l.eras[index]);
+                };
             };
         },
         {
@@ -1503,8 +1731,15 @@ module Module {
                 let era = getEra(now, locale);
                 era.abbreviatedName;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let options = Array.map(l.eras, func(e : Era) : Text = e.abbreviatedName);
+                let ?(index, remainingText) = findAndExtractStart(text, options) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #era(l.eras[index]);
+                };
             };
         },
         {
@@ -1516,8 +1751,15 @@ module Module {
                 let era = getEra(now, locale);
                 era.abbreviatedName;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let options = Array.map(l.eras, func(e : Era) : Text = e.abbreviatedName);
+                let ?(index, remainingText) = findAndExtractStart(text, options) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #era(l.eras[index]);
+                };
             };
         },
         {
@@ -1529,8 +1771,15 @@ module Module {
                 let era = getEra(now, locale);
                 era.abbreviatedName;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let options = Array.map(l.eras, func(e : Era) : Text = e.abbreviatedName);
+                let ?(index, remainingText) = findAndExtractStart(text, options) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #era(l.eras[index]);
+                };
             };
         },
         {
@@ -1541,8 +1790,17 @@ module Module {
                 let weekYearValue = weekYear(components, l.firstDayOfYear);
                 TextUtil.toTextPaddedSign(weekYearValue, 4, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?(weekYear, remainingText) = extractInt(text, 4, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #weekYear({
+                        value = weekYear;
+                        firstDayOfYear = l.firstDayOfYear;
+                    });
+                };
             };
         },
         {
@@ -1553,8 +1811,17 @@ module Module {
                 let weekYearValue = weekYear(components, l.firstDayOfYear);
                 TextUtil.toTextPaddedSign(weekYearValue % 100, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?(weekYearWithoutCentury, remainingText) = extractNat(text, 2, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #weekYearWithoutCentury({
+                        value = weekYearWithoutCentury;
+                        firstDayOfYear = l.firstDayOfYear;
+                    });
+                };
             };
         },
         {
@@ -1564,8 +1831,16 @@ module Module {
                 let weekYearValue = weekYear(components, 4); // ISO week year starts on thursday (4)
                 TextUtil.toTextPaddedSign(weekYearValue, 4, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(weekYear, remainingText) = extractInt(text, 4, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #weekYear({
+                        value = weekYear;
+                        firstDayOfYear = 4;
+                    });
+                };
             };
         },
         {
@@ -1575,8 +1850,16 @@ module Module {
                 let weekYearValue = weekYear(components, 4); // ISO week year starts on thursday (4)
                 TextUtil.toTextPaddedSign(weekYearValue % 100, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(weekYearWithoutCentury, remainingText) = extractNat(text, 2, true) else return null;
+
+                ?{
+                    remainingText = remainingText;
+                    value = #weekYearWithoutCentury({
+                        value = weekYearWithoutCentury;
+                        firstDayOfYear = 4;
+                    });
+                };
             };
         },
         // TODO
@@ -1587,7 +1870,7 @@ module Module {
         //         let l = requireLocale(locale);
         //         l.getMeridiem(components.hour, components.minute, false);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1598,7 +1881,7 @@ module Module {
         //         let l = requireLocale(locale);
         //         l.getMeridiem(components.hour, components.minute, true);
         //     };
-        //     extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
+        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
         //         // TODO
         //     };
         // },
@@ -1608,8 +1891,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPaddedSign(components.hour, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(hour, remainingText) = extractNat(text, 2, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #hour(hour);
+                };
             };
         },
         {
@@ -1618,8 +1905,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 Nat.toText(components.hour);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(hour, remainingText) = extractNat(text, 2, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #hour(hour);
+                };
             };
         },
         {
@@ -1630,8 +1921,12 @@ module Module {
                 let value = if (hour12Value == 0) 12 else hour12Value;
                 TextUtil.toTextPaddedSign(value, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(hour, remainingText) = extractNat(text, 2, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #hour12(hour);
+                };
             };
         },
         {
@@ -1642,8 +1937,12 @@ module Module {
                 let value = if (hour12Value == 0) 12 else hour12Value;
                 Nat.toText(value);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(hour, remainingText) = extractNat(text, 2, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #hour12(hour);
+                };
             };
         },
         {
@@ -1652,8 +1951,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPaddedSign(components.hour + 1, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(hour, remainingText) = extractNat(text, 2, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #hour(hour - 1);
+                };
             };
         },
         {
@@ -1662,8 +1965,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 Nat.toText(components.hour + 1);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(hour, remainingText) = extractNat(text, 2, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #hour(hour - 1);
+                };
             };
         },
         {
@@ -1672,8 +1979,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 TextUtil.toTextPaddedSign(components.minute, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(minute, remainingText) = extractNat(text, 2, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #minute(minute);
+                };
             };
         },
         {
@@ -1682,8 +1993,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 Nat.toText(components.minute);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(minute, remainingText) = extractNat(text, 2, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #minute(minute);
+                };
             };
         },
         {
@@ -1693,8 +2008,12 @@ module Module {
                 let second = components.nanosecond / 1_000_000_000;
                 TextUtil.toTextPaddedSign(second, 2, false);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(second, remainingText) = extractNat(text, 2, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(second * 1_000_000_000);
+                };
             };
         },
         {
@@ -1704,8 +2023,12 @@ module Module {
                 let second = components.nanosecond / 1_000_000_000;
                 Nat.toText(second);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(second, remainingText) = extractNat(text, 2, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(second * 1_000_000_000);
+                };
             };
         },
         {
@@ -1714,8 +2037,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 9);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fNanoSeconds, remainingText) = extractNat(text, 9, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fNanoSeconds);
+                };
             };
         },
         {
@@ -1724,8 +2051,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 8);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fOctSeconds, remainingText) = extractNat(text, 8, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fOctSeconds * 10);
+                };
             };
         },
         {
@@ -1734,8 +2065,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 7);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fSeptSeconds, remainingText) = extractNat(text, 7, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fSeptSeconds * 100);
+                };
             };
         },
         {
@@ -1744,8 +2079,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 6);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fHexSeconds, remainingText) = extractNat(text, 6, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fHexSeconds * 1_000);
+                };
             };
         },
         {
@@ -1754,8 +2093,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 5);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fPentSeconds, remainingText) = extractNat(text, 5, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fPentSeconds * 10_000);
+                };
             };
         },
         {
@@ -1764,8 +2107,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 4);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fQuadSeconds, remainingText) = extractNat(text, 4, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fQuadSeconds * 100_000);
+                };
             };
         },
         {
@@ -1774,8 +2121,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 3);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fMilliSeconds, remainingText) = extractNat(text, 3, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fMilliSeconds * 1_000_000);
+                };
             };
         },
         {
@@ -1784,8 +2135,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 2);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fCentiSeconds, remainingText) = extractNat(text, 2, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fCentiSeconds * 10_000_000);
+                };
             };
         },
         {
@@ -1794,8 +2149,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getFractionalSecond(components, 1);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(fDeciSeconds, remainingText) = extractNat(text, 1, true) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #nanosecond(fDeciSeconds * 100_000_000);
+                };
             };
         },
         {
@@ -1804,8 +2163,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getTimeZoneInfo(components, timeZone).0;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let (name, remainingText) = getNextWord(text);
+                ?{
+                    remainingText = remainingText;
+                    value = #timeZoneDescriptor(#name(name));
+                };
             };
         },
         {
@@ -1814,8 +2177,12 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getTimeZoneInfo(components, timeZone).0;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let (name, remainingText) = getNextWord(text);
+                ?{
+                    remainingText = remainingText;
+                    value = #timeZoneDescriptor(#name(name));
+                };
             };
         },
         {
@@ -1825,8 +2192,24 @@ module Module {
                 let offset = getTimeZoneInfo(components, timeZone).1;
                 Text.replace(offset, #char(':'), "");
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+
+                let ?(hour, textWithoutHour) = extractInt(text, 2, true) else return null;
+                let ?(minute, textWithoutMinute) = extractNat(textWithoutHour, 2, true) else return null;
+                let (offsetSeconds, remainingText) = switch (extractNat(textWithoutMinute, 2, true)) {
+                    case (null) {
+                        let offsetSeconds = hour * 60 * 60 + minute * 60;
+                        (offsetSeconds, textWithoutMinute);
+                    };
+                    case (?(second, remainingText)) {
+                        let offsetSeconds = hour * 60 * 60 + minute * 60 + second;
+                        (offsetSeconds, remainingText);
+                    };
+                };
+                ?{
+                    remainingText = remainingText;
+                    value = #timeZoneDescriptor(#fixed(#seconds(offsetSeconds)));
+                };
             };
         },
         {
@@ -1835,8 +2218,26 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 getTimeZoneInfo(components, timeZone).1;
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+
+                let ?(hour, textWithoutHour) = extractInt(text, 2, true) else return null;
+                let ?textWithoutHourAndColon = Text.stripStart(textWithoutHour, #char(':')) else return null;
+                let ?(minute, textWithoutMinute) = extractNat(textWithoutHourAndColon, 2, true) else return null;
+                let (offsetSeconds, remainingText) = switch (Text.stripStart(textWithoutMinute, #char(':'))) {
+                    case (null) {
+                        let offsetSeconds = hour * 60 * 60 + minute * 60;
+                        (offsetSeconds, textWithoutMinute);
+                    };
+                    case (?textWithoutMinuteAndColon) {
+                        let ?(second, textWithoutSecond) = extractNat(textWithoutMinuteAndColon, 2, true) else return null;
+                        let offsetSeconds = hour * 60 * 60 + minute * 60 + second;
+                        (offsetSeconds, textWithoutSecond);
+                    };
+                };
+                ?{
+                    remainingText = remainingText;
+                    value = #timeZoneDescriptor(#fixed(#seconds(offsetSeconds)));
+                };
             };
         },
         {
@@ -1846,8 +2247,12 @@ module Module {
                 let time = toTime(components);
                 Int.toText(time / 1_000_000_000);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(timestamp, remainingText) = extractInt(text, 10, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #time(timestamp * 1_000_000_000);
+                };
             };
         },
         {
@@ -1857,8 +2262,12 @@ module Module {
                 let time = toTime(components);
                 Int.toText(time / 1_000_000);
             };
-            extract = func(text : Text, components : Components, locale : ?Locale) : ?ExtractResult {
-                // TODO
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let ?(timestamp, remainingText) = extractInt(text, 10, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #time(timestamp * 1_000_000);
+                };
             };
         },
     ];
