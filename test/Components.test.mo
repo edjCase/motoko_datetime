@@ -22,7 +22,7 @@ test(
             minute = 0;
             nanosecond = 0;
         };
-        let actual = Components.epoch();
+        let actual = Components.epoch;
         assert (expected == actual);
     },
 );
@@ -412,7 +412,7 @@ test(
                 timeZone = #fixed(#seconds(0));
                 expected = [
                     (#iso8601, "1970-01-01T00:00:00.000000000Z"),
-                    (#custom({ format = "D/M/YYYY, hh:mm:ss A"; locale = EN.locale }), "1/1/1970, 12:00:00 AM"),
+                    (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = EN.locale }), "1/1/1970, 00:00:00 +00:00"),
                 ];
             },
             {
@@ -427,7 +427,7 @@ test(
                 timeZone = #fixed(#seconds(-25_320));
                 expected = [
                     (#iso8601, "1970-01-01T00:00:00.000000000-07:02"),
-                    (#custom({ format = "D/M/YYYY, hh:mm:ss A"; locale = JA.locale }), "1/1/1970, 12:00:00 AM"),
+                    (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = JA.locale }), "1/1/1970, 00:00:00 -07:02"),
                 ];
             },
             {
@@ -442,7 +442,7 @@ test(
                 timeZone = #fixed(#seconds(-25_321));
                 expected = [
                     (#iso8601, "1970-01-01T00:00:00.000000000-07:02:01"),
-                    (#custom({ format = "D/M/YYYY, hh:mm:ss A"; locale = EN.locale }), "1/1/1970, 12:00:00 AM"),
+                    (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = EN.locale }), "1/1/1970, 00:00:00 -07:02:01"),
                 ];
             },
         ];

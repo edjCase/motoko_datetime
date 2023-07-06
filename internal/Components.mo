@@ -16,6 +16,7 @@ import TimeZone "TimeZone";
 import Bool "mo:base/Bool";
 import Char "mo:base/Char";
 import Nat32 "mo:base/Nat32";
+import Option "mo:base/Option";
 
 module Module {
 
@@ -53,10 +54,12 @@ module Module {
         #hour : Nat;
         #hour12 : Nat;
         #minute : Nat;
-        #nanosecond : Nat;
+        #second : Nat;
+        #fractionalNanosecond : Nat;
         #timeZoneDescriptor : TimeZoneDescriptor;
         #time : Time.Time;
         #era : Era;
+        #isPM : Bool;
     };
 
     type TokenInfo = {
@@ -309,7 +312,7 @@ module Module {
             hour : ?Nat;
             minute : ?Nat;
             second : ?Nat;
-            nanosecond : ?Nat;
+            fractionalNanosecond : ?Nat;
             tz : ?TimeZoneDescriptor;
             isPM : ?Bool;
         };
@@ -327,87 +330,88 @@ module Module {
                 hour = null;
                 minute = null;
                 second = null;
-                nanosecond = null;
+                fractionalNanosecond = null;
                 tz = null;
                 isPM = null;
             };
 
-            var requeueCount = 0;
-            label l loop {
-                switch (extractedValues.removeLast()) {
-                    case (null) break l;
-                    case (?v) {
-                        switch (updateState(state, v.value)) {
-                            case (null) {
-                                extractedValues.insert(0, v.value); // Add to the front, to be processed after others
-                                requeueCount += 1;
-                                if (requeueCount >= extractedValues.size()) {
-                                    return null;
-                                };
-                            };
-                            case (newState) {
-                                state := newState;
-                                requeueCount := 0; // Reset requeue count because something changed
-                            };
-                        };
+            // To fix and issue with isPM and year being needed for other values, we prefetch them, TODO make better
+            for (value in extractedValues.vals()) {
+                switch (value) {
+                    case (#isPM(_) or #year(_)) {
+                        // Prefetch subset
+                        state := updateState(state, value);
                     };
-                }
+                    case (_) {
+                        // Skip in prefetch
+                    };
+                };
+            };
 
+            label l loop {
+                let ?lastValue = extractedValues.removeLast() else break l;
+                state := updateState(state, lastValue);
             };
+            let ?year = state.year else return null;
+            let ?month = state.month else return null;
+            let ?day = state.day else return null;
+            let hour = Option.get(state.hour, 0);
+            let minute = Option.get(state.minute, 0);
+            let nanosecond = Option.get(state.fractionalNanosecond, 0) + Option.get(state.second, 0) * 1_000_000_000;
+            let timeZoneDescriptor = Option.get(state.tz, #unspecified);
             let components : Components = {
-                year = state.year;
-                month = state.month;
-                day = state.day;
-                hour = state.hour;
-                minute = state.minute;
-                nanosecond = state.nanosecond;
-            };
-            let timeZoneDescriptor = switch (state.tz) {
-                case (null) #unspecified;
-                case (?tz) tz;
+                year = year;
+                month = month;
+                day = day;
+                hour = hour;
+                minute = minute;
+                nanosecond = nanosecond;
             };
             ?(components, timeZoneDescriptor);
         };
 
-        func updateState(state : State, value : ExtractedValue) : ?State {
+        func updateState(state : State, value : ExtractedValue) : State {
 
-            switch (value) {
+            let newState = switch (value) {
                 case (#year(y)) {
-                    ?{ state with year = ?y };
+                    { state with year = ?y };
                 };
                 case (#yearWithoutCentury(y)) {
                     // Skip, not enough information
-                    ?state;
+                    state;
                 };
                 case (#quarter(q)) {
                     // Skip, not enough information
-                    ?state;
+                    state;
                 };
                 case (#month(m)) {
-                    ?{ state with month = ?m };
+                    { state with month = ?m };
                 };
                 case (#hour(h)) {
-                    ?{ state with hour = ?h };
+                    { state with hour = ?h };
                 };
                 case (#hour12(h)) {
                     switch (state.isPM) {
-                        case (null) null; // Need to know if AM or PM
+                        case (null) Debug.trap("Meridiem is required when using 12 hour clock"); // isPM is prefetched, TODO make better
                         case (?true) {
-                            ?{ state with hour = ?(h + 12) };
+                            { state with hour = ?(h + 12) };
                         };
                         case (?false) {
-                            ?{ state with hour = ?h };
+                            { state with hour = ?h };
                         };
                     };
                 };
                 case (#minute(m)) {
-                    ?{ state with minute = ?m };
+                    { state with minute = ?m };
                 };
-                case (#nanosecond(s)) {
-                    ?{ state with nanosecond = ?s };
+                case (#second(s)) {
+                    { state with second = ?s };
+                };
+                case (#fractionalNanosecond(s)) {
+                    { state with fractionalNanosecond = ?s };
                 };
                 case (#dayOfYear(d)) {
-                    let ?year = state.year else return null;
+                    let ?year = state.year else Debug.trap("Year is required when using day of year"); // Year is prefetched, TODO make better
                     var month = 1;
                     var remainingDays = d;
                     label l loop {
@@ -418,22 +422,22 @@ module Module {
                         remainingDays -= daysInMonthValue;
                         month += 1;
                     };
-                    ?{
+                    {
                         state with
                         day = ?remainingDays;
                         month = ?month;
                     };
                 };
                 case (#dayOfMonth(d)) {
-                    ?{ state with day = ?d };
+                    { state with day = ?d };
                 };
                 case (#dayOfWeek(d)) {
                     // Skip, not enough information
-                    ?state;
+                    state;
                 };
                 case (#time(t)) {
                     let components = fromTime(t);
-                    ?{
+                    {
                         state with
                         year = ?components.year;
                         month = ?components.month;
@@ -445,24 +449,28 @@ module Module {
                 };
                 case (#weekOfYear(w)) {
                     // Skip, not enough information
-                    ?state;
+                    state;
                 };
                 case (#timeZoneDescriptor(tzd)) {
-                    ?{ state with tz = ?tzd };
+                    { state with tz = ?tzd };
                 };
                 case (#era(e)) {
                     // Skip, not enough information
-                    ?state;
+                    state;
                 };
                 case (#weekYear(wy)) {
                     // Skip, not enough information
-                    ?state;
+                    state;
                 };
                 case (#weekYearWithoutCentury(wy)) {
                     // Skip, not enough information
-                    ?state;
+                    state;
+                };
+                case (#isPM(isPM)) {
+                    { state with isPM = ?isPM };
                 };
             };
+            newState;
         };
     };
 
@@ -1111,7 +1119,7 @@ module Module {
 
     private func take<T>(iter : Iter.Iter<T>, count : Nat) : (Buffer.Buffer<T>, Iter.Iter<T>) {
         var takenBuffer = Buffer.Buffer<T>(count);
-        let i = 0;
+        var i = 0;
         label l loop {
             if (i >= count) {
                 break l;
@@ -1120,6 +1128,7 @@ module Module {
                 case (?c) takenBuffer.add(c);
                 case (null) break l;
             };
+            i += 1;
         };
         (takenBuffer, iter);
     };
@@ -1154,30 +1163,52 @@ module Module {
 
     private func extractNat(text : Text, maxDigits : Nat, strict : Bool) : ?(Nat, Text) {
         let (taken, remainingText) = take<Char>(text.chars(), maxDigits);
-        var lastUsedTakenIndex = 0;
-        var value : Nat = 0;
+        var digitCount = 0;
+        let values = Buffer.Buffer<Nat>(maxDigits);
         label l for (c in taken.vals()) {
-            let isDigit = Char.isDigit(c);
-            if (not isDigit) {
-                if (strict) {
-                    return null;
-                } else {
-                    break l;
+            let digit = switch (c) {
+                case ('0') 0;
+                case ('1') 1;
+                case ('2') 2;
+                case ('3') 3;
+                case ('4') 4;
+                case ('5') 5;
+                case ('6') 6;
+                case ('7') 7;
+                case ('8') 8;
+                case ('9') 9;
+                case (_) {
+                    if (strict or digitCount == 0) {
+                        return null;
+                    } else {
+                        break l;
+                    };
                 };
             };
-            value := value * 10 + Nat32.toNat(Char.toNat32(c));
-            lastUsedTakenIndex += 1;
+            values.add(digit);
+            digitCount += 1;
         };
-        let lastTakenIndex : Nat = taken.size() - 1;
-        let r = if (lastUsedTakenIndex >= lastTakenIndex) {
+        type Acc = { value : Nat; i : Nat };
+        let natValue = Buffer.foldRight(
+            values,
+            { value = 0; i = 0 },
+            func(value : Nat, acc : Acc) : Acc {
+                let newValue = acc.value + (value * Nat.pow(10, acc.i));
+                {
+                    value = newValue;
+                    i = acc.i + 1;
+                };
+            },
+        );
+        let r = if (digitCount >= taken.size()) {
             Text.fromIter(remainingText);
         } else {
-            let unusedTakenLength : Nat = taken.size() - lastUsedTakenIndex;
-            let unusedTakenBuffer = Buffer.subBuffer(taken, lastUsedTakenIndex, unusedTakenLength);
+            let unusedTakenLength : Nat = taken.size() - digitCount;
+            let unusedTakenBuffer = Buffer.subBuffer(taken, digitCount, unusedTakenLength);
             let unusedTakenText = Text.fromIter(unusedTakenBuffer.vals());
             unusedTakenText # Text.fromIter(remainingText);
         };
-        ?(value, r);
+        ?(natValue.value, r);
     };
 
     // Tokens are ordered by length so that the longest token is matched first
@@ -2012,7 +2043,7 @@ module Module {
                 let ?(second, remainingText) = extractNat(text, 2, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(second * 1_000_000_000);
+                    value = #second(second);
                 };
             };
         },
@@ -2027,7 +2058,7 @@ module Module {
                 let ?(second, remainingText) = extractNat(text, 2, false) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(second * 1_000_000_000);
+                    value = #second(second);
                 };
             };
         },
@@ -2041,7 +2072,7 @@ module Module {
                 let ?(fNanoSeconds, remainingText) = extractNat(text, 9, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fNanoSeconds);
+                    value = #fractionalNanosecond(fNanoSeconds);
                 };
             };
         },
@@ -2055,7 +2086,7 @@ module Module {
                 let ?(fOctSeconds, remainingText) = extractNat(text, 8, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fOctSeconds * 10);
+                    value = #fractionalNanosecond(fOctSeconds * 10);
                 };
             };
         },
@@ -2069,7 +2100,7 @@ module Module {
                 let ?(fSeptSeconds, remainingText) = extractNat(text, 7, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fSeptSeconds * 100);
+                    value = #fractionalNanosecond(fSeptSeconds * 100);
                 };
             };
         },
@@ -2083,7 +2114,7 @@ module Module {
                 let ?(fHexSeconds, remainingText) = extractNat(text, 6, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fHexSeconds * 1_000);
+                    value = #fractionalNanosecond(fHexSeconds * 1_000);
                 };
             };
         },
@@ -2097,7 +2128,7 @@ module Module {
                 let ?(fPentSeconds, remainingText) = extractNat(text, 5, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fPentSeconds * 10_000);
+                    value = #fractionalNanosecond(fPentSeconds * 10_000);
                 };
             };
         },
@@ -2111,7 +2142,7 @@ module Module {
                 let ?(fQuadSeconds, remainingText) = extractNat(text, 4, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fQuadSeconds * 100_000);
+                    value = #fractionalNanosecond(fQuadSeconds * 100_000);
                 };
             };
         },
@@ -2125,7 +2156,7 @@ module Module {
                 let ?(fMilliSeconds, remainingText) = extractNat(text, 3, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fMilliSeconds * 1_000_000);
+                    value = #fractionalNanosecond(fMilliSeconds * 1_000_000);
                 };
             };
         },
@@ -2139,7 +2170,7 @@ module Module {
                 let ?(fCentiSeconds, remainingText) = extractNat(text, 2, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fCentiSeconds * 10_000_000);
+                    value = #fractionalNanosecond(fCentiSeconds * 10_000_000);
                 };
             };
         },
@@ -2153,7 +2184,7 @@ module Module {
                 let ?(fDeciSeconds, remainingText) = extractNat(text, 1, true) else return null;
                 ?{
                     remainingText = remainingText;
-                    value = #nanosecond(fDeciSeconds * 100_000_000);
+                    value = #fractionalNanosecond(fDeciSeconds * 100_000_000);
                 };
             };
         },
@@ -2219,24 +2250,38 @@ module Module {
                 getTimeZoneInfo(components, timeZone).1;
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-
-                let ?(hour, textWithoutHour) = extractInt(text, 2, true) else return null;
-                let ?textWithoutHourAndColon = Text.stripStart(textWithoutHour, #char(':')) else return null;
-                let ?(minute, textWithoutMinute) = extractNat(textWithoutHourAndColon, 2, true) else return null;
-                let (offsetSeconds, remainingText) = switch (Text.stripStart(textWithoutMinute, #char(':'))) {
+                switch (Text.stripStart(text, #char('Z'))) {
+                    case (?remainingText) {
+                        // UTC
+                        ?{
+                            remainingText = remainingText;
+                            value = #timeZoneDescriptor(#fixed(#seconds(0)));
+                        };
+                    };
                     case (null) {
-                        let offsetSeconds = hour * 60 * 60 + minute * 60;
-                        (offsetSeconds, textWithoutMinute);
+                        // Parse as number
+                        let ?(hour, textWithoutHour) = extractInt(text, 2, true) else return null;
+                        let negativeModifier = if (hour < 0) -1 else 1;
+                        let hourAbs = Int.abs(hour);
+                        let ?textWithoutHourAndColon = Text.stripStart(textWithoutHour, #char(':')) else return null;
+                        let ?(minute, textWithoutMinute) = extractNat(textWithoutHourAndColon, 2, true) else return null;
+                        let offsetHourAndMinute = hourAbs * 60 * 60 + minute * 60;
+
+                        let (offsetSeconds, remainingText) = switch (Text.stripStart(textWithoutMinute, #char(':'))) {
+                            case (null) {
+                                (offsetHourAndMinute, textWithoutMinute);
+                            };
+                            case (?textWithoutMinuteAndColon) {
+                                let ?(second, textWithoutSecond) = extractNat(textWithoutMinuteAndColon, 2, true) else return null;
+                                let offsetSeconds = offsetHourAndMinute + second;
+                                (offsetSeconds, textWithoutSecond);
+                            };
+                        };
+                        ?{
+                            remainingText = remainingText;
+                            value = #timeZoneDescriptor(#fixed(#seconds(offsetSeconds * negativeModifier)));
+                        };
                     };
-                    case (?textWithoutMinuteAndColon) {
-                        let ?(second, textWithoutSecond) = extractNat(textWithoutMinuteAndColon, 2, true) else return null;
-                        let offsetSeconds = hour * 60 * 60 + minute * 60 + second;
-                        (offsetSeconds, textWithoutSecond);
-                    };
-                };
-                ?{
-                    remainingText = remainingText;
-                    value = #timeZoneDescriptor(#fixed(#seconds(offsetSeconds)));
                 };
             };
         },

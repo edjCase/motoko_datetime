@@ -31,7 +31,7 @@ module {
     public type TimeZone = InternalTypes.TimeZone;
     public type Duration = InternalTypes.Duration;
     public type TextFormat = InternalTypes.TextFormat;
-    public type TextParseFormat = InternalTypes.TextParseFormat;
+    public type FromTextResult = InternalTypes.FromTextResult;
     public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     public type Locale = InternalTypes.Locale;
 
@@ -127,7 +127,7 @@ module {
     /// ```motoko include=import
     /// let ?result : ?FromTextResult = Components.fromTextFormatted("2020-01-01T00:00:00Z", #iso8601) else return #error("Invalid datetime text");
     /// ```
-    public func fromTextFormatted(text : Text, format : TextParseFormat) : ?FromTextResult {
+    public func fromTextFormatted(text : Text, format : TextFormat) : ?FromTextResult {
         InternalComponents.fromTextFormatted(text, format);
     };
 

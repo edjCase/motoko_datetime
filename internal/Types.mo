@@ -15,8 +15,9 @@ module {
         dateTimeFormat : Text;
         longDateFormat : Text;
         eras : [Era];
-        getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
-        getOrdinal : (num : Nat) -> Text;
+        // TODO
+        // getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
+        // getOrdinal : (num : Nat) -> Text;
 
     };
 
