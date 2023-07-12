@@ -32,7 +32,7 @@ module Module {
     type FromTextResult = InternalTypes.FromTextResult;
 
     public type CalculatedDuration = {
-        #adder : (Components) -> Components;
+        #relative : (Components) -> Components;
         #absoluteTime : Int;
     };
 
@@ -106,12 +106,33 @@ module Module {
                 #absoluteTime(weeks * 7 * 24 * 60 * 60 * 1_000_000_000);
             };
             case (#months(months)) {
-                #adder(
+                #relative(
                     func(components : Components) : Components {
-                        // TODO validate leap stuff
                         let newMonth : Int = components.month + months;
                         let newYear : Int = components.year + newMonth / 12;
-                        let newMonthInYear : Nat = Int.abs(newMonth % 12);
+                        let (month, year) : (Nat, Int) = if (newMonth < 1) {
+                            let absMonth = Int.abs(newMonth);
+                            let extraYears = (absMonth / 12) + 1;
+                            let month : Nat = 12 - (absMonth % 12);
+                            (month, components.year - extraYears);
+                        } else {
+                            let absMonth = Int.abs(newMonth);
+                            let extraYears = absMonth / 12;
+                            let month : Nat = absMonth % 12;
+                            if (month == 0) {
+                                {
+                                    year = date.year + extraYears - 1;
+                                    month = 12;
+                                    day = date.day;
+                                };
+                            } else {
+                                {
+                                    year = date.year + extraYears;
+                                    month = month;
+                                    day = date.day;
+                                };
+                            };
+                        };
                         let isLeapYear : Bool = Module.isLeapYear(newYear);
                         let maxDaysInMonth : Nat = Module.daysInMonth(newMonthInYear, isLeapYear);
                         let dayIsNotInMonth = components.day > maxDaysInMonth;
@@ -131,10 +152,19 @@ module Module {
                 );
             };
             case (#years(years)) {
-                #adder(
+                #relative(
                     func(components : Components) : Components {
-                        // TODO validate leap stuff
                         let newYear : Int = components.year + years;
+                        let newMonthInYear : Nat = Int.abs(newMonth % 12);
+                        let isLeapYear : Bool = Module.isLeapYear(newYear);
+                        let maxDaysInMonth : Nat = Module.daysInMonth(newMonthInYear, isLeapYear);
+                        let dayIsNotInMonth = components.day > maxDaysInMonth;
+                        let newDay : Nat = if (dayIsNotInMonth) {
+                            // If not in the month then use the last day of the current month
+                            maxDaysInMonth;
+                        } else {
+                            components.day;
+                        };
                         {
                             year = newYear;
                             month = components.month;
