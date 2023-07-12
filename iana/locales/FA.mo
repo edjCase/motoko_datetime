@@ -60,7 +60,7 @@ module FA {
 			"نوامبر",
 			"دسامبر",
 		];
-		firstDayOfWeek = 6;
+		firstDayOfWeek = #saturday;
 		firstDayOfYear = 12;
 		timeFormat = "HH:mm";
 		dateFormat = "DD/MM/YYYY";

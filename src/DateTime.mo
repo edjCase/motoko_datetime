@@ -27,6 +27,7 @@ module D {
     public type TextFormat = InternalTypes.TextFormat;
     public type DateTime = InternalTypes.DateTime;
     type Components = InternalTypes.Components;
+    type DayOfWeek = InternalTypes.DayOfWeek;
 
     /// Creates an instance of the `DateTime` type from a `Time.Time` value.
     ///
@@ -50,69 +51,47 @@ module D {
                 case (#absoluteTime(newTime)) {
                     DateTime(toTime() + newTime);
                 };
-                case (#adder(adder)) {
+                case (#relative(converter)) {
                     let components = toComponents();
-                    let newComponents = adder(components);
+                    let newComponents = converter(components);
                     fromComponents(newComponents);
                 };
             };
         };
 
-        // TODO
-        // public func getIsoWeek() : Nat {
-        //     let components = toComponents();
-        //     let year = components.year;
-        //     let month = components.month;
-        //     let day = components.day;
-        //     let a : Nat = (14 - month) / 12; // Calculate the "a" value used in the ISO week calculation
-        //     let intY : Int = year + 4800 - a; // Calculate the "intY" value used in the ISO week calculation
-        //     let y : Nat = if (intY < 0) {
-        //         // Check if the year is negative
-        //         Debug.trap("Unable to calculate ISO week for dates before 0001-01-01") // If the year is negative, trap with an error message
-        //     } else {
-        //         Int.abs(intY); // If the year is not negative, take the absolute value
-        //     };
-        //     let m : Nat = month + 12 * a - 3; // Calculate the "m" value used in the ISO week calculation
-        //     let daysIn400Years : Nat = 146097; // Define the number of days in a 400-year cycle
-        //     let daysIn100Years : Nat = 36524; // Define the number of days in a 100-year cycle
-        //     let daysIn4Years : Nat = 1461; // Define the number of days in a 4-year cycle
-        //     // Calculate the Julian day number from the Gregorian calendar. Simplifies the calculations to just have day units
-        //     let jdn : Nat = (1461 * (y + 4800 + (m - 14) / 12)) / 4 // Calculate the Julian day number from the Gregorian calendar
-        //     + (367 * (m - 2 - 12 * ((m - 14) / 12))) / 12 - (3 * ((y + 4900 + (m - 14) / 12) / 100)) / 4 + day - 32075;
-        //     let d4 : Nat = (jdn + 31741 - (jdn % 7)) // Calculate the number of days since the start of the 4-year cycle that contains the current date
-        //     % daysIn400Years % daysIn100Years % daysIn4Years; // Take the remainder when divided by the number of days in a 400-year cycle, then by the number of days in a 100-year cycle, then by the number of days in a 4-year cycle
-        //     let l : Nat = d4 / 1460; // Calculate the number of complete 4-year cycles since the start of the 4-year cycle that contains the current date
-        //     let d1 : Nat = ((d4 - l) % 365) + l; // Calculate the number of days since the start of the year that contains the current date
-        //     let week : Nat = d1 / 7 + 1; // Calculate the ISO week number
-        //     week;
-        // };
+        /// Gets the day of year for the `DateTime` value.
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let dayOfYear : Nat.Nat = dateTime.dayOfYear();
+        /// ```
+        public func dayOfYear() : Nat {
+            let components = toComponents();
+            InternalComponents.dayOfYear(components);
+        };
 
-        // public func getWeekOfYear() : Nat {
-        //     let components = toComponents();
-        //     let ?firstDayOfYear = DateTime.fromComponents({
-        //         year = components.year;
-        //         month = 1;
-        //         day = 1;
-        //     }) else Prelude.unreachable();
-        //     let daysSinceMonday = (firstDayOfYear.toComponents().weekday - 1 + (toComponents().day - 1)) % 7;
-        //     let weekOfYear = (toComponents().day + daysSinceMonday - 1) / 7 + 1;
-        //     return weekOfYear;
-        // };
+        /// Gets the ISO week of year for the `DateTime` value.
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let weekOfYear : Nat.Nat = dateTime.weekOfYear();
+        /// ```
+        public func weekOfYear() : Nat {
+            let components = toComponents();
+            InternalComponents.weekOfYear(components, #monday, 4);
+        };
 
-        // public func getWeekOfMonth() : Nat {
-        //     let components = toComponents();
-        //     let ?firstDayOfMonth = DateTime.fromComponents({
-        //         year = components.year;
-        //         month = components.month;
-        //         day = 1;
-        //     }) else Prelude.unreachable();
+        /// Gets the day of the week for the `DateTime` value.
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let dayOfWeek : DayOfWeek.DayOfWeek = dateTime.dayOfWeek();
+        /// ```
+        public func dayOfWeek() : DayOfWeek {
+            let components = toComponents();
+            InternalComponents.dayOfWeek(components);
+        };
 
-        //     let let daysSinceMonday = (firstDayOfMonth.toComponents().weekday - 1 + (toComponents().day - 1)) % 7;
-        //     let weekOfMonth = (toComponents().day + daysSinceMonday - 1) / 7 + 1;
-        //     return weekOfMonth;
-        // };
-
-        // TODO rename
         /// Calculates the time difference between this `DateTime` and another `DateTime` value.
         /// Will return a negative value if the other `DateTime` is in the future compared with this `DateTime` value.
         ///

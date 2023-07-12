@@ -60,7 +60,7 @@ module EN_IL {
 			"Nov",
 			"Dec",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "HH:mm";
 		dateFormat = "DD/MM/YYYY";

@@ -60,7 +60,7 @@ module AR_DZ {
 			"نوفمبر",
 			"ديسمبر",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 4;
 		timeFormat = "HH:mm";
 		dateFormat = "D/‏M/‏YYYY";

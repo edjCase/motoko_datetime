@@ -7,7 +7,6 @@ import Int "mo:base/Int";
 import Text "mo:base/Text";
 import Types "../internal/Types";
 
-
 test(
     "equal",
     func() {
@@ -17,10 +16,10 @@ test(
             (1, 0, false),
             (1, 1, true),
             (999_999_999_999_999_999, 999_999_999_999_999_999, true),
-            (999_999_999_999_999_998, 999_999_999_999_999_999, false)
+            (999_999_999_999_999_998, 999_999_999_999_999_999, false),
         ];
-        for (testCase in Iter.fromArray(testCases)){
-            
+        for (testCase in Iter.fromArray(testCases)) {
+
             let a = DateTime.fromTime(testCase.0);
             let b = DateTime.fromTime(testCase.1);
             let areEqual = a.equal(b);
@@ -38,7 +37,6 @@ test(
     },
 );
 
-
 test(
     "compare",
     func() {
@@ -48,10 +46,10 @@ test(
             (1, 0, #greater),
             (1, 1, #equal),
             (999_999_999_999_999_999, 999_999_999_999_999_999, #equal),
-            (999_999_999_999_999_998, 999_999_999_999_999_999, #less)
+            (999_999_999_999_999_998, 999_999_999_999_999_999, #less),
         ];
-        for (testCase in Iter.fromArray(testCases)){
-            
+        for (testCase in Iter.fromArray(testCases)) {
+
             let a = DateTime.fromTime(testCase.0);
             let b = DateTime.fromTime(testCase.1);
             let result = a.compare(b);
@@ -61,7 +59,7 @@ test(
                 assert false;
             };
             if (result != testCase.2) {
-                Debug.print("Expected " # debug_show(testCase.2) # ": " # a.toText() # " and " # b.toText());
+                Debug.print("Expected " # debug_show (testCase.2) # ": " # a.toText() # " and " # b.toText());
                 assert false;
             };
         };
@@ -71,49 +69,49 @@ test(
 test(
     "isInLeapYear",
     func() {
-        
+
         let testCases = [
             (0, false),
             (1_590_857_933_000_000_000, true),
-            (1_685_465_933_000_000_000, false)
+            (1_685_465_933_000_000_000, false),
         ];
-        for (testCase in Iter.fromArray(testCases)){
-            
+        for (testCase in Iter.fromArray(testCases)) {
+
             let dateTime = DateTime.fromTime(testCase.0);
             let isInLeapYear = dateTime.isInLeapYear();
             if (isInLeapYear != testCase.1) {
-                Debug.print("Expected isInLeapYear: " # debug_show(testCase.1) # " but got " # debug_show(isInLeapYear) # " for " # dateTime.toText());
+                Debug.print("Expected isInLeapYear: " # debug_show (testCase.1) # " but got " # debug_show (isInLeapYear) # " for " # dateTime.toText());
                 assert false;
             };
         };
-    }
+    },
 );
 
 test(
     "timeBetween",
     func() {
-        
+
         let testCases = [
             (0, 1, -1),
             (1_590_857_933_000_000_000, 1_590_757_933_000_000_001, 99_999_999_999_999),
-            (1_685_465_933_000_000_000, 1_700_000_000_000_000_000, -14_534_067_000_000_000)
+            (1_685_465_933_000_000_000, 1_700_000_000_000_000_000, -14_534_067_000_000_000),
         ];
-        for (testCase in Iter.fromArray(testCases)) {            
+        for (testCase in Iter.fromArray(testCases)) {
             let dateTime1 = DateTime.fromTime(testCase.0);
             let dateTime2 = DateTime.fromTime(testCase.1);
             let timeBetween = dateTime1.timeBetween(dateTime2);
             if (timeBetween != testCase.2) {
-                Debug.print("Expected: " # debug_show(testCase.2) # " but got " # debug_show(timeBetween) # " for " # dateTime1.toText() # " and " # dateTime2.toText());
+                Debug.print("Expected: " # debug_show (testCase.2) # " but got " # debug_show (timeBetween) # " for " # dateTime1.toText() # " and " # dateTime2.toText());
                 assert false;
             };
         };
-    }
+    },
 );
 
 test(
     "add",
     func() {
-        
+
         let testCases : [(Int, Types.Duration, Int)] = [
             (+0, #nanoseconds(+5), +5),
             (+0, #milliseconds(+6), +6_000_000),
@@ -132,18 +130,17 @@ test(
             (-123_456_789_000_000, #nanoseconds(-5_000_000), -123_456_794_000_000),
             (-123_456_789_000_000, #years(-3), -94_817_856_789_000_000),
         ];
-        for (testCase in Iter.fromArray(testCases)) {            
+        for (testCase in Iter.fromArray(testCases)) {
             let actual = DateTime.fromTime(testCase.0).add(testCase.1);
             let newTime = actual.toTime();
             if (newTime != testCase.2) {
-                Debug.print("Case " # debug_show(testCase.0) # " + " # debug_show(testCase.1));
-                Debug.print("Expected: " # debug_show(testCase.2) # " but got " # debug_show(newTime));
+                Debug.print("Case " # debug_show (testCase.0) # " + " # debug_show (testCase.1));
+                Debug.print("Expected: " # debug_show (testCase.2) # " but got " # debug_show (newTime));
                 assert false;
             };
         };
-    }
+    },
 );
-
 
 func assertText(expected : Text, actual : Text) {
     if (expected != actual) {
@@ -180,7 +177,7 @@ test(
                     Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectedIso8601));
                     assert false;
                 };
-                case (?actualDateTime) {            
+                case (?actualDateTime) {
                     let matched2 = testCase.dateTime.equal(actualDateTime);
 
                     if (not matched2) {
@@ -189,7 +186,37 @@ test(
                         Debug.print("Actual:   " # debug_show (actualDateTime.toTime()));
                         assert false;
                     };
-                }
+                };
+            };
+        };
+    },
+);
+
+test(
+    "dayOfYear",
+    func() {
+        let testCases = [
+            {
+                dateTime = DateTime.DateTime(0);
+                expected = 1;
+            },
+            {
+                dateTime = DateTime.DateTime(+25_320_000_000_000);
+                expected = 1;
+            },
+            {
+                dateTime = DateTime.DateTime(+1_686_082_300_787_000_000);
+                expected = 157;
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual = testCase.dateTime.dayOfYear();
+
+            if (actual != testCase.expected) {
+                Debug.print("Date: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Expected: " # debug_show (testCase.expected));
+                Debug.print("Actual:   " # debug_show (actual));
+                assert false;
             };
         };
     },

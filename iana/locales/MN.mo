@@ -60,7 +60,7 @@ module MN {
 			"11 сар",
 			"12 сар",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "HH:mm";
 		dateFormat = "YYYY-MM-DD";

@@ -60,7 +60,7 @@ module EU {
 			"aza.",
 			"abe.",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 7;
 		timeFormat = "HH:mm";
 		dateFormat = "YYYY-MM-DD";

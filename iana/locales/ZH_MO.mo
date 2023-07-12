@@ -60,7 +60,7 @@ module ZH_MO {
 			"11月",
 			"12月",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "HH:mm";
 		dateFormat = "DD/MM/YYYY";

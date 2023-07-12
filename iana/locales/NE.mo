@@ -60,7 +60,7 @@ module NE {
 			"नोभे.",
 			"डिसे.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "Aको h:mm बजे";
 		dateFormat = "DD/MM/YYYY";

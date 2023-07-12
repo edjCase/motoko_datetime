@@ -60,7 +60,7 @@ module HR {
 			"stu.",
 			"pro.",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 7;
 		timeFormat = "H:mm";
 		dateFormat = "DD.MM.YYYY";

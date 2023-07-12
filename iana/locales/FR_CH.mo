@@ -60,7 +60,7 @@ module FR_CH {
 			"nov.",
 			"déc.",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "HH:mm";
 		dateFormat = "DD.MM.YYYY";

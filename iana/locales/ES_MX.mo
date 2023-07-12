@@ -60,7 +60,7 @@ module ES_MX {
 			"nov.",
 			"dic.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 4;
 		timeFormat = "H:mm";
 		dateFormat = "DD/MM/YYYY";

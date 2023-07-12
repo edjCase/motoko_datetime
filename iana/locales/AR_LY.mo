@@ -60,7 +60,7 @@ module AR_LY {
 			"نوفمبر",
 			"ديسمبر",
 		];
-		firstDayOfWeek = 6;
+		firstDayOfWeek = #saturday;
 		firstDayOfYear = 12;
 		timeFormat = "HH:mm";
 		dateFormat = "D/‏M/‏YYYY";

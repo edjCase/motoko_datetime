@@ -60,7 +60,7 @@ module TH {
 			"พ.ย.",
 			"ธ.ค.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "H:mm";
 		dateFormat = "DD/MM/YYYY";

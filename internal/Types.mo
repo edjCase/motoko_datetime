@@ -8,7 +8,7 @@ module {
         weekdaysMin : [Text];
         months : [Text];
         monthsShort : [Text];
-        firstDayOfWeek : Nat;
+        firstDayOfWeek : DayOfWeek;
         firstDayOfYear : Nat;
         timeFormat : Text;
         dateFormat : Text;
@@ -128,13 +128,31 @@ module {
         isInLeapYear : () -> Bool;
 
         compare : (other : T) -> Order.Order;
+
+        dayOfYear : () -> Nat;
+
+        dayOfWeek : () -> DayOfWeek;
     };
 
-    public type DateTime = DateTimeType<DateTime>;
+    public type DateTime = DateTimeType<DateTime> and {
+        weekOfYear : () -> Nat;
+    };
+
+    public type LocaleWeekOfYearData = {
+        firstDayOfWeek : DayOfWeek;
+        firstDayOfYear : Nat;
+    };
+
+    public type WeekOfYearType = {
+        #iso;
+        #locale : LocaleWeekOfYearData;
+    };
 
     public type LocalDateTime = DateTimeType<LocalDateTime> and {
         toUtcDateTime : () -> DateTime;
 
         getTimeZone : () -> TimeZone;
+
+        weekOfYear : (type_ : WeekOfYearType) -> Nat;
     };
 };

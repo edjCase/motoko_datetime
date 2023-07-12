@@ -60,7 +60,7 @@ module UZ_LATN {
 			"Noy",
 			"Dek",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 7;
 		timeFormat = "HH:mm";
 		dateFormat = "DD/MM/YYYY";

@@ -60,7 +60,7 @@ module EN_NZ {
 			"Nov",
 			"Dec",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "h:mm A";
 		dateFormat = "DD/MM/YYYY";

@@ -60,7 +60,7 @@ module GOM_LATN {
 			"Nov.",
 			"Dez.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 3;
 		timeFormat = "A h:mm [vazta]";
 		dateFormat = "DD-MM-YYYY";

@@ -60,7 +60,7 @@ module KO {
 			"11월",
 			"12월",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm";
 		dateFormat = "YYYY.MM.DD.";

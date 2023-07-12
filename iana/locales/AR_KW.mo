@@ -60,7 +60,7 @@ module AR_KW {
 			"نونبر",
 			"دجنبر",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 12;
 		timeFormat = "HH:mm";
 		dateFormat = "DD/MM/YYYY";

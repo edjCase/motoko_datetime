@@ -60,7 +60,7 @@ module PA_IN {
 			"ਨਵੰਬਰ",
 			"ਦਸੰਬਰ",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm ਵਜੇ";
 		dateFormat = "DD/MM/YYYY";

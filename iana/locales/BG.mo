@@ -60,7 +60,7 @@ module BG {
 			"ное",
 			"дек",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 7;
 		timeFormat = "H:mm";
 		dateFormat = "D.MM.YYYY";

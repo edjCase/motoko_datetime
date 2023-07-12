@@ -60,7 +60,7 @@ module TE {
 			"నవ.",
 			"డిసె.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm";
 		dateFormat = "DD/MM/YYYY";

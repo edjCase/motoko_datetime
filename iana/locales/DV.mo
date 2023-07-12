@@ -60,7 +60,7 @@ module DV {
 			"ނޮވެމްބަރު",
 			"ޑިސެމްބަރު",
 		];
-		firstDayOfWeek = 7;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 12;
 		timeFormat = "HH:mm";
 		dateFormat = "D/M/YYYY";

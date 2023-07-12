@@ -40,6 +40,10 @@ module {
 
     type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
 
+    type DayOfWeek = InternalTypes.DayOfWeek;
+
+    type WeekOfYearType = InternalTypes.WeekOfYearType;
+
     /// Creates an instance of the `LocalDateTime` type from a `Components` and a timezone.
     /// The timezone will not change the components value, so the components will reprsent the local time rather than the UTC time.
     /// The `Components` must be valid, otherwise the function will trap.
@@ -69,12 +73,46 @@ module {
                     let newComponents = Components.addTime(components, nanoseconds);
                     LocalDateTime(newComponents, timeZone);
                 };
-                case (#adder(adder)) {
+                case (#relative(converter)) {
                     // Convert the current datetime components to
-                    let newComponents = adder(components);
+                    let newComponents = converter(components);
                     LocalDateTime(newComponents, timeZone);
                 };
             };
+        };
+
+        /// Gets the day of year for the `DateTime` value.
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let dayOfYear : Nat.Nat = dateTime.dayOfYear();
+        /// ```
+        public func dayOfYear() : Nat {
+            InternalComponents.dayOfYear(components);
+        };
+
+        /// Gets the week of year for the `DateTime` value.
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let weekOfYear : Nat.Nat = dateTime.weekOfYear();
+        /// ```
+        public func weekOfYear(type_ : WeekOfYearType) : Nat {
+            let (firstDayOfWeek, firstDayOfYear) = switch (type_) {
+                case (#iso)(#monday, 4);
+                case (#locale(l))(l.firstDayOfWeek, l.firstDayOfYear);
+            };
+            InternalComponents.weekOfYear(components, firstDayOfWeek, firstDayOfYear);
+        };
+
+        /// Gets the day of the week for the `DateTime` value.
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let dayOfWeek : DayOfWeek.DayOfWeek = dateTime.dayOfWeek();
+        /// ```
+        public func dayOfWeek() : DayOfWeek {
+            InternalComponents.dayOfWeek(components);
         };
 
         /// Calculates the time difference between this `LocalDateTime` and another `LocalDateTime` value.

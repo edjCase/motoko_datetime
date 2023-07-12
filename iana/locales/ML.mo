@@ -60,7 +60,7 @@ module ML {
 			"നവം.",
 			"ഡിസം.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm -നു";
 		dateFormat = "DD/MM/YYYY";

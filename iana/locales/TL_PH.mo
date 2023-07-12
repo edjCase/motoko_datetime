@@ -60,7 +60,7 @@ module TL_PH {
 			"Nob",
 			"Dis",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "HH:mm";
 		dateFormat = "MM/D/YYYY";

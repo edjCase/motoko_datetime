@@ -60,7 +60,7 @@ module CS {
 			"lis",
 			"pro",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "H:mm";
 		dateFormat = "DD.MM.YYYY";

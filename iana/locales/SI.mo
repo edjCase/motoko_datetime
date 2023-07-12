@@ -60,7 +60,7 @@ module SI {
 			"නොවැ",
 			"දෙසැ",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "a h:mm";
 		dateFormat = "YYYY/MM/DD";

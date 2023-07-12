@@ -60,7 +60,7 @@ module IT_CH {
 			"nov",
 			"dic",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "HH:mm";
 		dateFormat = "DD.MM.YYYY";

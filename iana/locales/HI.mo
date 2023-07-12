@@ -60,7 +60,7 @@ module HI {
 			"नव.",
 			"दिस.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm बजे";
 		dateFormat = "DD/MM/YYYY";

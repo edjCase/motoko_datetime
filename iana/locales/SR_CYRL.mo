@@ -60,7 +60,7 @@ module SR_CYRL {
 			"нов.",
 			"дец.",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 7;
 		timeFormat = "H:mm";
 		dateFormat = "D. M. YYYY.";

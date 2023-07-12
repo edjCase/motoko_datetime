@@ -108,45 +108,14 @@ module Module {
             case (#months(months)) {
                 #relative(
                     func(components : Components) : Components {
-                        let newMonth : Int = components.month + months;
-                        let newYear : Int = components.year + newMonth / 12;
-                        let (month, year) : (Nat, Int) = if (newMonth < 1) {
-                            let absMonth = Int.abs(newMonth);
-                            let extraYears = (absMonth / 12) + 1;
-                            let month : Nat = 12 - (absMonth % 12);
-                            (month, components.year - extraYears);
-                        } else {
-                            let absMonth = Int.abs(newMonth);
-                            let extraYears = absMonth / 12;
-                            let month : Nat = absMonth % 12;
-                            if (month == 0) {
-                                {
-                                    year = date.year + extraYears - 1;
-                                    month = 12;
-                                    day = date.day;
-                                };
-                            } else {
-                                {
-                                    year = date.year + extraYears;
-                                    month = month;
-                                    day = date.day;
-                                };
-                            };
-                        };
-                        let isLeapYear : Bool = Module.isLeapYear(newYear);
-                        let maxDaysInMonth : Nat = Module.daysInMonth(newMonthInYear, isLeapYear);
-                        let dayIsNotInMonth = components.day > maxDaysInMonth;
-                        let newDay : Nat = if (dayIsNotInMonth) {
-                            // If not in the month then use the last day of the current month
-                            maxDaysInMonth;
-                        } else {
-                            components.day;
-                        };
+                        let uncorrectedMonth : Int = components.month + months;
+                        let (month, year) = getCorrectedMonth(uncorrectedMonth, components.year);
+                        let day = getCorrectedDay(components.day, month, year);
                         {
                             components with
-                            year = newYear;
-                            month = newMonthInYear;
-                            day = newDay;
+                            year = year;
+                            month = month;
+                            day = day;
                         };
                     }
                 );
@@ -154,28 +123,46 @@ module Module {
             case (#years(years)) {
                 #relative(
                     func(components : Components) : Components {
-                        let newYear : Int = components.year + years;
-                        let newMonthInYear : Nat = Int.abs(newMonth % 12);
-                        let isLeapYear : Bool = Module.isLeapYear(newYear);
-                        let maxDaysInMonth : Nat = Module.daysInMonth(newMonthInYear, isLeapYear);
-                        let dayIsNotInMonth = components.day > maxDaysInMonth;
-                        let newDay : Nat = if (dayIsNotInMonth) {
-                            // If not in the month then use the last day of the current month
-                            maxDaysInMonth;
-                        } else {
-                            components.day;
-                        };
+                        let year : Int = components.year + years;
+                        let day = getCorrectedDay(components.day, components.month, year);
                         {
-                            year = newYear;
-                            month = components.month;
-                            day = components.day;
-                            hour = components.hour;
-                            minute = components.minute;
-                            nanosecond = components.nanosecond;
+                            components with
+                            year = year;
+                            day = day;
                         };
                     }
                 );
             };
+        };
+    };
+
+    private func getCorrectedMonth(uncorrectedMonth : Int, year : Int) : (Nat, Int) {
+        if (uncorrectedMonth < 1) {
+            let absMonth = Int.abs(uncorrectedMonth);
+            let extraYears = (absMonth / 12) + 1;
+            let month : Nat = 12 - (absMonth % 12);
+            (month, year - extraYears);
+        } else {
+            let absMonth = Int.abs(uncorrectedMonth);
+            let extraYears = absMonth / 12;
+            let month : Nat = absMonth % 12;
+            if (month == 0) {
+                (12, year + extraYears - 1);
+            } else {
+                (month, year + extraYears);
+            };
+        };
+    };
+
+    private func getCorrectedDay(day : Nat, month : Nat, year : Int) : Nat {
+        let isLeapYear : Bool = Module.isLeapYear(year);
+        let maxDaysInMonth : Nat = Module.daysInMonth(month, isLeapYear);
+        let dayIsNotInMonth = day > maxDaysInMonth;
+        if (dayIsNotInMonth) {
+            // If not in the month then use the last day of the current month
+            maxDaysInMonth;
+        } else {
+            day;
         };
     };
 
@@ -1000,20 +987,30 @@ module Module {
     // array with leading number of days values
     private let monthLeadingValues = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
 
-    public func dayOfWeekIndex(components : DateComponents) : Nat {
-        let d = components.day;
-        let m = components.month;
-        let y = if (m < 3) components.year else components.year - 1; // if month is less than 3 reduce year by 1
-
-        let t = monthLeadingValues[m - 1];
-        let v : Int = if (components.year >= 1582) {
-            // Gregorian calendar rules
-            (y + y / 4 - y / 100 + y / 400 + t + d);
-        } else {
-            // Julian calendar rules
-            (y + y / 4 + t + d);
+    public func indexFromDayOfWeek(dayOfWeek : DayOfWeek) : Nat {
+        switch (dayOfWeek) {
+            case (#sunday) 0;
+            case (#monday) 1;
+            case (#tuesday) 2;
+            case (#wednesday) 3;
+            case (#thursday) 4;
+            case (#friday) 5;
+            case (#saturday) 6;
         };
-        return Int.abs(v) % 7;
+    };
+
+    public func dayOfWeekIndex(components : DateComponents) : Nat {
+        // The following uses the Zeller’s Congruence algorithm
+        let (month, year) = switch (components.month) {
+            case (1)(13, components.year - 1);
+            case (2)(14, components.year - 1);
+            case (m)(m, components.year);
+        };
+        let day = components.day;
+        let yearWithoutCentury = year % 100;
+        let century = year / 100;
+        let h = day + 13 * (month + 1) / 5 + yearWithoutCentury + yearWithoutCentury / 4 + century / 4 + 5 * century;
+        Int.abs(h) % 7 - 1;
     };
 
     public func daysInYear(year : Int) : Nat {
@@ -1038,9 +1035,6 @@ module Module {
     };
 
     public func weekYear(date : DateComponents, firstDayOfYear : Nat) : Int {
-        if (firstDayOfYear < 1 or firstDayOfYear > 7) {
-            Debug.trap("First day must be between 1 and 7. Value: " # Nat.toText(firstDayOfYear));
-        };
         // Calculate the day of the year for the given date
         let startOfYear = {
             year = date.year;
@@ -1056,12 +1050,12 @@ module Module {
         // Calculate the day of the week for the given date (0 = Monday, 6 = Sunday)
         let dayOfWeek = dayOfWeekIndex(date);
 
-        // Check if the date falls in the first week of the year
         let firstDayOfYearIndex : Nat = firstDayOfYear - 1;
+        // Check if the date falls in the first week of the year
         let inFirstWeek = dayOfYear < firstDayOfYear and dayOfWeek >= firstDayOfYearIndex;
 
         // Check if the date falls in the last week of the previous year
-        let lastDayOfYear : Nat = 365 - (7 - firstDayOfYear);
+        let lastDayOfYear : Nat = 365 - (7 - firstDayOfYearIndex);
         let inLastWeekOfPrevYear = dayOfYear >= lastDayOfYear and dayOfWeek < firstDayOfYearIndex;
 
         // Return the correct week year
@@ -1074,14 +1068,14 @@ module Module {
         };
     };
 
-    public func weekOfYear(components : DateComponents, firstDayOfWeek : Nat, firstDayOfYear : Nat) : Nat {
-        let dayOfYearValue = dayOfYear(components, firstDayOfYear);
+    public func weekOfYear(components : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Nat {
+        let dayOfYearValue = dayOfYear(components);
 
         // Calculate the week number
         var weekNumber : Nat = (dayOfYearValue / 7) + 1;
 
         // If the first day of the year was before the `firstDayOfYear`, add 1 to the week number
-        if (firstDayOfWeek < firstDayOfYear) {
+        if (indexFromDayOfWeek(firstDayOfWeek) < firstDayOfYear) {
             weekNumber += 1;
         };
 
@@ -1089,7 +1083,7 @@ module Module {
 
     };
 
-    public func dayOfYear(date : DateComponents, firstDayOfYear : Nat) : Nat {
+    public func dayOfYear(date : DateComponents) : Nat {
         let startOfYear = {
             year = date.year;
             month = 1;
@@ -1101,7 +1095,7 @@ module Module {
         };
         let dateTime = { date with hour = 0; minute = 0; nanosecond = 0 };
         let time = timeBetween(startOfYear, dateTime);
-        Int.abs(time) / 24 / 60 / 60 / 1_000_000_000;
+        Int.abs(time) / 24 / 60 / 60 / 1_000_000_000 + 1;
     };
 
     public func timeBetween(start : Components, end : Components) : Int {
@@ -1348,7 +1342,7 @@ module Module {
             value = "DDDD";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                TextUtil.toTextPadded(dayOfYear(components, 1), 3);
+                TextUtil.toTextPadded(dayOfYear(components), 3);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let ?(dayOfYear, remainingText) = extractNat(text, 4, true) else return null;
@@ -1376,7 +1370,7 @@ module Module {
             value = "DDD";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                Nat.toText(dayOfYear(components, 1));
+                Nat.toText(dayOfYear(components));
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let ?(dayOfYear, remainingText) = extractNat(text, 4, false) else return null;
@@ -1514,16 +1508,17 @@ module Module {
             value = "e";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                let dayOfWeek = dayOfWeekIndex(components);
-                Nat.toText(dayOfWeek + l.firstDayOfWeek);
+                let dayOfWeekIndexValue = dayOfWeekIndex(components);
+                let firstDayOfWeekIndex = indexFromDayOfWeek(l.firstDayOfWeek);
+                Nat.toText(dayOfWeekIndexValue + firstDayOfWeekIndex);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
                 let l = requireLocale(locale);
                 let ?(dayOfWeek, remainingText) = extractNat(text, 1, true) else return null;
-
+                let firstDayOfWeekIndex = indexFromDayOfWeek(l.firstDayOfWeek);
                 ?{
                     remainingText = remainingText;
-                    value = #dayOfWeek(dayOfWeek - l.firstDayOfWeek);
+                    value = #dayOfWeek(dayOfWeek - firstDayOfWeekIndex);
                 };
             };
         },
@@ -1604,7 +1599,7 @@ module Module {
             // Padded Week of Year (ISO)
             value = "WW";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                let weekOfYearValue = weekOfYear(components, 1, 4);
+                let weekOfYearValue = weekOfYear(components, #monday, 4);
                 TextUtil.toTextPaddedSign(weekOfYearValue, 2, false);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1614,7 +1609,6 @@ module Module {
                     remainingText = remainingText;
                     value = #weekOfYear({
                         value = weekOfYear;
-                        firstDayOfWeek = 1;
                         firstDayOfYear = 4;
                     });
                 };
@@ -1637,7 +1631,7 @@ module Module {
             // Week of Year (ISO)
             value = "W";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                let weekOfYearValue = weekOfYear(components, 1, 4);
+                let weekOfYearValue = weekOfYear(components, #monday, 4);
                 Nat.toText(weekOfYearValue);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1647,7 +1641,6 @@ module Module {
                     remainingText = remainingText;
                     value = #weekOfYear({
                         value = weekOfYear;
-                        firstDayOfWeek = 1;
                         firstDayOfYear = 4;
                     });
                 };

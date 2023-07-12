@@ -60,7 +60,7 @@ module JA {
 			"11月",
 			"12月",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "HH:mm";
 		dateFormat = "YYYY/MM/DD";

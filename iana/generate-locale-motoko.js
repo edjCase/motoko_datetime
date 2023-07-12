@@ -30,6 +30,20 @@ function unescapeUnicode(str) {
     });
 }
 
+function toDayOfWeek(day) {
+    switch (day) {
+        case 0: return "#sunday";
+        case 1: return "#monday";
+        case 2: return "#tuesday";
+        case 3: return "#wednesday";
+        case 4: return "#thursday";
+        case 5: return "#friday";
+        case 6: return "#saturday";
+        case 7: return "#sunday";
+        default: throw new Error("Invalid day of week: " + day);
+    }
+}
+
 function writeLocale(writer, localName, locale) {
     writer.writeLine(`module ${localName} {`);
     writer.depth += 1;
@@ -52,7 +66,9 @@ function writeLocale(writer, localName, locale) {
     writer.writeList("monthsShort", locale.monthsShort(), (m) => {
         writer.write(`"${m}"`);
     });
-    writer.writeLine(`firstDayOfWeek = ${locale.firstDayOfWeek()};`);
+
+
+    writer.writeLine(`firstDayOfWeek = ${toDayOfWeek(locale.firstDayOfWeek())};`);
     writer.writeLine(`firstDayOfYear = ${locale.firstDayOfYear()};`);
     writer.writeLine(`timeFormat = "${locale.longDateFormat('LT')}";`);
     writer.writeLine(`dateFormat = "${locale.longDateFormat('L')}";`);

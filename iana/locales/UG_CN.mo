@@ -60,7 +60,7 @@ module UG_CN {
 			"نويابىر",
 			"دېكابىر",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 7;
 		timeFormat = "HH:mm";
 		dateFormat = "YYYY-MM-DD";

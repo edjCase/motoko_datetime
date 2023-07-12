@@ -60,7 +60,7 @@ module BO {
 			"ཟླ་11",
 			"ཟླ་12",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm";
 		dateFormat = "DD/MM/YYYY";

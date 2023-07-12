@@ -60,7 +60,7 @@ module KN {
 			"ನವೆಂ",
 			"ಡಿಸೆಂ",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm";
 		dateFormat = "DD/MM/YYYY";

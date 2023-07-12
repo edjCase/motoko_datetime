@@ -60,7 +60,7 @@ module BN_BD {
 			"নভে",
 			"ডিসে",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm সময়";
 		dateFormat = "DD/MM/YYYY";

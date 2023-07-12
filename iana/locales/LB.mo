@@ -60,7 +60,7 @@ module LB {
 			"Nov.",
 			"Dez.",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "H:mm [Auer]";
 		dateFormat = "DD.MM.YYYY";

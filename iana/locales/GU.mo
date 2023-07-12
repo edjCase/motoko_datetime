@@ -60,7 +60,7 @@ module GU {
 			"નવે.",
 			"ડિસે.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 6;
 		timeFormat = "A h:mm વાગ્યે";
 		dateFormat = "DD/MM/YYYY";

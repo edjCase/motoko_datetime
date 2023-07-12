@@ -60,7 +60,7 @@ module GOM_DEVA {
 			"नोव्हें.",
 			"डिसें.",
 		];
-		firstDayOfWeek = 0;
+		firstDayOfWeek = #sunday;
 		firstDayOfYear = 3;
 		timeFormat = "A h:mm [वाजतां]";
 		dateFormat = "DD-MM-YYYY";

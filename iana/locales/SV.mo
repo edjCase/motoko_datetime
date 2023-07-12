@@ -60,7 +60,7 @@ module SV {
 			"nov",
 			"dec",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "HH:mm";
 		dateFormat = "YYYY-MM-DD";

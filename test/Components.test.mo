@@ -570,3 +570,54 @@ test(
         };
     },
 );
+
+test(
+    "dayOfWeek",
+    func() {
+        let testCases = [
+            {
+                components = {
+                    year = 1970;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                expected = #thursday;
+            },
+            {
+                components = {
+                    year = 1980;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                expected = #tuesday;
+            },
+            {
+                components = {
+                    year = 1971;
+                    month = 1;
+                    day = 1;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                expected = #friday;
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual : Components.DayOfWeek = Components.dayOfWeek(testCase.components);
+            let matched = testCase.expected == actual;
+            if (not matched) {
+                Debug.print("Components: " # debug_show (testCase.components));
+                Debug.print("Expected: " # debug_show (testCase.expected));
+                Debug.print("Actual:   " # debug_show (actual));
+                assert false;
+            };
+        };
+    },
+);

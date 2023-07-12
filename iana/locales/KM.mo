@@ -60,7 +60,7 @@ module KM {
 			"វិច្ឆិកា",
 			"ធ្នូ",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 4;
 		timeFormat = "HH:mm";
 		dateFormat = "DD/MM/YYYY";

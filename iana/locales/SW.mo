@@ -60,7 +60,7 @@ module SW {
 			"Nov",
 			"Des",
 		];
-		firstDayOfWeek = 1;
+		firstDayOfWeek = #monday;
 		firstDayOfYear = 7;
 		timeFormat = "hh:mm A";
 		dateFormat = "DD.MM.YYYY";
