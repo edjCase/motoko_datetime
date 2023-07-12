@@ -208,9 +208,47 @@ test(
                 dateTime = DateTime.DateTime(+1_686_082_300_787_000_000);
                 expected = 157;
             },
+            {
+                dateTime = DateTime.DateTime(+1_786_582_300_787_000_000);
+                expected = 225;
+            },
         ];
         for (testCase in Iter.fromArray(testCases)) {
             let actual = testCase.dateTime.dayOfYear();
+
+            if (actual != testCase.expected) {
+                Debug.print("Date: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Expected: " # debug_show (testCase.expected));
+                Debug.print("Actual:   " # debug_show (actual));
+                assert false;
+            };
+        };
+    },
+);
+
+test(
+    "weekOfYear",
+    func() {
+        let testCases = [
+            {
+                dateTime = DateTime.DateTime(0);
+                expected = 0;
+            },
+            {
+                dateTime = DateTime.DateTime(+25_320_000_000_000);
+                expected = 0;
+            },
+            {
+                dateTime = DateTime.DateTime(+1_686_082_300_787_000_000);
+                expected = 22;
+            },
+            {
+                dateTime = DateTime.DateTime(+1_786_582_300_787_000_000);
+                expected = 32;
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual = testCase.dateTime.weekOfYear();
 
             if (actual != testCase.expected) {
                 Debug.print("Date: " # debug_show (testCase.dateTime.toText()));

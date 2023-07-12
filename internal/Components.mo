@@ -1070,17 +1070,21 @@ module Module {
 
     public func weekOfYear(components : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Nat {
         let dayOfYearValue = dayOfYear(components);
+        Debug.print("dayOfYearValue: " # Nat.toText(dayOfYearValue));
+        let firstDayOfWeekIndex = indexFromDayOfWeek(firstDayOfWeek);
+        Debug.print("firstDayOfWeekIndex: " # Nat.toText(firstDayOfWeekIndex));
+        // let offset : Nat = (firstDayOfYear - firstDayOfWeekNat + 7) % 7;
+        // Debug.print("offset: " # Nat.toText(offset));
+        // let week : Nat = (dayOfYearValue + offset) / 7;
+        // Debug.print("week: " # Nat.toText(week));
 
-        // Calculate the week number
-        var weekNumber : Nat = (dayOfYearValue / 7) + 1;
+        let week : Nat = (dayOfYearValue - firstDayOfWeekIndex + 10) / 7;
 
-        // If the first day of the year was before the `firstDayOfYear`, add 1 to the week number
-        if (indexFromDayOfWeek(firstDayOfWeek) < firstDayOfYear) {
-            weekNumber += 1;
+        if (week % 7 != 0) {
+            week + 1;
+        } else {
+            week;
         };
-
-        return weekNumber;
-
     };
 
     public func dayOfYear(date : DateComponents) : Nat {
