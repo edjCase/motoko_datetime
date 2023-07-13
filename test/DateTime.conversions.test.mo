@@ -123,37 +123,38 @@ let testCases : [TestCase] = [
   },
 ];
 
-func assertT<T>(
-  actual : T,
-  expected : T,
-  eval : (T, T) -> Bool,
-  debugShow : (T) -> Text,
-) {
-  if (not eval(actual, expected)) {
-    Debug.print("Expected\n" # debugShow(expected) # "\n\nActual:\n" # debugShow(actual));
-    assert (false);
-  };
-};
-
-func assertDateTime(
-  actual : DateTime.DateTime,
-  expected : DateTime.DateTime,
-) {
-  return assertT<DateTime.DateTime>(actual, expected, DateTime.equal, DateTime.toText);
-};
-func assertComponents(
-  actual : Components.Components,
-  expected : Components.Components,
-) {
-  return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
-};
-func testCaseToText(testCase : TestCase) : Text {
-  return testCase.textIso8061;
-};
-
 for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = DateTime.DateTime(testCase.nanoseconds);
-  Debug.print("Test case: " # testCaseToText(testCase));
+
+  func assertT<T>(
+    actual : T,
+    expected : T,
+    eval : (T, T) -> Bool,
+    debugShow : (T) -> Text,
+  ) {
+    if (not eval(actual, expected)) {
+      Debug.print("Test case: " # testCaseToText(testCase));
+      Debug.print("Expected\n" # debugShow(expected) # "\n\nActual:\n" # debugShow(actual));
+      assert (false);
+    };
+  };
+
+  func assertDateTime(
+    actual : DateTime.DateTime,
+    expected : DateTime.DateTime,
+  ) {
+    return assertT<DateTime.DateTime>(actual, expected, DateTime.equal, DateTime.toText);
+  };
+  func assertComponents(
+    actual : Components.Components,
+    expected : Components.Components,
+  ) {
+    return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
+  };
+  func testCaseToText(testCase : TestCase) : Text {
+    return testCase.textIso8061;
+  };
+
   test(
     "fromComponents (Components -> LocalDateTime)",
     func() {

@@ -76,15 +76,49 @@ module {
         InternalComponents.fromTime(nanoseconds);
     };
 
+    /// Gets the week year based on the specified components and when the year starts
+    /// Will trap if the components are invalid
+    /// Note: This is not the same as the calendar year or week of year
+    ///
+    /// ```motoko include=import
+    /// let c : Components.DateComponents = {year = 2020; month = 1; day = 1;};
+    /// let weekYear : Int = Components.weekYear(c, #monday, 4);
+    /// ```
+    public func weekYear(components : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Int {
+        InternalComponents.weekYear(components, firstDayOfWeek, firstDayOfYear);
+    };
+
+    /// Gets the week of year based on the specified components and when the year starts
+    /// Will trap if the components are invalid
+    ///
+    /// ```motoko include=import
+    /// let c : Components.DateComponents = {year = 2020; month = 1; day = 1;};
+    /// let weekOfYear : Nat = Components.weekOfYear(c, #monday, 4);
+    /// ```
+    public func weekOfYear(components : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Nat {
+        InternalComponents.weekOfYear(components, firstDayOfWeek, firstDayOfYear);
+    };
+
     /// Gets the day of the week based on the specified components.
     /// Will trap if the components are invalid
     ///
     /// ```motoko include=import
-    /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
+    /// let c : Components.DateComponents = {year = 2020; month = 1; day = 1;};
     /// let dayOfWeek : Components.DayOfWeek = Components.dayOfWeek(c);
     /// ```
     public func dayOfWeek(components : DateComponents) : DayOfWeek {
         InternalComponents.dayOfWeek(components);
+    };
+
+    /// Gets the day of the year based on the specified components.
+    /// Will trap if the components are invalid
+    ///
+    /// ```motoko include=import
+    /// let c : Components.DateComponents = {year = 2020; month = 1; day = 1;};
+    /// let dayOfYear : Nat = Components.dayOfYear(c);
+    /// ```
+    public func dayOfYear(components : DateComponents) : Nat {
+        InternalComponents.dayOfYear(components);
     };
 
     /// Checks if the specified components are valid.

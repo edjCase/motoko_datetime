@@ -9,7 +9,7 @@ import Components "../src/Components";
 import TimeZone "../src/TimeZone";
 
 type TestCase = {
-  timeZone: LocalDateTime.TimeZone;
+  timeZone : LocalDateTime.TimeZone;
   dateTime : Components.Components;
   nanoseconds : Int;
   textIso8061 : Text;
@@ -56,7 +56,7 @@ let testCases : [TestCase] = [
     textIso8061 = "1970-01-01T00:00:00.000000000+09:00";
   },
   {
-    timeZone = #fixed(#hours(13,));
+    timeZone = #fixed(#hours(13));
     dateTime = {
       year = 1970;
       month = 1;
@@ -135,38 +135,38 @@ let testCases : [TestCase] = [
   },
 ];
 
-func assertT<T>(
-  actual : T,
-  expected : T,
-  eval : (T, T) -> Bool,
-  debugShow : (T) -> Text,
-) {
-  if (not eval(actual, expected)) {
-    Debug.print("Expected\n" # debugShow(expected) # "\n\nActual:\n" # debugShow(actual));
-    assert (false);
-  };
-};
-
-func assertDateTime(
-  actual : LocalDateTime.LocalDateTime,
-  expected : LocalDateTime.LocalDateTime,
-) {
-  return assertT<LocalDateTime.LocalDateTime>(actual, expected, LocalDateTime.equal, LocalDateTime.toText);
-};
-func assertComponents(
-  actual : Components.Components,
-  expected : Components.Components,
-) {
-  return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
-};
-
-func testCaseToText(testCase : TestCase) : Text {
-  return testCase.textIso8061;
-};
-
 for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = LocalDateTime.LocalDateTime(testCase.dateTime, testCase.timeZone);
-  Debug.print("Test case: " # testCaseToText(testCase));
+
+  func assertT<T>(
+    actual : T,
+    expected : T,
+    eval : (T, T) -> Bool,
+    debugShow : (T) -> Text,
+  ) {
+    if (not eval(actual, expected)) {
+      Debug.print("Test case: " # testCaseToText(testCase));
+      Debug.print("Expected\n" # debugShow(expected) # "\n\nActual:\n" # debugShow(actual));
+      assert (false);
+    };
+  };
+
+  func assertDateTime(
+    actual : LocalDateTime.LocalDateTime,
+    expected : LocalDateTime.LocalDateTime,
+  ) {
+    return assertT<LocalDateTime.LocalDateTime>(actual, expected, LocalDateTime.equal, LocalDateTime.toText);
+  };
+  func assertComponents(
+    actual : Components.Components,
+    expected : Components.Components,
+  ) {
+    return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
+  };
+
+  func testCaseToText(testCase : TestCase) : Text {
+    return testCase.textIso8061;
+  };
   test(
     "fromComponents (Components -> LocalDateTime)",
     func() {

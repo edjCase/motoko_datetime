@@ -572,7 +572,7 @@ test(
 );
 
 test(
-    "dayOfWeek",
+    "dayOfWeek, weekOfYear, weekYear, dayOfYear",
     func() {
         let testCases = [
             {
@@ -584,38 +584,100 @@ test(
                     minute = 0;
                     nanosecond = 0;
                 };
-                expected = #thursday;
+                expected = {
+                    weekOfYear = 0;
+                    weekYear = 1969;
+                    dayOfWeek = #thursday;
+                    dayOfYear = 1;
+                };
             },
             {
                 components = {
                     year = 1980;
                     month = 1;
                     day = 1;
-                    hour = 0;
-                    minute = 0;
-                    nanosecond = 0;
                 };
-                expected = #tuesday;
+                expected = {
+                    weekOfYear = 0;
+                    weekYear = 1979;
+                    dayOfWeek = #tuesday;
+                    dayOfYear = 1;
+                };
             },
             {
                 components = {
                     year = 1971;
                     month = 1;
                     day = 1;
-                    hour = 0;
-                    minute = 0;
-                    nanosecond = 0;
                 };
-                expected = #friday;
+                expected = {
+                    weekOfYear = 0;
+                    weekYear = 1970;
+                    dayOfWeek = #friday;
+                    dayOfYear = 1;
+                };
+            },
+            {
+                components = {
+                    year = 1970;
+                    month = 1;
+                    day = 4;
+                };
+                expected = {
+                    weekOfYear = 1;
+                    weekYear = 1970;
+                    dayOfWeek = #sunday;
+                    dayOfYear = 4;
+                };
+            },
+            {
+                components = {
+                    year = 2020;
+                    month = 4;
+                    day = 23;
+                };
+                expected = {
+                    weekOfYear = 17;
+                    weekYear = 2020;
+                    dayOfWeek = #thursday;
+                    dayOfYear = 114;
+                };
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
             let actual : Components.DayOfWeek = Components.dayOfWeek(testCase.components);
-            let matched = testCase.expected == actual;
-            if (not matched) {
+            if (testCase.expected.dayOfWeek != actual) {
+                Debug.print("Failed to get correct day of week");
                 Debug.print("Components: " # debug_show (testCase.components));
-                Debug.print("Expected: " # debug_show (testCase.expected));
+                Debug.print("Expected: " # debug_show (testCase.expected.dayOfWeek));
                 Debug.print("Actual:   " # debug_show (actual));
+                assert false;
+            };
+
+            let actualWeekOfYear : Int = Components.weekOfYear(testCase.components, #monday, 4);
+            if (testCase.expected.weekOfYear != actualWeekOfYear) {
+                Debug.print("Failed to get correct week of year");
+                Debug.print("Components: " # debug_show (testCase.components));
+                Debug.print("Expected: " # debug_show (testCase.expected.weekOfYear));
+                Debug.print("Actual:   " # debug_show (actualWeekOfYear));
+                assert false;
+            };
+
+            let actualWeekYear : Int = Components.weekYear(testCase.components, #monday, 4);
+            if (testCase.expected.weekYear != actualWeekYear) {
+                Debug.print("Failed to get correct week year");
+                Debug.print("Components: " # debug_show (testCase.components));
+                Debug.print("Expected: " # debug_show (testCase.expected.weekYear));
+                Debug.print("Actual:   " # debug_show (actualWeekYear));
+                assert false;
+            };
+
+            let actualDayOfYear : Int = Components.dayOfYear(testCase.components);
+            if (testCase.expected.dayOfYear != actualDayOfYear) {
+                Debug.print("Failed to get correct day of year");
+                Debug.print("Components: " # debug_show (testCase.components));
+                Debug.print("Expected: " # debug_show (testCase.expected.dayOfYear));
+                Debug.print("Actual:   " # debug_show (actualDayOfYear));
                 assert false;
             };
         };

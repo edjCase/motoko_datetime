@@ -42,7 +42,7 @@ module {
 
     type DayOfWeek = InternalTypes.DayOfWeek;
 
-    type WeekOfYearType = InternalTypes.WeekOfYearType;
+    type StartOfYear = InternalTypes.StartOfYear;
 
     /// Creates an instance of the `LocalDateTime` type from a `Components` and a timezone.
     /// The timezone will not change the components value, so the components will reprsent the local time rather than the UTC time.
@@ -91,18 +91,37 @@ module {
             InternalComponents.dayOfYear(components);
         };
 
+        /// Gets the ISO week year for the `DateTime` value.
+        /// Will trap if the components are invalid
+        /// Note: This is not the same as the calendar year or week of year
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let weekYear : Int.Int = dateTime.weekYear();
+        /// ```
+        public func weekYear(startOfYear : StartOfYear) : Int {
+            let (firstDayOfWeek, firstDayOfYear) = getStartOfYear(startOfYear);
+            let components = toComponents();
+            InternalComponents.weekYear(components, firstDayOfWeek, firstDayOfYear);
+        };
+
         /// Gets the week of year for the `DateTime` value.
+        /// A value of 0 means that the week is part of the previous year.
         ///
         /// ```motoko include=import
         /// let dateTime : DateTime.DateTime = DateTime.now();
         /// let weekOfYear : Nat.Nat = dateTime.weekOfYear();
         /// ```
-        public func weekOfYear(type_ : WeekOfYearType) : Nat {
-            let (firstDayOfWeek, firstDayOfYear) = switch (type_) {
+        public func weekOfYear(startOfYear : StartOfYear) : Nat {
+            let (firstDayOfWeek, firstDayOfYear) = getStartOfYear(startOfYear);
+            InternalComponents.weekOfYear(components, firstDayOfWeek, firstDayOfYear);
+        };
+
+        private func getStartOfYear(startOfYear : StartOfYear) : (DayOfWeek, Nat) {
+            switch (startOfYear) {
                 case (#iso)(#monday, 4);
                 case (#locale(l))(l.firstDayOfWeek, l.firstDayOfYear);
             };
-            InternalComponents.weekOfYear(components, firstDayOfWeek, firstDayOfYear);
         };
 
         /// Gets the day of the week for the `DateTime` value.

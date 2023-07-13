@@ -70,7 +70,21 @@ module D {
             InternalComponents.dayOfYear(components);
         };
 
+        /// Gets the ISO week year for the `DateTime` value.
+        /// Will trap if the components are invalid
+        /// Note: This is not the same as the calendar year or week of year
+        ///
+        /// ```motoko include=import
+        /// let dateTime : DateTime.DateTime = DateTime.now();
+        /// let weekYear : Int.Int = dateTime.weekYear();
+        /// ```
+        public func weekYear() : Int {
+            let components = toComponents();
+            InternalComponents.weekYear(components, #monday, 4);
+        };
+
         /// Gets the ISO week of year for the `DateTime` value.
+        /// A value of 0 means that the week is part of the previous year.
         ///
         /// ```motoko include=import
         /// let dateTime : DateTime.DateTime = DateTime.now();

@@ -193,33 +193,81 @@ test(
 );
 
 test(
-    "dayOfYear",
+    "dayOfWeek, weekOfYear, weekYear, dayOfYear",
     func() {
         let testCases = [
             {
                 dateTime = DateTime.DateTime(0);
-                expected = 1;
+                expected = {
+                    weekOfYear = 0;
+                    weekYear = 1969;
+                    dayOfWeek = #thursday;
+                    dayOfYear = 1;
+                };
             },
             {
                 dateTime = DateTime.DateTime(+25_320_000_000_000);
-                expected = 1;
+                expected = {
+                    weekOfYear = 0;
+                    weekYear = 1969;
+                    dayOfWeek = #thursday;
+                    dayOfYear = 1;
+                };
             },
             {
                 dateTime = DateTime.DateTime(+1_686_082_300_787_000_000);
-                expected = 157;
+                expected = {
+                    weekOfYear = 23;
+                    weekYear = 2023;
+                    dayOfWeek = #tuesday;
+                    dayOfYear = 157;
+                };
             },
             {
                 dateTime = DateTime.DateTime(+1_786_582_300_787_000_000);
-                expected = 225;
+                expected = {
+                    weekOfYear = 33;
+                    weekYear = 2026;
+                    dayOfWeek = #thursday;
+                    dayOfYear = 225;
+                };
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
-            let actual = testCase.dateTime.dayOfYear();
 
-            if (actual != testCase.expected) {
-                Debug.print("Date: " # debug_show (testCase.dateTime.toText()));
-                Debug.print("Expected: " # debug_show (testCase.expected));
+            let actual : Components.DayOfWeek = testCase.dateTime.dayOfWeek();
+            if (testCase.expected.dayOfWeek != actual) {
+                Debug.print("Failed to get correct day of week");
+                Debug.print("DateTime: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Expected: " # debug_show (testCase.expected.dayOfWeek));
                 Debug.print("Actual:   " # debug_show (actual));
+                assert false;
+            };
+
+            let actualWeekOfYear : Int = testCase.dateTime.weekOfYear();
+            if (testCase.expected.weekOfYear != actualWeekOfYear) {
+                Debug.print("Failed to get correct week of year");
+                Debug.print("DateTime: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Expected: " # debug_show (testCase.expected.weekOfYear));
+                Debug.print("Actual:   " # debug_show (actualWeekOfYear));
+                assert false;
+            };
+
+            let actualWeekYear : Int = testCase.dateTime.weekYear();
+            if (testCase.expected.weekYear != actualWeekYear) {
+                Debug.print("Failed to get correct week year");
+                Debug.print("DateTime: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Expected: " # debug_show (testCase.expected.weekYear));
+                Debug.print("Actual:   " # debug_show (actualWeekYear));
+                assert false;
+            };
+
+            let actualDayOfYear : Int = testCase.dateTime.dayOfYear();
+            if (testCase.expected.dayOfYear != actualDayOfYear) {
+                Debug.print("Failed to get correct day of year");
+                Debug.print("DateTime: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Expected: " # debug_show (testCase.expected.dayOfYear));
+                Debug.print("Actual:   " # debug_show (actualDayOfYear));
                 assert false;
             };
         };
@@ -239,12 +287,16 @@ test(
                 expected = 0;
             },
             {
+                dateTime = DateTime.DateTime(+1_672_790_400_000_000_000);
+                expected = 1;
+            },
+            {
                 dateTime = DateTime.DateTime(+1_686_082_300_787_000_000);
-                expected = 22;
+                expected = 23;
             },
             {
                 dateTime = DateTime.DateTime(+1_786_582_300_787_000_000);
-                expected = 32;
+                expected = 33;
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {

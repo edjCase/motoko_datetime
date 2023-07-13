@@ -136,16 +136,18 @@ module {
 
     public type DateTime = DateTimeType<DateTime> and {
         weekOfYear : () -> Nat;
+
+        weekYear : () -> Int;
     };
 
-    public type LocaleWeekOfYearData = {
+    public type LocaleStartOfYear = {
         firstDayOfWeek : DayOfWeek;
         firstDayOfYear : Nat;
     };
 
-    public type WeekOfYearType = {
+    public type StartOfYear = {
         #iso;
-        #locale : LocaleWeekOfYearData;
+        #locale : LocaleStartOfYear;
     };
 
     public type LocalDateTime = DateTimeType<LocalDateTime> and {
@@ -153,6 +155,8 @@ module {
 
         getTimeZone : () -> TimeZone;
 
-        weekOfYear : (type_ : WeekOfYearType) -> Nat;
+        weekOfYear : (startOfYear : StartOfYear) -> Nat;
+
+        weekYear : (startOfYear : StartOfYear) -> Int;
     };
 };

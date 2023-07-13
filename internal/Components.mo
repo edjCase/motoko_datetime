@@ -1034,53 +1034,29 @@ module Module {
         };
     };
 
-    public func weekYear(date : DateComponents, firstDayOfYear : Nat) : Int {
-        // Calculate the day of the year for the given date
-        let startOfYear = {
-            year = date.year;
-            month = 1;
-            day = 1;
-            hour = 0;
-            minute = 0;
-            nanosecond = 0;
-        };
-        let dateTime = { date with hour = 0; minute = 0; nanosecond = 0 };
-        let dayOfYear = timeBetween(startOfYear, dateTime) / 24 / 60 / 60 / 1_000_000_000;
+    public func weekYear(date : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Int {
+        let weekOfYearValue = weekOfYear(date, firstDayOfWeek, firstDayOfYear);
 
-        // Calculate the day of the week for the given date (0 = Monday, 6 = Sunday)
-        let dayOfWeek = dayOfWeekIndex(date);
-
-        let firstDayOfYearIndex : Nat = firstDayOfYear - 1;
-        // Check if the date falls in the first week of the year
-        let inFirstWeek = dayOfYear < firstDayOfYear and dayOfWeek >= firstDayOfYearIndex;
-
-        // Check if the date falls in the last week of the previous year
-        let lastDayOfYear : Nat = 365 - (7 - firstDayOfYearIndex);
-        let inLastWeekOfPrevYear = dayOfYear >= lastDayOfYear and dayOfWeek < firstDayOfYearIndex;
-
-        // Return the correct week year
-        if (inFirstWeek) {
-            return date.year;
-        } else if (inLastWeekOfPrevYear) {
+        if (weekOfYearValue < 1) {
             return date.year - 1;
-        } else {
-            return date.year;
         };
+        date.year;
     };
 
     public func weekOfYear(components : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Nat {
         let dayOfYearValue = dayOfYear(components);
-        Debug.print("dayOfYearValue: " # Nat.toText(dayOfYearValue));
         let firstDayOfWeekIndex = indexFromDayOfWeek(firstDayOfWeek);
-        Debug.print("firstDayOfWeekIndex: " # Nat.toText(firstDayOfWeekIndex));
-        // let offset : Nat = (firstDayOfYear - firstDayOfWeekNat + 7) % 7;
-        // Debug.print("offset: " # Nat.toText(offset));
-        // let week : Nat = (dayOfYearValue + offset) / 7;
-        // Debug.print("week: " # Nat.toText(week));
 
-        let week : Nat = (dayOfYearValue - firstDayOfWeekIndex + 10) / 7;
+        let dayInJanuaryThatStartsFirstWeek : Nat = 7 + firstDayOfWeekIndex - firstDayOfYear;
 
-        if (week % 7 != 0) {
+        if (dayOfYearValue < dayInJanuaryThatStartsFirstWeek) {
+            return 0;
+        };
+        let daysAfter : Nat = dayOfYearValue - dayInJanuaryThatStartsFirstWeek;
+
+        let week : Nat = daysAfter / 7 + 1;
+
+        if (daysAfter % 7 != 0) {
             week + 1;
         } else {
             week;
@@ -1845,7 +1821,7 @@ module Module {
             value = "gggg";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                let weekYearValue = weekYear(components, l.firstDayOfYear);
+                let weekYearValue = weekYear(components, l.firstDayOfWeek, l.firstDayOfYear);
                 TextUtil.toTextPaddedSign(weekYearValue, 4, false);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1866,7 +1842,7 @@ module Module {
             value = "gg";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
-                let weekYearValue = weekYear(components, l.firstDayOfYear);
+                let weekYearValue = weekYear(components, l.firstDayOfWeek, l.firstDayOfYear);
                 TextUtil.toTextPaddedSign(weekYearValue % 100, 2, false);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1886,7 +1862,7 @@ module Module {
             // Padded Week Year (ISO)
             value = "GGGG";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                let weekYearValue = weekYear(components, 4); // ISO week year starts on thursday (4)
+                let weekYearValue = weekYear(components, #monday, 4); // ISO week year starts on thursday (4)
                 TextUtil.toTextPaddedSign(weekYearValue, 4, false);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1905,7 +1881,7 @@ module Module {
             // Padded Week Year without century (ISO)
             value = "GG";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                let weekYearValue = weekYear(components, 4); // ISO week year starts on thursday (4)
+                let weekYearValue = weekYear(components, #monday, 4); // ISO week year starts on thursday (4)
                 TextUtil.toTextPaddedSign(weekYearValue % 100, 2, false);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
