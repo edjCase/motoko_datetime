@@ -123,40 +123,41 @@ let testCases : [TestCase] = [
   },
 ];
 
+func assertT<T>(
+  actual : T,
+  expected : T,
+  eval : (T, T) -> Bool,
+  debugShow : (T) -> Text,
+) {
+  if (not eval(actual, expected)) {
+    Debug.print("Expected\n" # debugShow(expected) # "\n\nActual:\n" # debugShow(actual));
+    assert (false);
+  };
+};
+
+func assertDateTime(
+  actual : DateTime.DateTime,
+  expected : DateTime.DateTime,
+) {
+  return assertT<DateTime.DateTime>(actual, expected, DateTime.equal, DateTime.toText);
+};
+func assertComponents(
+  actual : Components.Components,
+  expected : Components.Components,
+) {
+  return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
+};
+func testCaseToText(testCase : TestCase) : Text {
+  return testCase.textIso8061;
+};
+
 for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = DateTime.DateTime(testCase.nanoseconds);
 
-  func assertT<T>(
-    actual : T,
-    expected : T,
-    eval : (T, T) -> Bool,
-    debugShow : (T) -> Text,
-  ) {
-    if (not eval(actual, expected)) {
-      Debug.print("Test case: " # testCaseToText(testCase));
-      Debug.print("Expected\n" # debugShow(expected) # "\n\nActual:\n" # debugShow(actual));
-      assert (false);
-    };
-  };
-
-  func assertDateTime(
-    actual : DateTime.DateTime,
-    expected : DateTime.DateTime,
-  ) {
-    return assertT<DateTime.DateTime>(actual, expected, DateTime.equal, DateTime.toText);
-  };
-  func assertComponents(
-    actual : Components.Components,
-    expected : Components.Components,
-  ) {
-    return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
-  };
-  func testCaseToText(testCase : TestCase) : Text {
-    return testCase.textIso8061;
-  };
+  let testCaseText = testCaseToText(testCase);
 
   test(
-    "fromComponents (Components -> LocalDateTime)",
+    "fromComponents (Components -> LocalDateTime): " # testCaseText,
     func() {
       // From date components
       let dateTime = DateTime.fromComponents(testCase.dateTime);
@@ -165,7 +166,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toComponents (LocalDateTime -> Components)",
+    "toComponents (LocalDateTime -> Components): " # testCaseText,
     func() {
       // From nanoseconds
       assertComponents(expectedDateTime.toComponents(), testCase.dateTime);
@@ -173,7 +174,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTime (Time -> LocalDateTime)",
+    "fromTime (Time -> LocalDateTime): " # testCaseText,
     func() {
       // From nanoseconds
       let dateTime = DateTime.fromTime(testCase.nanoseconds);
@@ -182,7 +183,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTime (LocalDateTime -> Time)",
+    "toTime (LocalDateTime -> Time): " # testCaseText,
     func() {
       // From nanoseconds
       assertT(expectedDateTime.toTime(), testCase.nanoseconds, Int.equal, Int.toText);
@@ -190,7 +191,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTextFormatted iso8601 (LocalDateTime -> Text)",
+    "toTextFormatted iso8601 (LocalDateTime -> Text): " # testCaseText,
     func() {
       // To Iso8601 text
       let actualIso8601 : Text = expectedDateTime.toTextFormatted(#iso8601);
@@ -200,7 +201,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTextFormatted iso8601 (Text -> LocalDateTime)",
+    "fromTextFormatted iso8601 (Text -> LocalDateTime): " # testCaseText,
     func() {
       // From Iso8601 text
       let ?actualIso8601DateTime = DateTime.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");
