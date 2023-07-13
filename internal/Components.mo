@@ -43,6 +43,7 @@ module Module {
     type ExtractedValue = {
         #year : Int;
         #yearWithoutCentury : Nat;
+        #eraYear : Int;
         #quarter : Nat;
         #month : Nat;
         #dayOfYear : Nat;
@@ -389,6 +390,10 @@ module Module {
                     { state with year = ?y };
                 };
                 case (#yearWithoutCentury(y)) {
+                    // Skip, not enough information
+                    state;
+                };
+                case (#eraYear(y)) {
                     // Skip, not enough information
                     state;
                 };
@@ -1086,8 +1091,7 @@ module Module {
         };
     };
 
-    private func getEra(time : Time.Time, locale : ?Locale) : Era {
-        let l = requireLocale(locale);
+    private func getEra(time : Time.Time, locale : Locale) : Era {
         let eraFilter = func(e : Era) : Bool {
             let onOrAfterStart = switch (e.start) {
                 case (null) true;
@@ -1099,9 +1103,9 @@ module Module {
             };
             return onOrAfterStart and beforeEnd;
         };
-        switch (Array.find<Era>(l.eras, eraFilter)) {
+        switch (Array.find<Era>(locale.eras, eraFilter)) {
             case (?era) era;
-            case (null) Debug.trap("No era found for time and locale. Time: " # debug_show (time) # ", Locale: " # l.id);
+            case (null) Debug.trap("No era found for time and locale. Time: " # debug_show (time) # ", Locale: " # locale.id);
         };
     };
 
@@ -1210,6 +1214,15 @@ module Module {
         ?(natValue.value, r);
     };
 
+    private func getEraYear(components : Components, locale : Locale) : Int {
+        let now = toTime(components);
+        let era = getEra(now, locale);
+        switch (era.start) {
+            case (null) components.year;
+            case (?start) components.year - fromTime(start).year + 1;
+        };
+    };
+
     // Tokens are ordered by length so that the longest token is matched first
     let tokens : [TokenInfo] = [
         {
@@ -1259,18 +1272,22 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Month with ordinal
-        //     value = "Mo";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         l.getOrdinal(components.month);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Month with ordinal
+            value = "Mo";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                l.getOrdinal(components.month);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #month(value);
+                };
+            };
+        },
         {
             // Month
             value = "M";
@@ -1285,18 +1302,22 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Quarter with ordinal
-        //     value = "Qo";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         l.getOrdinal(components.month / 3 + 1);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Quarter with ordinal
+            value = "Qo";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                l.getOrdinal(components.month / 3 + 1);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #quarter(value);
+                };
+            };
+        },
         {
             // Quarter
             value = "Q";
@@ -1316,7 +1337,6 @@ module Module {
             // Padded Day of Year
             value = "DDDD";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                let l = requireLocale(locale);
                 TextUtil.toTextPadded(dayOfYear(components), 3);
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1328,23 +1348,27 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Day of Year with ordinal
-        //     value = "DDDo";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         l.getOrdinal(dayOfYear(components, l.firstDayOfYear));
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Day of Year with ordinal
+            value = "DDDo";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                let doy = dayOfYear(components);
+                l.getOrdinal(doy);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #dayOfYear(value);
+                };
+            };
+        },
         {
             // Day of Year
             value = "DDD";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-                let l = requireLocale(locale);
                 Nat.toText(dayOfYear(components));
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1371,18 +1395,22 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Day of Month with ordinal
-        //     value = "Do";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         l.getOrdinal(components.day);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Day of Month with ordinal
+            value = "Do";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                l.getOrdinal(components.day);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #dayOfMonth(value);
+                };
+            };
+        },
         {
             // Day of Month
             value = "D";
@@ -1449,19 +1477,23 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Day of Week with ordinal
-        //     value = "do";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         let dayOfWeek = dayOfWeekIndex(components);
-        //         l.getOrdinal(dayOfWeek);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Day of Week with ordinal
+            value = "do";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                let dayOfWeek = dayOfWeekIndex(components);
+                l.getOrdinal(dayOfWeek);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #dayOfWeek(value);
+                };
+            };
+        },
         {
             // Day of Week
             value = "d";
@@ -1535,19 +1567,26 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Week of Year with ordinal
-        //     value = "wo";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
-        //         l.getOrdinal(weekOfYearValue);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Week of Year with ordinal
+            value = "wo";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                let weekOfYearValue = weekOfYear(components, l.firstDayOfWeek, l.firstDayOfYear);
+                l.getOrdinal(weekOfYearValue);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #weekOfYear({
+                        value = value;
+                        firstDayOfYear = l.firstDayOfYear;
+                    });
+                };
+            };
+        },
         {
             // Week of Year
             value = "w";
@@ -1589,19 +1628,26 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Week of Year (ISO) with ordinal
-        //     value = "Wo";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         let weekOfYearValue = weekOfYear(components, 1, 4);
-        //         l.getOrdinal(weekOfYearValue);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Week of Year (ISO) with ordinal
+            value = "Wo";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                let weekOfYearValue = weekOfYear(components, #monday, 4);
+                l.getOrdinal(weekOfYearValue);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #weekOfYear({
+                        firstDayOfYear = 4;
+                        value = value;
+                    });
+                };
+            };
+        },
         {
             // Week of Year (ISO)
             value = "W";
@@ -1682,42 +1728,47 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Era year with ordinal
-        //     value = "yo";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         let now = toTime(components);
-        //         let era = getEra(now, locale);
-        //         let eraYear = Int.abs(components.year);
-        //         l.getOrdinal(eraYear);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
-        // TODO
-        // {
-        //     // Era year
-        //     value = "y";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let now = toTime(components);
-        //         let era = getEra(now, locale);
-        //         let eraYear = era
-        //         Nat.toText(eraYear);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Era year with ordinal
+            value = "yo";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                let eraYear = getEraYear(components, l);
+                l.getOrdinal(eraYear);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseOrdinal(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #eraYear(value);
+                };
+            };
+        },
+        {
+            // Era year
+            value = "y";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                let eraYear = getEraYear(components, l);
+                Int.toText(eraYear);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?(eraYear, remainingText) = extractNat(text, 4, false) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #eraYear(eraYear);
+                };
+            };
+        },
         {
             // Era Narrow Name
             value = "NNNNN";
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
                 let now = toTime(components);
-                let era = getEra(now, locale);
+                let era = getEra(now, l);
                 era.narrowName;
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1737,7 +1788,7 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
                 let now = toTime(components);
-                let era = getEra(now, locale);
+                let era = getEra(now, l);
                 era.fullName;
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1757,7 +1808,7 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
                 let now = toTime(components);
-                let era = getEra(now, locale);
+                let era = getEra(now, l);
                 era.abbreviatedName;
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1777,7 +1828,7 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
                 let now = toTime(components);
-                let era = getEra(now, locale);
+                let era = getEra(now, l);
                 era.abbreviatedName;
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1797,7 +1848,7 @@ module Module {
             getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
                 let l = requireLocale(locale);
                 let now = toTime(components);
-                let era = getEra(now, locale);
+                let era = getEra(now, l);
                 era.abbreviatedName;
             };
             extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
@@ -1891,29 +1942,38 @@ module Module {
                 };
             };
         },
-        // TODO
-        // {
-        //     // Meridiem (UPPERCASE)
-        //     value = "A";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         l.getMeridiem(components.hour, components.minute, false);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
-        // {
-        //     // Meridiem (lowercase)
-        //     value = "a";
-        //     getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
-        //         let l = requireLocale(locale);
-        //         l.getMeridiem(components.hour, components.minute, true);
-        //     };
-        //     extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
-        //         // TODO
-        //     };
-        // },
+        {
+            // Meridiem (UPPERCASE)
+            value = "A";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                l.getMeridiem(components.hour, components.minute, false);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseMeridiemAsIsPM(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #isPM(value);
+                };
+            };
+        },
+        {
+            // Meridiem (lowercase)
+            value = "a";
+            getter = func(components : Components, timeZone : TimeZone, locale : ?Locale) : Text {
+                let l = requireLocale(locale);
+                l.getMeridiem(components.hour, components.minute, true);
+            };
+            extract = func(text : Text, locale : ?Locale) : ?ExtractResult {
+                let l = requireLocale(locale);
+                let ?{ remainingText; value } = l.parseMeridiemAsIsPM(text) else return null;
+                ?{
+                    remainingText = remainingText;
+                    value = #isPM(value);
+                };
+            };
+        },
         {
             // Hour Padded (0-23)
             value = "HH";

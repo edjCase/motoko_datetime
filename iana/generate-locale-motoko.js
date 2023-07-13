@@ -111,10 +111,63 @@ function writeLocale(writer, localName, locale) {
         writer.write(`}`);
     });
 
-    // TODO Meridiem
-    // writer.writeLine(`getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {`);
-    // writer.depth += 1;
-    // // TODO optimize
+    writer.writeLine(`getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {`);
+    writer.depth += 1;
+    // TODO MERIDIEM this is placeholder code    
+    
+    
+    writer.writeLine(`if (hour < 12) {`)
+    writer.depth += 1;
+    writer.writeLine(`if (isLower) "am" else "AM";`);
+    writer.depth -= 1;
+    writer.writeLine(`} else {`);
+    writer.depth += 1;
+    writer.writeLine(`if (isLower) "pm" else "PM";`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    
+    writer.writeLine(`parseMeridiemAsIsPM = func (text : Text) : ?{`);
+    writer.depth += 1;
+    writer.writeLine(`remainingText : Text;`);
+    writer.writeLine(`value : Bool;`);
+    writer.depth -= 1;
+    writer.writeLine(`} {`);
+    writer.depth += 1;
+    writer.writeLine(`let mederiem = TextX.slice(text, 0, 2);`);
+    writer.writeLine(`switch (TextX.toLower(mederiem)) {`);
+    writer.depth += 1;
+    writer.writeLine(`case ("pm") {`);
+    writer.depth += 1;
+    writer.writeLine(`?{`);
+    writer.depth += 1;
+    writer.writeLine(`remainingText = TextX.sliceToEnd(text, 2);`);
+    writer.writeLine(`value = true;`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.writeLine(`case ("am") {`);
+    writer.depth += 1;
+    writer.writeLine(`?{`);
+    writer.depth += 1;
+    writer.writeLine(`remainingText = TextX.sliceToEnd(text, 2);`);
+    writer.writeLine(`value = false;`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.writeLine(`case (_) {`);
+    writer.depth += 1;
+    writer.writeLine(`null;`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.depth -= 1;
+    writer.writeLine(`};`); 
+
+    
+    
     // writer.writeLine(`let (lower, upper) : (Text, Text) = switch ((hour, minute)) {`);
     // writer.depth += 1;
 
@@ -149,10 +202,69 @@ function writeLocale(writer, localName, locale) {
     // writer.depth -= 1;
     // writer.writeLine(`};`);
     // writer.writeLine(`if (isLower) lower else upper;`);
-    // writer.depth -= 1;
-    // writer.writeLine(`};`);
 
-    // TODO Ordinal
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+
+    writer.writeLine(`getOrdinal = func (num : Int) : Text {`);
+    writer.depth += 1;
+    // TODO Ordinal this is placeholder code
+
+    writer.writeLine(`let suffix = if (num % 100 >= 11 and num % 100 <= 13) {`);
+    writer.depth += 1;
+    writer.writeLine(`"th";`);
+    writer.depth -= 1;
+    writer.writeLine(`} else switch (num % 10) {`);
+    writer.depth += 1;
+    writer.writeLine(`case (1) "st";`);
+    writer.writeLine(`case (2) "nd";`);
+    writer.writeLine(`case (3) "rd";`);
+    writer.writeLine(`case (_) "th";`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.writeLine(`return Int.toText(num) # suffix;`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+
+    writer.writeLine(`parseOrdinal = func(ordinal : Text) : ?{`);
+    writer.depth += 1;
+    writer.writeLine(`remainingText : Text;`);
+    writer.writeLine(`value : Nat;`);
+    writer.depth -= 1;
+    writer.writeLine(`} {`);
+    writer.depth += 1;
+    writer.writeLine(`var startIndex = 0;`);
+    writer.writeLine(`label f for (char in ordinal.chars()) {`);
+    writer.depth += 1;
+    writer.writeLine(`if (Char.isDigit(char)) {`);
+    writer.depth += 1;
+    writer.writeLine(`startIndex += 1;`);
+    writer.depth -= 1;
+    writer.writeLine(`} else {`);
+    writer.depth += 1;
+    writer.writeLine(`break f;`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.writeLine(`let numberText = TextX.slice(ordinal, 0, startIndex);`);
+    writer.writeLine(`let suffix = TextX.slice(ordinal, startIndex, 2);`);
+    writer.writeLine(`if (suffix == "st" or suffix == "nd" or suffix == "rd" or suffix == "th") {`);
+    writer.depth += 1;
+    writer.writeLine(`let ?value = Nat.fromText(numberText) else return null;`);
+    writer.writeLine(`return ?{`);
+    writer.depth += 1;
+    writer.writeLine(`remainingText = TextX.sliceToEnd(ordinal, startIndex + 2);`);
+    writer.writeLine(`value = value;`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
+    writer.writeLine(`return null;`);
+
+
+
+
     // if (!locale._dayOfMonthOrdinalParse) {
     //     writer.writeLine(`ordinalInfo = null;`);
     // } else {
@@ -186,8 +298,6 @@ function writeLocale(writer, localName, locale) {
     //     writer.depth -= 1;
     //     writer.writeLine(`};`);
     // };
-    // writer.writeLine(`getOrdinal = func (num : Nat) : Text {`);
-    // writer.depth += 1;
 
     // let currentOrdinal = null;
     // for (let day = 0; day < 366; day++) {
@@ -226,8 +336,8 @@ function writeLocale(writer, localName, locale) {
     //     };
     // }
     // writer.writeLine(`Prelude.unreachable();`);
-    // writer.depth -= 1;
-    // writer.writeLine(`};`);
+    writer.depth -= 1;
+    writer.writeLine(`};`);
 
 
     writer.depth -= 1;
@@ -257,6 +367,10 @@ for (let localeId of moment.locales()) {
     writer.writeLine(`import Prelude "mo:base/Prelude";`);
     writer.writeLine(`import Text "mo:base/Text";`);
     writer.writeLine(`import Nat "mo:base/Nat";`);
+    writer.writeLine(`import Int "mo:base/Int";`);
+    writer.writeLine(`import TextX "mo:xtended-text/TextX";`);
+    writer.writeLine(`import Char "mo:base/Char";`);
+    
     writeLocale(writer, localName, locale);
     let fileName = `locales/${localName}.mo`;
     fs.writeFile(fileName, writer.motoko, (err) => { });

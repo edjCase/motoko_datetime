@@ -1,5 +1,6 @@
 [dependencies]
 base = "0.9.4"
+xtended-text = "0.2.4"
 
 [package]
 name = "DateTime"

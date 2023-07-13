@@ -15,10 +15,13 @@ module {
         dateTimeFormat : Text;
         longDateFormat : Text;
         eras : [Era];
-        // TODO
-        // getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
-        // getOrdinal : (num : Nat) -> Text;
-
+        getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
+        parseMeridiemAsIsPM : (text : Text) -> ?{
+            remainingText : Text;
+            value : Bool;
+        };
+        getOrdinal : (num : Int) -> Text;
+        parseOrdinal : (text : Text) -> ?{ remainingText : Text; value : Nat };
     };
 
     public type Era = {
