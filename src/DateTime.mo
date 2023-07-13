@@ -288,6 +288,8 @@ module D {
     /// Returns null if the Text value is invalid.
     /// Treats the Text value as UTC if no timezone is specified.
     /// Format uses momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
+    /// Locale is only required for formats with locale specific tokens (e.g. month names).
+    /// Will trap if locale is null and the format contains locale specific tokens.
     ///
     /// ```motoko include=import
     /// let date = "2020-01-01T00:00:00Z";

@@ -6,6 +6,7 @@ import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
 import Types "../internal/Types";
+import TimeZone "../src/TimeZone";
 
 test(
     "equal",
@@ -170,8 +171,11 @@ test(
                 expectediso = "2023-06-07T04:11:40.787000000+08:00";
             },
         ];
+        let format = "YYYY-MM-DDThh:mm:ss.SSSSSSSSSZ";
+        let locale = null;
+        let timeZoneNameParser = func(name : Text) : ?TimeZone.TimeZone = null;
         for (testCase in Iter.fromArray(testCases)) {
-            let fromTextResult = DateTime.fromTextFormatted(testCase.expectediso, #iso);
+            let fromTextResult = DateTime.fromTextFormatted(testCase.expectediso, format, locale, timeZoneNameParser);
             switch (fromTextResult) {
                 case (null) {
                     Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectediso));

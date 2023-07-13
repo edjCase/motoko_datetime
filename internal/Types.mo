@@ -79,7 +79,7 @@ module {
         #iso;
         #custom : {
             format : Text;
-            locale : Locale;
+            locale : ?Locale;
         };
     };
 

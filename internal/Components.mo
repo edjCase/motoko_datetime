@@ -275,7 +275,7 @@ module Module {
 
         let locale : ?Locale = switch (format) {
             case (#iso) null;
-            case (#custom({ format; locale })) ?locale;
+            case (#custom({ format; locale })) locale;
         };
         let tokens = parseFormatText(customFormat);
 

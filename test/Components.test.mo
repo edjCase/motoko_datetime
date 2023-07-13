@@ -395,7 +395,6 @@ func assertText(expected : Text, actual : Text) {
         assert false;
     };
 };
-
 test(
     "toTextFormatted and fromTextFormatted",
     func() {
@@ -411,8 +410,8 @@ test(
                 };
                 timeZone = #fixed(#seconds(0));
                 expected = [
-                    (#iso, "1970-01-01T00:00:00.000000000Z"),
-                    (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = EN.locale }), "1/1/1970, 00:00:00 +00:00"),
+                    ({ format = "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ"; locale = null }, "1970-01-01T00:00:00.000000000+00:00"),
+                    ({ format = "D/M/YYYY, HH:mm:ss Z"; locale = ?EN.locale }, "1/1/1970, 00:00:00 +00:00"),
                 ];
             },
             {
@@ -426,8 +425,8 @@ test(
                 };
                 timeZone = #fixed(#seconds(-25_320));
                 expected = [
-                    (#iso, "1970-01-01T00:00:00.000000000-07:02"),
-                    (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = JA.locale }), "1/1/1970, 00:00:00 -07:02"),
+                    ({ format = "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ"; locale = null }, "1970-01-01T00:00:00.000000000-07:02"),
+                    ({ format = "D/M/YYYY, HH:mm:ss Z"; locale = ?EN.locale }, "1/1/1970, 00:00:00 -07:02"),
                 ];
             },
             {
@@ -441,24 +440,20 @@ test(
                 };
                 timeZone = #fixed(#seconds(-25_321));
                 expected = [
-                    (#iso, "1970-01-01T00:00:00.000000000-07:02:01"),
-                    (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = EN.locale }), "1/1/1970, 00:00:00 -07:02:01"),
+                    ({ format = "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ"; locale = null }, "1970-01-01T00:00:00.000000000-07:02:01"),
+                    ({ format = "D/M/YYYY, HH:mm:ss Z"; locale = ?EN.locale }, "1/1/1970, 00:00:00 -07:02:01"),
                 ];
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
-            for ((format, expectedText) in Iter.fromArray(testCase.expected)) {
-                let actual : Text = Components.toTextFormatted(testCase.components, testCase.timeZone, format);
+            for (({ format; locale }, expectedText) in Iter.fromArray(testCase.expected)) {
+                let actual : Text = Components.toTextFormatted(testCase.components, testCase.timeZone, #custom({ format; locale }));
                 assertText(expectedText, actual);
 
-                let fromTextResult = Components.fromTextFormatted(expectedText, format);
+                let fromTextResult = Components.fromTextFormatted(expectedText, format, locale);
                 switch (fromTextResult) {
                     case (null) {
-                        let formatName = switch (format) {
-                            case (#iso) "ISO";
-                            case (#custom({ format })) format;
-                        };
-                        Debug.print("Failed to parse '" # formatName # "' datetime: " # debug_show (expectedText));
+                        Debug.print("Failed to parse '" # format # "' datetime: " # debug_show (expectedText));
                         assert false;
                     };
                     case (?r) {

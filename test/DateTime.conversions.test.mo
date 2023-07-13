@@ -5,6 +5,7 @@ import Components "../src/Components";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
+import TimeZone "../src/TimeZone";
 
 type TestCase = {
   dateTime : Components.Components;
@@ -151,6 +152,9 @@ func testCaseToText(testCase : TestCase) : Text {
   return testCase.textIso;
 };
 
+let format = "YYYY-MM-DDThh:mm:ss.SSSSSSSSSZ";
+let locale = null;
+let timeZoneNameParser = func(name : Text) : ?TimeZone.TimeZone = null;
 for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = DateTime.DateTime(testCase.nanoseconds);
 
@@ -204,7 +208,7 @@ for (testCase in Iter.fromArray(testCases)) {
     "fromTextFormatted iso (Text -> LocalDateTime): " # testCaseText,
     func() {
       // From iso text
-      let ?actualisoDateTime = DateTime.fromTextFormatted(testCase.textIso, #iso) else Debug.trap("Could not parse date time components to a datetime");
+      let ?actualisoDateTime = DateTime.fromTextFormatted(testCase.textIso, format, locale, timeZoneNameParser) else Debug.trap("Could not parse date time components to a datetime");
       assertDateTime(actualisoDateTime, expectedDateTime);
     },
   );

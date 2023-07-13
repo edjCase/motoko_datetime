@@ -162,8 +162,9 @@ module {
     };
 
     /// Parses a formatted datetime text into components and timezone with the specified format.
-    /// Locale is only required for formats with locale specific information (e.g. month names).
     /// Returns null if the text is not a valid formatted datetime
+    /// Locale is only required for formats with locale specific tokens (e.g. month names).
+    /// Will throw an exception if locale is null and the format contains locale specific tokens.
     ///
     /// ```motoko include=import
     /// let date = "2020-01-01T00:00:00Z";

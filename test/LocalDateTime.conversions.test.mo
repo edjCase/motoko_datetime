@@ -168,6 +168,11 @@ for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = LocalDateTime.LocalDateTime(testCase.dateTime, testCase.timeZone);
 
   let testCaseText = testCaseToText(testCase);
+  let format = "YYYY-MM-DDDTHH:mm:ss.SSSSSSSSSZ";
+  let locale = null;
+  let timeZoneNameParser = func(name : Text) : ?TimeZone.TimeZone = null;
+  let defaultTimeZone = TimeZone.utc();
+
   test(
     "fromComponents (Components -> LocalDateTime): " # testCaseText,
     func() {
@@ -213,10 +218,10 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTextFormatted iso (Text -> LocalDateTime)",
+    "fromTextFormatted iso (Text -> LocalDateTime): " # testCaseText,
     func() {
       // From iso text
-      let ?actualisoDateTime = LocalDateTime.fromTextFormatted(testCase.textIso, #iso) else Debug.trap("Could not parse date time components to a datetime");
+      let ?actualisoDateTime = LocalDateTime.fromTextFormatted(testCase.textIso, format, locale, timeZoneNameParser, defaultTimeZone) else Debug.trap("Could not parse date time components to a datetime");
       assertDateTime(actualisoDateTime, expectedDateTime);
     },
   );
