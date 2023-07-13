@@ -152,7 +152,7 @@ func testCaseToText(testCase : TestCase) : Text {
   return testCase.textIso;
 };
 
-let format = "YYYY-MM-DDThh:mm:ss.SSSSSSSSSZ";
+let format = "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ";
 let locale = null;
 let timeZoneNameParser = func(name : Text) : ?TimeZone.TimeZone = null;
 for (testCase in Iter.fromArray(testCases)) {

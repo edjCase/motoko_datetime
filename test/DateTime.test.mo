@@ -171,7 +171,7 @@ test(
                 expectediso = "2023-06-07T04:11:40.787000000+08:00";
             },
         ];
-        let format = "YYYY-MM-DDThh:mm:ss.SSSSSSSSSZ";
+        let format = "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ";
         let locale = null;
         let timeZoneNameParser = func(name : Text) : ?TimeZone.TimeZone = null;
         for (testCase in Iter.fromArray(testCases)) {
