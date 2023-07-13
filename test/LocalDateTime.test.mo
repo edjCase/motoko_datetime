@@ -552,7 +552,7 @@ test(
                     nanosecond = 0;
                 };
                 timeZone = #seconds(0);
-                expectedIso8601 = "1970-01-01T00:00:00.000000000Z";
+                expectediso = "1970-01-01T00:00:00.000000000Z";
             },
             {
                 dateTime = {
@@ -564,7 +564,7 @@ test(
                     nanosecond = 0;
                 };
                 timeZone = #seconds(-25_320);
-                expectedIso8601 = "1970-01-01T00:00:00.000000000-07:02";
+                expectediso = "1970-01-01T00:00:00.000000000-07:02";
             },
             {
                 dateTime = {
@@ -576,21 +576,21 @@ test(
                     nanosecond = 40_787_000_000;
                 };
                 timeZone = #hours(8);
-                expectedIso8601 = "2023-06-07T04:11:40.787000000+08:00";
+                expectediso = "2023-06-07T04:11:40.787000000+08:00";
             },
         ];
         for (testCase in Iter.fromArray(testCases)) {
-            let fromTextResult = LocalDateTime.fromTextFormatted(testCase.expectedIso8601, #iso8601);
+            let fromTextResult = LocalDateTime.fromTextFormatted(testCase.expectediso, #iso);
             switch (fromTextResult) {
                 case (null) {
-                    Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectedIso8601));
+                    Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectediso));
                     assert false;
                 };
                 case (?actualDateTime) {
                     let expected = LocalDateTime.LocalDateTime(testCase.dateTime, #fixed(testCase.timeZone));
 
                     if (not expected.equal(actualDateTime)) {
-                        Debug.print("Text: " # debug_show (testCase.expectedIso8601));
+                        Debug.print("Text: " # debug_show (testCase.expectediso));
                         Debug.print("Expected: " # debug_show (expected.toText()));
                         Debug.print("Actual:   " # debug_show (actualDateTime.toText()));
                         assert false;

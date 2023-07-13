@@ -28,6 +28,7 @@ module D {
     public type DateTime = InternalTypes.DateTime;
     type Components = InternalTypes.Components;
     type DayOfWeek = InternalTypes.DayOfWeek;
+    type Locale = InternalTypes.Locale;
 
     /// Creates an instance of the `DateTime` type from a `Time.Time` value.
     ///
@@ -136,17 +137,18 @@ module D {
         /// let dateTimeText : Text = dateTime.toText();
         /// ```
         public func toText() : Text {
-            return toTextFormatted(#iso8601);
+            return toTextFormatted(#iso);
         };
 
         /// Formats the `DateTime` as Text value using the given format.
         ///
         /// Formats:
-        /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
+        /// - `#iso` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
+        /// - `#custom` - Custom format using momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
         ///
         /// ```motoko include=import
         /// let dateTime : DateTime.DateTime = DateTime.now();
-        /// let dateTimeText : Text = dateTime.toTextFormatted(#iso8601);
+        /// let dateTimeText : Text = dateTime.toTextFormatted(#iso);
         /// ```
         public func toTextFormatted(format : TextFormat) : Text {
             let components : Components = toComponents();
@@ -271,11 +273,12 @@ module D {
     /// Formats the `DateTime` as Text value using the given format.
     ///
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
+    /// - `#iso` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
+    /// - `#custom` - Custom format using momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
     ///
     /// ```motoko include=import
     /// let dateTime : DateTime.DateTime = DateTime.now();
-    /// let dateTimeText : Text = DateTime.toTextFormatted(datetime, #iso8601);
+    /// let dateTimeText : Text = DateTime.toTextFormatted(datetime, #iso);
     /// ```
     public func toTextFormatted(dateTime : DateTime, format : TextFormat) : Text {
         dateTime.toTextFormatted(format);
@@ -284,23 +287,32 @@ module D {
     /// Parses the Text value as a `DateTime` using the given format.
     /// Returns null if the Text value is invalid.
     /// Treats the Text value as UTC if no timezone is specified.
-    ///
-    /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
+    /// Format uses momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
     ///
     /// ```motoko include=import
-    /// let dateTimeText : Text = "2021-01-01T00:00:00.000000000Z";
-    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, #iso8601) else return #error("Invalid date");
+    /// let date = "2020-01-01T00:00:00Z";
+    /// let format = "YYYY-MM-DDTHH:mm:ssZ";
+    /// let locale = null; // TODO
+    /// let timeZoneNameParser = null; // TODO
+    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, format, locale, timeZoneParser) else return #error("Invalid date");
     /// ```
-    public func fromTextFormatted(text : Text, format : TextFormat) : ?DateTime {
+    public func fromTextFormatted(
+        text : Text,
+        format : Text,
+        locale : ?Locale,
+        timeZoneNameParser : (Text) -> ?TimeZone.TimeZone,
+    ) : ?DateTime {
 
         do ? {
-            let { components; timeZoneDescriptor } : Components.FromTextResult = Components.fromTextFormatted(text, format)!;
+            let { components; timeZoneDescriptor } : Components.FromTextResult = Components.fromTextFormatted(text, format, locale)!;
             let offset : ?Time.Time = switch (timeZoneDescriptor) {
                 case (#utc) null;
                 case (#unspecified) null;
                 case (#fixed(f)) ?TimeZone.toFixedOffsetSeconds(f);
-                case (#name(n)) null; // TODO
+                case (#name(n)) {
+                    let ?tz = timeZoneNameParser(n) else return null;
+                    ?TimeZone.toOffsetSeconds(tz, components);
+                };
             };
             switch (offset) {
                 case (null) {

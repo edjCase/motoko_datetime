@@ -12,7 +12,7 @@ type TestCase = {
   timeZone : LocalDateTime.TimeZone;
   dateTime : Components.Components;
   nanoseconds : Int;
-  textIso8061 : Text;
+  textIso : Text;
 };
 
 let testCases : [TestCase] = [
@@ -27,7 +27,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -631_126_800_000_000_000;
-    textIso8061 = "1950-01-01T00:00:00.000000000-07:00";
+    textIso = "1950-01-01T00:00:00.000000000-07:00";
   },
   {
     timeZone = #fixed(#hours(-5));
@@ -40,7 +40,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -603_901_620_000_000_000;
-    textIso8061 = "1950-11-12T04:33:00.000000000-05:00";
+    textIso = "1950-11-12T04:33:00.000000000-05:00";
   },
   {
     timeZone = #fixed(#hours(9));
@@ -53,7 +53,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -32_400_000_000_000;
-    textIso8061 = "1970-01-01T00:00:00.000000000+09:00";
+    textIso = "1970-01-01T00:00:00.000000000+09:00";
   },
   {
     timeZone = #fixed(#hours(13));
@@ -66,7 +66,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -46_740_000_000_000;
-    textIso8061 = "1970-01-01T00:01:00.000000000+13:00";
+    textIso = "1970-01-01T00:01:00.000000000+13:00";
   },
   {
     timeZone = #fixed(#hours(-1));
@@ -79,7 +79,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 90_000_000_000_000;
-    textIso8061 = "1970-01-02T00:00:00.000000000-01:00";
+    textIso = "1970-01-02T00:00:00.000000000-01:00";
   },
   {
     timeZone = #fixed(#seconds(27_240));
@@ -92,7 +92,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 68_169_600_000_000_000;
-    textIso8061 = "1972-02-29T07:34:00.000000000+07:34";
+    textIso = "1972-02-29T07:34:00.000000000+07:34";
   },
   {
     timeZone = #fixed(#seconds(-25_320));
@@ -105,7 +105,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 946_710_120_000_000_000;
-    textIso8061 = "2000-01-01T00:00:00.000000000-07:02";
+    textIso = "2000-01-01T00:00:00.000000000-07:02";
   },
   {
     timeZone = #fixed(#seconds(120));
@@ -118,7 +118,7 @@ let testCases : [TestCase] = [
       nanosecond = 59_000_000_000;
     };
     nanoseconds = 978_307_079_000_000_000;
-    textIso8061 = "2000-12-31T23:59:59.000000000+00:02";
+    textIso = "2000-12-31T23:59:59.000000000+00:02";
   },
   {
     timeZone = #fixed(#seconds(14_580));
@@ -131,7 +131,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 1_589_974_020_000_000_000;
-    textIso8061 = "2020-05-20T15:30:00.000000000+04:03";
+    textIso = "2020-05-20T15:30:00.000000000+04:03";
   },
 ];
 
@@ -161,7 +161,7 @@ func assertComponents(
 };
 
 func testCaseToText(testCase : TestCase) : Text {
-  return testCase.textIso8061;
+  return testCase.textIso;
 };
 
 for (testCase in Iter.fromArray(testCases)) {
@@ -203,21 +203,21 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTextFormatted iso8601 (LocalDateTime -> Text): " # testCaseText,
+    "toTextFormatted iso (LocalDateTime -> Text): " # testCaseText,
     func() {
-      // To Iso8601 text
-      let actualIso8601 : Text = expectedDateTime.toTextFormatted(#iso8601);
-      assertT(actualIso8601, testCase.textIso8061, Text.equal, func(t : Text) : Text = t);
+      // To iso text
+      let actualiso : Text = expectedDateTime.toTextFormatted(#iso);
+      assertT(actualiso, testCase.textIso, Text.equal, func(t : Text) : Text = t);
 
     },
   );
 
   test(
-    "fromTextFormatted iso8601 (Text -> LocalDateTime)",
+    "fromTextFormatted iso (Text -> LocalDateTime)",
     func() {
-      // From Iso8601 text
-      let ?actualIso8601DateTime = LocalDateTime.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");
-      assertDateTime(actualIso8601DateTime, expectedDateTime);
+      // From iso text
+      let ?actualisoDateTime = LocalDateTime.fromTextFormatted(testCase.textIso, #iso) else Debug.trap("Could not parse date time components to a datetime");
+      assertDateTime(actualisoDateTime, expectedDateTime);
     },
   );
 };

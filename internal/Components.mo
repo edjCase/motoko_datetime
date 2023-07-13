@@ -262,7 +262,7 @@ module Module {
         throwIfNotValid(components);
 
         let customFormat : Text = switch (format) {
-            case (#iso8601) {
+            case (#iso) {
                 let isUtc = switch (timeZone) {
                     case (#fixed(#seconds(s))) s == 0;
                     case (#fixed(#hours(h))) h == 0;
@@ -274,7 +274,7 @@ module Module {
         };
 
         let locale : ?Locale = switch (format) {
-            case (#iso8601) null;
+            case (#iso) null;
             case (#custom({ format; locale })) ?locale;
         };
         let tokens = parseFormatText(customFormat);
@@ -289,14 +289,9 @@ module Module {
         text;
     };
 
-    public func fromTextFormatted(text : Text, format : TextFormat) : ?FromTextResult {
-        let (formatText, locale) : (Text, ?Locale) = switch (format) {
-            case (#iso8601)("YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ", null);
-            case (#custom({ format; locale }))(format, ?locale);
-        };
-
+    public func fromTextFormatted(text : Text, format : Text, locale : ?Locale) : ?FromTextResult {
         var remainingText = text;
-        let tokenOrTextBuffer : Buffer.Buffer<TokenOrText> = parseFormatText(formatText);
+        let tokenOrTextBuffer : Buffer.Buffer<TokenOrText> = parseFormatText(format);
         let extractedValueHelper = ExtractedValueHelper();
         for (tokenOrText in tokenOrTextBuffer.vals()) {
             switch (tokenOrText) {

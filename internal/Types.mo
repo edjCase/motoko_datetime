@@ -76,7 +76,7 @@ module {
     };
 
     public type TextFormat = {
-        #iso8601;
+        #iso;
         #custom : {
             format : Text;
             locale : Locale;

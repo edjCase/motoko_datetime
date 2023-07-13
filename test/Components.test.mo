@@ -411,7 +411,7 @@ test(
                 };
                 timeZone = #fixed(#seconds(0));
                 expected = [
-                    (#iso8601, "1970-01-01T00:00:00.000000000Z"),
+                    (#iso, "1970-01-01T00:00:00.000000000Z"),
                     (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = EN.locale }), "1/1/1970, 00:00:00 +00:00"),
                 ];
             },
@@ -426,7 +426,7 @@ test(
                 };
                 timeZone = #fixed(#seconds(-25_320));
                 expected = [
-                    (#iso8601, "1970-01-01T00:00:00.000000000-07:02"),
+                    (#iso, "1970-01-01T00:00:00.000000000-07:02"),
                     (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = JA.locale }), "1/1/1970, 00:00:00 -07:02"),
                 ];
             },
@@ -441,7 +441,7 @@ test(
                 };
                 timeZone = #fixed(#seconds(-25_321));
                 expected = [
-                    (#iso8601, "1970-01-01T00:00:00.000000000-07:02:01"),
+                    (#iso, "1970-01-01T00:00:00.000000000-07:02:01"),
                     (#custom({ format = "D/M/YYYY, HH:mm:ss Z"; locale = EN.locale }), "1/1/1970, 00:00:00 -07:02:01"),
                 ];
             },
@@ -455,7 +455,7 @@ test(
                 switch (fromTextResult) {
                     case (null) {
                         let formatName = switch (format) {
-                            case (#iso8601) "ISO";
+                            case (#iso) "ISO";
                             case (#custom({ format })) format;
                         };
                         Debug.print("Failed to parse '" # formatName # "' datetime: " # debug_show (expectedText));

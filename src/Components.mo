@@ -140,17 +140,18 @@ module {
     /// let text : Text = Components.toText(c, TimeZone.utc());
     /// ```
     public func toText(components : Components, timeZone : TimeZone) : Text {
-        toTextFormatted(components, timeZone, #iso8601);
+        toTextFormatted(components, timeZone, #iso);
     };
 
     /// Converts datetime components to the specified text format.
     ///
     /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
+    /// - `#iso` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
+    /// - `#custom` - Custom format using momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
     ///
     /// ```motoko include=import
     /// let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minute = 0; nanosecond = 0};
-    /// let text : Text = Components.toTextFormatted(c, #iso8601, TimeZone.utc());
+    /// let text : Text = Components.toTextFormatted(c, #iso, TimeZone.utc());
     /// ```
     public func toTextFormatted(
         components : Components,
@@ -161,15 +162,16 @@ module {
     };
 
     /// Parses a formatted datetime text into components and timezone with the specified format.
+    /// Locale is only required for formats with locale specific information (e.g. month names).
     /// Returns null if the text is not a valid formatted datetime
-    /// Formats:
-    /// - `#iso8601` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
     ///
     /// ```motoko include=import
-    /// let ?result : ?FromTextResult = Components.fromTextFormatted("2020-01-01T00:00:00Z", #iso8601) else return #error("Invalid datetime text");
+    /// let date = "2020-01-01T00:00:00Z";
+    /// let format = "YYYY-MM-DDTHH:mm:ssZ";
+    /// let ?result : ?FromTextResult = Components.fromTextFormatted(date, format, null) else return #error("Invalid datetime text");
     /// ```
-    public func fromTextFormatted(text : Text, format : TextFormat) : ?FromTextResult {
-        InternalComponents.fromTextFormatted(text, format);
+    public func fromTextFormatted(text : Text, format : Text, locale : ?Locale) : ?FromTextResult {
+        InternalComponents.fromTextFormatted(text, format, locale);
     };
 
     /// Adds the specified nanoseconds to the components and returns the resulting components.

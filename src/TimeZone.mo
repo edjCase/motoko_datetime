@@ -55,7 +55,7 @@ module {
     /// Gets the UTC offset in seconds for the specified fixed time zone.
     ///
     /// ```motoko include=import
-    /// let timeZone : TimeZone.TimeZone = #fixed(#hoursAndMinutes(1, 0));
+    /// let timeZone : TimeZone.TimeZone = #fixed(#hours(1));
     /// let offsetSeconds : Int = TimeZone.getFixedOffsetSeconds(timeZone);
     /// ```
     public func toFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int {

@@ -9,7 +9,7 @@ import Text "mo:base/Text";
 type TestCase = {
   dateTime : Components.Components;
   nanoseconds : Int;
-  textIso8061 : Text;
+  textIso : Text;
 };
 
 let testCases : [TestCase] = [
@@ -23,7 +23,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -631_152_000_000_000_000;
-    textIso8061 = "1950-01-01T00:00:00.000000000Z";
+    textIso = "1950-01-01T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -35,7 +35,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = -603_919_620_000_000_000;
-    textIso8061 = "1950-11-12T04:33:00.000000000Z";
+    textIso = "1950-11-12T04:33:00.000000000Z";
   },
   {
     dateTime = {
@@ -47,7 +47,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 0;
-    textIso8061 = "1970-01-01T00:00:00.000000000Z";
+    textIso = "1970-01-01T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -59,7 +59,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 60_000_000_000;
-    textIso8061 = "1970-01-01T00:01:00.000000000Z";
+    textIso = "1970-01-01T00:01:00.000000000Z";
   },
   {
     dateTime = {
@@ -71,7 +71,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 86_400_000_000_000;
-    textIso8061 = "1970-01-02T00:00:00.000000000Z";
+    textIso = "1970-01-02T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -83,7 +83,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 68_169_600_000_000_000;
-    textIso8061 = "1972-02-29T00:00:00.000000000Z";
+    textIso = "1972-02-29T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -95,7 +95,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 946_684_800_000_000_000;
-    textIso8061 = "2000-01-01T00:00:00.000000000Z";
+    textIso = "2000-01-01T00:00:00.000000000Z";
   },
   {
     dateTime = {
@@ -107,7 +107,7 @@ let testCases : [TestCase] = [
       nanosecond = 59_000_000_000;
     };
     nanoseconds = 978_307_199_000_000_000;
-    textIso8061 = "2000-12-31T23:59:59.000000000Z";
+    textIso = "2000-12-31T23:59:59.000000000Z";
   },
   {
     dateTime = {
@@ -119,7 +119,7 @@ let testCases : [TestCase] = [
       nanosecond = 0;
     };
     nanoseconds = 1_589_988_600_000_000_000;
-    textIso8061 = "2020-05-20T15:30:00.000000000Z";
+    textIso = "2020-05-20T15:30:00.000000000Z";
   },
 ];
 
@@ -148,7 +148,7 @@ func assertComponents(
   return assertT<Components.Components>(actual, expected, func(a, b) = a == b, func(a) = debug_show (a));
 };
 func testCaseToText(testCase : TestCase) : Text {
-  return testCase.textIso8061;
+  return testCase.textIso;
 };
 
 for (testCase in Iter.fromArray(testCases)) {
@@ -191,21 +191,21 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTextFormatted iso8601 (LocalDateTime -> Text): " # testCaseText,
+    "toTextFormatted iso (LocalDateTime -> Text): " # testCaseText,
     func() {
-      // To Iso8601 text
-      let actualIso8601 : Text = expectedDateTime.toTextFormatted(#iso8601);
-      assertT(actualIso8601, testCase.textIso8061, Text.equal, func(t : Text) : Text = t);
+      // To iso text
+      let actualiso : Text = expectedDateTime.toTextFormatted(#iso);
+      assertT(actualiso, testCase.textIso, Text.equal, func(t : Text) : Text = t);
 
     },
   );
 
   test(
-    "fromTextFormatted iso8601 (Text -> LocalDateTime): " # testCaseText,
+    "fromTextFormatted iso (Text -> LocalDateTime): " # testCaseText,
     func() {
-      // From Iso8601 text
-      let ?actualIso8601DateTime = DateTime.fromTextFormatted(testCase.textIso8061, #iso8601) else Debug.trap("Could not parse date time components to a datetime");
-      assertDateTime(actualIso8601DateTime, expectedDateTime);
+      // From iso text
+      let ?actualisoDateTime = DateTime.fromTextFormatted(testCase.textIso, #iso) else Debug.trap("Could not parse date time components to a datetime");
+      assertDateTime(actualisoDateTime, expectedDateTime);
     },
   );
 };
