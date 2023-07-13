@@ -1,6 +1,5 @@
 .vessel
 *.wasm
-docs/
 build/
 .mops/
 node_modules/
