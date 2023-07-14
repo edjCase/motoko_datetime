@@ -390,5 +390,5 @@ localeListWriter.writeList("public let locales", localeNames, (localeName) => {
 localeListWriter.depth -= 1;
 localeListWriter.writeLine(`};`);
 
-let regionMapText = localeListWriter.motoko;
-fs.writeFileSync("LocaleList.mo", regionMapText, (err) => { });
+let localeListText = localeListWriter.motoko;
+fs.writeFileSync("LocaleList.mo", localeListText, (err) => { });

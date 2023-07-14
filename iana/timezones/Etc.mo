@@ -1,9 +1,9 @@
 import Types "../Types";
 module Etc {
 	public module GMT {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "GMT";
 					expiration = null;
@@ -13,9 +13,9 @@ module Etc {
 		};
 	};
 	public module GMT__0 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+0";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "GMT";
 					expiration = null;
@@ -25,9 +25,9 @@ module Etc {
 		};
 	};
 	public module GMT__1 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+1";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-01";
 					expiration = null;
@@ -37,9 +37,9 @@ module Etc {
 		};
 	};
 	public module GMT__10 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+10";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-10";
 					expiration = null;
@@ -49,9 +49,9 @@ module Etc {
 		};
 	};
 	public module GMT__11 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+11";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-11";
 					expiration = null;
@@ -61,9 +61,9 @@ module Etc {
 		};
 	};
 	public module GMT__12 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+12";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-12";
 					expiration = null;
@@ -73,9 +73,9 @@ module Etc {
 		};
 	};
 	public module GMT__2 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+2";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-02";
 					expiration = null;
@@ -85,9 +85,9 @@ module Etc {
 		};
 	};
 	public module GMT__3 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+3";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-03";
 					expiration = null;
@@ -97,9 +97,9 @@ module Etc {
 		};
 	};
 	public module GMT__4 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+4";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-04";
 					expiration = null;
@@ -109,9 +109,9 @@ module Etc {
 		};
 	};
 	public module GMT__5 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+5";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-05";
 					expiration = null;
@@ -121,9 +121,9 @@ module Etc {
 		};
 	};
 	public module GMT__6 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+6";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-06";
 					expiration = null;
@@ -133,9 +133,9 @@ module Etc {
 		};
 	};
 	public module GMT__7 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+7";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-07";
 					expiration = null;
@@ -145,9 +145,9 @@ module Etc {
 		};
 	};
 	public module GMT__8 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+8";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-08";
 					expiration = null;
@@ -157,9 +157,9 @@ module Etc {
 		};
 	};
 	public module GMT__9 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT+9";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "-09";
 					expiration = null;
@@ -169,9 +169,9 @@ module Etc {
 		};
 	};
 	public module GMT_0 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-0";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "GMT";
 					expiration = null;
@@ -181,9 +181,9 @@ module Etc {
 		};
 	};
 	public module GMT_1 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-1";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+01";
 					expiration = null;
@@ -193,9 +193,9 @@ module Etc {
 		};
 	};
 	public module GMT_10 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-10";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+10";
 					expiration = null;
@@ -205,9 +205,9 @@ module Etc {
 		};
 	};
 	public module GMT_11 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-11";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+11";
 					expiration = null;
@@ -217,9 +217,9 @@ module Etc {
 		};
 	};
 	public module GMT_12 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-12";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+12";
 					expiration = null;
@@ -229,9 +229,9 @@ module Etc {
 		};
 	};
 	public module GMT_13 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-13";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+13";
 					expiration = null;
@@ -241,9 +241,9 @@ module Etc {
 		};
 	};
 	public module GMT_14 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-14";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+14";
 					expiration = null;
@@ -253,9 +253,9 @@ module Etc {
 		};
 	};
 	public module GMT_2 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-2";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+02";
 					expiration = null;
@@ -265,9 +265,9 @@ module Etc {
 		};
 	};
 	public module GMT_3 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-3";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+03";
 					expiration = null;
@@ -277,9 +277,9 @@ module Etc {
 		};
 	};
 	public module GMT_4 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-4";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+04";
 					expiration = null;
@@ -289,9 +289,9 @@ module Etc {
 		};
 	};
 	public module GMT_5 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-5";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+05";
 					expiration = null;
@@ -301,9 +301,9 @@ module Etc {
 		};
 	};
 	public module GMT_6 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-6";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+06";
 					expiration = null;
@@ -313,9 +313,9 @@ module Etc {
 		};
 	};
 	public module GMT_7 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-7";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+07";
 					expiration = null;
@@ -325,9 +325,9 @@ module Etc {
 		};
 	};
 	public module GMT_8 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-8";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+08";
 					expiration = null;
@@ -337,9 +337,9 @@ module Etc {
 		};
 	};
 	public module GMT_9 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT-9";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "+09";
 					expiration = null;
@@ -349,9 +349,9 @@ module Etc {
 		};
 	};
 	public module GMT0 {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/GMT0";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "GMT";
 					expiration = null;
@@ -361,9 +361,9 @@ module Etc {
 		};
 	};
 	public module Greenwich {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/Greenwich";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "GMT";
 					expiration = null;
@@ -373,9 +373,9 @@ module Etc {
 		};
 	};
 	public module UCT {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/UCT";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "UTC";
 					expiration = null;
@@ -385,9 +385,9 @@ module Etc {
 		};
 	};
 	public module UTC {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/UTC";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "UTC";
 					expiration = null;
@@ -397,9 +397,9 @@ module Etc {
 		};
 	};
 	public module Universal {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/Universal";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "UTC";
 					expiration = null;
@@ -409,9 +409,9 @@ module Etc {
 		};
 	};
 	public module Zulu {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Etc/Zulu";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "UTC";
 					expiration = null;

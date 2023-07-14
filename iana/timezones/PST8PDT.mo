@@ -1,9 +1,9 @@
 import Types "../Types";
 module PST8PDT {
 	public module PST8PDT {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "PST8PDT";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "PST";
 					expiration = ?-1633269600000;

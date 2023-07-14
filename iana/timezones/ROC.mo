@@ -1,9 +1,9 @@
 import Types "../Types";
 module ROC {
 	public module ROC {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "ROC";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2335248360000;

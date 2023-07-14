@@ -1,9 +1,9 @@
 import Types "../Types";
 module UTC {
 	public module UTC {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "UTC";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "UTC";
 					expiration = null;

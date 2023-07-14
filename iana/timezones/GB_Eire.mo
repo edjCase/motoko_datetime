@@ -1,9 +1,9 @@
 import Types "../Types";
 module GB_Eire {
 	public module GB_Eire {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "GB-Eire";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-3852662325000;

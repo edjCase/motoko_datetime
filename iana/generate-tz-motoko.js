@@ -6,21 +6,21 @@ let nameMap = {};
 
 
 
-function buildRegion(writer, region, moduleName) {
+function buildTzData(writer, data, moduleName) {
     writer.writeLine(`public module ${moduleName} {`);
     writer.depth += 1;
 
-    let abbrs = region.abbrs || [];
-    let untils = region.untils || [];
-    let offsets = region.offsets || [];
+    let abbrs = data.abbrs || [];
+    let untils = data.untils || [];
+    let offsets = data.offsets || [];
 
     let indicies = Array.from({ length: abbrs.length }, (_, i) => i);
 
     if (indicies.length > 0) {
-        writer.writeLine(`public let region : Types.Region = {`);
+        writer.writeLine(`public let data : Types.TimeZoneData = {`);
         writer.depth += 1;
-        writer.writeLine(`id = "${region.name}";`);
-        writer.writeList("timeZoneRules", indicies, (i) => {
+        writer.writeLine(`id = "${data.name}";`);
+        writer.writeList("rules", indicies, (i) => {
             writer.writeLine("{");
             writer.depth += 1;
             writer.writeLine(`abbreviation = "${abbrs[i]}";`);
@@ -77,7 +77,7 @@ for (let zoneId in zones) {
         let subZoneId = subZone.name.replace(zoneId + "/", "");
         let subModuleName = normalizeText(subZoneId);
         nameMap[subZoneId] = moduleName + "." + subModuleName;
-        buildRegion(writer, subZone, subModuleName);
+        buildTzData(writer, subZone, subModuleName);
     };
     writer.depth -= 1;
     writer.writeLine(`}`);
@@ -87,18 +87,18 @@ for (let zoneId in zones) {
     fs.writeFile(fileName, fileText, (err) => { });
 };
 
-let regionMapWriter = new MotokoWriter();
+let tzDataListWriter = new MotokoWriter();
 for (let fileName of fileNames) {
-    regionMapWriter.writeLine(`import ${fileName} "timezones/${fileName}";`);
+    tzDataListWriter.writeLine(`import ${fileName} "timezones/${fileName}";`);
 };
-regionMapWriter.writeLine(`module {`);
-regionMapWriter.depth += 1;
-regionMapWriter.writeList("public let regions", Object.keys(nameMap), (regionName) => {
-    let moduleName = nameMap[regionName];
-    regionMapWriter.write(`${moduleName}.region`);
+tzDataListWriter.writeLine(`module {`);
+tzDataListWriter.depth += 1;
+tzDataListWriter.writeList("public let zoneData", Object.keys(nameMap), (tzName) => {
+    let moduleName = nameMap[tzName];
+    tzDataListWriter.write(`${moduleName}.data`);
 });
-regionMapWriter.depth -= 1;
-regionMapWriter.writeLine(`};`);
+tzDataListWriter.depth -= 1;
+tzDataListWriter.writeLine(`};`);
 
-let regionMapText = regionMapWriter.motoko;
-fs.writeFileSync("RegionList.mo", regionMapText, (err) => { }); 
+let timeZoneListText = tzDataListWriter.motoko;
+fs.writeFileSync("TimeZoneList.mo", timeZoneListText, (err) => { }); 

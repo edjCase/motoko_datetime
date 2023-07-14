@@ -1,9 +1,9 @@
 import Types "../Types";
 module Mexico {
 	public module BajaNorte {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Mexico/BajaNorte";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -5378,9 +5378,9 @@ module Mexico {
 		};
 	};
 	public module BajaSur {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Mexico/BajaSur";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;
@@ -5705,9 +5705,9 @@ module Mexico {
 		};
 	};
 	public module General {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Mexico/General";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1514739600000;

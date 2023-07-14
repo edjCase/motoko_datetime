@@ -1,9 +1,9 @@
 import Types "../Types";
 module Egypt {
 	public module Egypt {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Egypt";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2185409109000;

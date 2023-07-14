@@ -1,9 +1,9 @@
 import Types "../Types";
 module PRC {
 	public module PRC {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "PRC";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2177481943000;

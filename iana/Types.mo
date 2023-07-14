@@ -11,7 +11,7 @@ import InternalTypes "../internal/Types";
 
 module {
 
-    public type Region = InternalTypes.Region;
+    public type TimeZoneData = InternalTypes.TimeZoneData;
 
     public type Locale = InternalTypes.Locale;
 

@@ -33,12 +33,12 @@ module {
         abbreviatedName : Text;
     };
 
-    public type Region = {
+    public type TimeZoneData = {
         id : Text;
-        timeZoneRules : [RegionTimeZoneRule];
+        rules : [TimeZoneRule];
     };
 
-    public type RegionTimeZoneRule = {
+    public type TimeZoneRule = {
         abbreviation : Text;
         expiration : ?Int;
         offsetSeconds : Int;

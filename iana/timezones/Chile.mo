@@ -1,9 +1,9 @@
 import Types "../Types";
 module Chile {
 	public module Continental {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Chile/Continental";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2524504635000;
@@ -5428,9 +5428,9 @@ module Chile {
 		};
 	};
 	public module EasterIsland {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Chile/EasterIsland";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2524495352000;

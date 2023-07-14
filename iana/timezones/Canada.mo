@@ -1,9 +1,9 @@
 import Types "../Types";
 module Canada {
 	public module Atlantic {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Atlantic";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2131645536000;
@@ -5773,9 +5773,9 @@ module Canada {
 		};
 	};
 	public module Central {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Central";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2602258284000;
@@ -11335,9 +11335,9 @@ module Canada {
 		};
 	};
 	public module Eastern {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Eastern";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2366736148000;
@@ -17132,9 +17132,9 @@ module Canada {
 		};
 	};
 	public module Mountain {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Mountain";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1998663968000;
@@ -22514,9 +22514,9 @@ module Canada {
 		};
 	};
 	public module Newfoundland {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Newfoundland";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2713897748000;
@@ -28341,9 +28341,9 @@ module Canada {
 		};
 	};
 	public module Pacific {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Pacific";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2713880852000;
@@ -33923,9 +33923,9 @@ module Canada {
 		};
 	};
 	public module Saskatchewan {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Saskatchewan";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2030202084000;
@@ -34200,9 +34200,9 @@ module Canada {
 		};
 	};
 	public module Yukon {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Canada/Yukon";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2188997988000;

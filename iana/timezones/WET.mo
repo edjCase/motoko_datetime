@@ -1,9 +1,9 @@
 import Types "../Types";
 module WET {
 	public module WET {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "WET";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "WET";
 					expiration = ?228877200000;

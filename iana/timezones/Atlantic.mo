@@ -1,9 +1,9 @@
 import Types "../Types";
 module Atlantic {
 	public module Azores {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Azores";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2713904240000;
@@ -5748,9 +5748,9 @@ module Atlantic {
 		};
 	};
 	public module Bermuda {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Bermuda";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2524506042000;
@@ -11160,9 +11160,9 @@ module Atlantic {
 		};
 	};
 	public module Canary {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Canary";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1509663504000;
@@ -16382,9 +16382,9 @@ module Atlantic {
 		};
 	};
 	public module Cape_Verde {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Cape_Verde";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830376800000;
@@ -16414,9 +16414,9 @@ module Atlantic {
 		};
 	};
 	public module Faeroe {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Faeroe";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1955748776000;
@@ -21621,9 +21621,9 @@ module Atlantic {
 		};
 	};
 	public module Faroe {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Faroe";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1955748776000;
@@ -26828,9 +26828,9 @@ module Atlantic {
 		};
 	};
 	public module Jan_Mayen {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Jan_Mayen";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2422054408000;
@@ -32175,9 +32175,9 @@ module Atlantic {
 		};
 	};
 	public module Madeira {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Madeira";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2713906344000;
@@ -37922,9 +37922,9 @@ module Atlantic {
 		};
 	};
 	public module Reykjavik {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Reykjavik";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -37939,9 +37939,9 @@ module Atlantic {
 		};
 	};
 	public module South_Georgia {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/South_Georgia";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2524512832000;
@@ -37956,9 +37956,9 @@ module Atlantic {
 		};
 	};
 	public module St_Helena {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/St_Helena";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-1830383032000;
@@ -37973,9 +37973,9 @@ module Atlantic {
 		};
 	};
 	public module Stanley {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Atlantic/Stanley";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2524507716000;

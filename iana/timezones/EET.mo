@@ -1,9 +1,9 @@
 import Types "../Types";
 module EET {
 	public module EET {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "EET";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "EET";
 					expiration = ?228877200000;

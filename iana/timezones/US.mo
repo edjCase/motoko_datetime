@@ -1,9 +1,9 @@
 import Types "../Types";
 module US {
 	public module Alaska {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Alaska";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-3225223727000;
@@ -5358,9 +5358,9 @@ module US {
 		};
 	};
 	public module Aleutian {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Aleutian";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-3225223727000;
@@ -10715,9 +10715,9 @@ module US {
 		};
 	};
 	public module Arizona {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Arizona";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2717643600000;
@@ -10782,9 +10782,9 @@ module US {
 		};
 	};
 	public module Central {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Central";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2717647200000;
@@ -16594,9 +16594,9 @@ module US {
 		};
 	};
 	public module East_Indiana {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/East-Indiana";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2717647200000;
@@ -21721,9 +21721,9 @@ module US {
 		};
 	};
 	public module Eastern {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Eastern";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2717650800000;
@@ -27533,9 +27533,9 @@ module US {
 		};
 	};
 	public module Hawaii {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Hawaii";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2334101314000;
@@ -27580,9 +27580,9 @@ module US {
 		};
 	};
 	public module Indiana_Starke {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Indiana-Starke";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2717647200000;
@@ -32982,9 +32982,9 @@ module US {
 		};
 	};
 	public module Michigan {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Michigan";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2051202469000;
@@ -38319,9 +38319,9 @@ module US {
 		};
 	};
 	public module Mountain {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Mountain";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2717643600000;
@@ -43741,9 +43741,9 @@ module US {
 		};
 	};
 	public module Pacific {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Pacific";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2717640000000;
@@ -49303,9 +49303,9 @@ module US {
 		};
 	};
 	public module Samoa {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "US/Samoa";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "LMT";
 					expiration = ?-2445424632000;

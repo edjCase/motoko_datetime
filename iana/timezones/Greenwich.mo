@@ -1,9 +1,9 @@
 import Types "../Types";
 module Greenwich {
 	public module Greenwich {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Greenwich";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "GMT";
 					expiration = null;

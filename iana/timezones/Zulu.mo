@@ -1,9 +1,9 @@
 import Types "../Types";
 module Zulu {
 	public module Zulu {
-		public let region : Types.Region = {
+		public let data : Types.TimeZoneData = {
 			id = "Zulu";
-			timeZoneRules = [
+			rules = [
 				{
 					abbreviation = "UTC";
 					expiration = null;
