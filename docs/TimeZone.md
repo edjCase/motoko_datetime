@@ -60,7 +60,7 @@ func toOffsetSeconds(timeZone : TimeZone, components : Components) : Int
 
 Gets the UTC offset in seconds for the specified components and time zone.
 The components are used if the timezone is dynamic. This is due to the timezone offset
-being dependent on the date (daylight savings, changes to region offset, etc...).
+being dependent on the date (daylight savings, changes to timezone offset, etc...).
 
 ```motoko include=import
 let timeZone : TimeZone.TimeZone = ...;
