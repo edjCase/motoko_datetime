@@ -4,6 +4,7 @@ import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import TextUtil "TextUtil";
 import Int "mo:base/Int";
+import TextX "mo:xtended-text/TextX";
 
 module {
     type Components = InternalTypes.Components;
@@ -11,7 +12,14 @@ module {
     type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     type FixedTimeZone = InternalTypes.FixedTimeZone;
 
-    public func parseDescriptor(descriptor : Text) : ?TimeZoneDescriptor {
+    public func parseDescriptor(descriptor : Text) : TimeZoneDescriptor {
+        switch (parseDescriptorInternal(descriptor)) {
+            case (?d) d;
+            case (null) #name(descriptor); // fallback to it being a name
+        };
+    };
+
+    private func parseDescriptorInternal(descriptor : Text) : ?TimeZoneDescriptor {
         do ? {
             if (descriptor == "") {
                 return ? #unspecified;
@@ -19,25 +27,27 @@ module {
             if (descriptor == "Z") {
                 return ? #utc;
             };
-            if (descriptor.size() != 6 and descriptor.size() != 9) {
-                return null;
+            let utcTrimmed = if (Text.startsWith(descriptor, #text("UTC"))) {
+                TextX.sliceToEnd(descriptor, 3); // Remove UTC prefix from UTC+00:00
+            } else {
+                descriptor;
             };
-            let splitIter = Text.split(descriptor, #char(':'));
-            var hoursText = splitIter.next()!;
+            let (isNegative, signTrimmed) : (Bool, Text) = switch (TextX.slice(utcTrimmed, 0, 1)) {
+                case ("+")(false, TextX.sliceToEnd(utcTrimmed, 1));
+                case ("-")(true, TextX.sliceToEnd(utcTrimmed, 1));
+                case (_)(false, utcTrimmed);
+            };
+            let splitIter = Text.split(signTrimmed, #char(':'));
 
-            let iter = Text.toIter(hoursText);
-            let sign = iter.next()!;
-            let isNegative : Bool = switch (sign) {
-                case ('+') false;
-                case ('-') true;
-                case (_) return null;
+            let hours = switch (splitIter.next()) {
+                case (null) return ? #utc;
+                case (?h) Nat.fromText(h)!;
             };
-            hoursText := Text.fromIter(iter);
-            let minutesText = splitIter.next()!;
-            let secondsText : ?Text = splitIter.next();
-            let hours : Nat = Nat.fromText(hoursText)!;
-            let minutes = Nat.fromText(minutesText)!;
-            let seconds : Nat = switch (secondsText) {
+            let minutes : Nat = switch (splitIter.next()) {
+                case (null) 0;
+                case (?m) Nat.fromText(m)!;
+            };
+            let seconds : Nat = switch (splitIter.next()) {
                 case (null) 0;
                 case (?s) Nat.fromText(s)!;
             };

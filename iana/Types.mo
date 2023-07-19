@@ -305,8 +305,9 @@ module {
         let ?name = parts.next() else Debug.trap("Missing 'Name'");
         let ?offsetText = parts.next() else Debug.trap("Missing 'GMT Offset'");
         let offset = switch (InternalTimeZone.parseDescriptor(offsetText)) {
-            case (? #fixed(#seconds(s))) s;
-            case (? #fixed(#hours(h))) h;
+            case (#fixed(#seconds(s))) s;
+            case (#fixed(#hours(h))) h;
+            case (#utc) 0;
             case (_) Debug.trap("Invalid 'GMT Offset' value: " # offsetText);
         };
         let ?rules = parts.next() else Debug.trap("Missing 'Rules'");
