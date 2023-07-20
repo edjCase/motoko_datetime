@@ -216,9 +216,9 @@ let c : Components.Components = {year = 2020; month = 1; day = 1; hour = 0; minu
 let text : Text = Components.toTextFormatted(c, #iso, TimeZone.utc());
 ```
 
-## Function `fromTextFormatted`
+## Function `fromText`
 ``` motoko no-repl
-func fromTextFormatted(text : Text, format : Text, locale : ?Locale) : ?FromTextResult
+func fromText(text : Text, format : Text, locale : ?Locale) : ?FromTextResult
 ```
 
 Parses a formatted datetime text into components and timezone with the specified format.
@@ -227,9 +227,11 @@ Locale is only required for formats with locale specific tokens (e.g. month name
 Will throw an exception if locale is null and the format contains locale specific tokens.
 
 ```motoko include=import
+import EN "../iana/locales/EN";
 let date = "2020-01-01T00:00:00Z";
 let format = "YYYY-MM-DDTHH:mm:ssZ";
-let ?result : ?FromTextResult = Components.fromTextFormatted(date, format, null) else return #error("Invalid datetime text");
+let locale = EN.locale; // Optional (only needed if contains locale specific tokens)
+let ?result : ?FromTextResult = Components.fromText(date, format, ?locale) else return #error("Invalid datetime text");
 ```
 
 ## Function `addTime`
