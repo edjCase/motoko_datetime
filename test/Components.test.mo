@@ -450,7 +450,7 @@ test(
                 let actual : Text = Components.toTextFormatted(testCase.components, testCase.timeZone, #custom({ format; locale }));
                 assertText(expectedText, actual);
 
-                let fromTextResult = Components.fromTextFormatted(expectedText, format, locale);
+                let fromTextResult = Components.fromText(expectedText, format, locale);
                 switch (fromTextResult) {
                     case (null) {
                         Debug.print("Failed to parse '" # format # "' datetime: " # debug_show (expectedText));

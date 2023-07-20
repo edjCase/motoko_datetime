@@ -55,7 +55,9 @@ module {
     /// let timeZone : TimeZone.TimeZone = #fixed(#hours(3))); // UTC+3
     /// let localDateTime : LocalDateTime.LocalDateTime = LocalDateTime(localComponents, timeZone);
     /// ```
-    public func LocalDateTime(components : Components, timeZone : TimeZone) : LocalDateTime = object {
+    public func LocalDateTime(components : Components, localTimeZone : TimeZone) : LocalDateTime = object {
+        public let timeZone = localTimeZone;
+
         if (not Components.isValid(components)) {
             Debug.trap("Invalid components");
         };
@@ -191,6 +193,7 @@ module {
         };
 
         /// Creates a `Components` from a `LocalDateTime` value.
+        /// Components will represent the local datetime, not UTC datetime
         ///
         /// ```motoko include=import
         /// let timeZone : TimeZone.TimeZone = #fixed(#hours(3))); // UTC+3
@@ -235,12 +238,30 @@ module {
             return compare(other) == #equal;
         };
 
-        public func toUtcDateTime() : DateTime.DateTime {
+        /// Converts the `LocalDateTime` to UTC `DateTime` object.
+        ///
+        /// ```motoko include=import
+        /// let timeZone : TimeZone.TimeZone = #fixed(#hours(3)); // UTC+3
+        /// let dateTime : LocalDateTime.LocalDateTime = LocalDateTime.now(timeZone);
+        /// let utcDateTime : DateTime.DateTime = dateTime.toUtcDateTime();
+        /// ```
+        public func toDateTime() : DateTime.DateTime {
             DateTime.DateTime(toTime());
         };
 
-        public func getTimeZone() : TimeZone.TimeZone {
-            timeZone;
+        /// Creates a new LocalDateTime with the same time but in the given timezone.
+        /// Does not modify original LocalDateTime
+        ///
+        /// ```motoko include=import
+        /// let timeZone1 : TimeZone.TimeZone = #fixed(#hours(3)); // UTC+3
+        /// let dateTime1 : LocalDateTime.LocalDateTime = LocalDateTime.now(timeZone);
+        ///
+        /// let timeZone2 : TimeZone.TimeZone = #fixed(#hours(2)); // UTC+2
+        /// let dateTime2 : LocalDateTime.LocalDateTime = dateTime1.withTimeZone(timeZone);
+        /// ```
+        public func withTimeZone(timeZone : TimeZone) : LocalDateTime {
+            let time = toTime();
+            fromTime(time, timeZone);
         };
     };
 
@@ -274,6 +295,18 @@ module {
     /// ```
     public func now(timeZone : TimeZone) : LocalDateTime {
         return fromTime(Time.now(), timeZone);
+    };
+
+    /// Creates a `LocalDateTime` from a `DateTime.DateTime` value and a timezone.
+    ///
+    /// ```motoko include=import
+    /// let dateTime : DateTime.DateTime = DateTime.now();
+    /// let timeZone : TimeZone.TimeZone = #fixed(#hours(3))); // UTC+3
+    /// let localDateTime : LocalDateTime.LocalDateTime = LocalDateTime.fromDateTime(dateTime, timeZone);
+    /// ```
+    public func fromDateTime(dateTime : DateTime.DateTime, timeZone : TimeZone) : LocalDateTime {
+        let time = dateTime.toTime();
+        fromTime(time, timeZone);
     };
 
     /// Creates a `LocalDateTime` from a `Time.Time` (nanoseconds since epoch) value and a timezone.
@@ -333,40 +366,67 @@ module {
         dateTime.toTextFormatted(format);
     };
 
-    /// Parses the Text value as a `LocalDateTime` using the given format.
+    /// Parses the Text value as a `LocalDateTime` using the given format. Converts to local timezone.
     /// Returns null if the Text value is invalid.
-    /// Uses the default time zone if no timezone is specified in the text.
+    /// Treats the Text value as local timezone if no timezone is specified.
+    /// Format uses momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
+    /// Will trap if locale is null and the format contains locale specific tokens.
+    /// Note: If you need to parse a localized date, use `DateTime.fromTextLocalized` instead.
+    ///
+    /// ```motoko include=import
+    /// let date = "2020-01-01T00:00:00Z";
+    /// let format = "YYYY-MM-DDTHH:mm:ssZ";
+    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromText(dateTimeText, format) else return #error("Invalid date");
+    /// ```
+    public func fromText(
+        text : Text,
+        format : Text,
+        localTimeZone : TimeZone.TimeZone,
+    ) : ?LocalDateTime {
+        fromTextInternal(text, format, #fixed(#seconds(0)), null);
+    };
+
+    /// Parses the Text value as a `LocalDateTime` using the given format and locale. Converts to local timezone.
+    /// Returns null if the Text value is invalid.
+    /// Treats the Text value as local timezone if no timezone is specified.
     /// Format uses momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
     /// Locale is only required for formats with locale specific tokens (e.g. month names).
     /// Will trap if locale is null and the format contains locale specific tokens.
+    /// Will trap if timezone abbreviation is used (e.g. PST), only use offset (e.g. -08:00)
     ///
     /// ```motoko include=import
-    /// let date = "2020-01-01T00:00:00";
-    /// let format = "YYYY-MM-DDTHH:mm:ss";
-    /// let locale = null; // TODO
-    /// let timeZoneNameParser = null; // TODO
-    /// let defaultTimeZone = #fixed(#hours(3))); // UTC+3
-    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, format, locale, timeZoneParser) else return #error("Invalid date");
+    /// import EN "../iana/locales/EN";
+    /// import AmericaTimeZones "../iana/timezones/America";
+    /// let date = "Sun, Mar 9, 2008";
+    /// let format = "ddd, MMM D, YYYY";
+    /// let localTimeZone = AmericaTimeZones.Los_Angeles.data;
+    /// let locale = EN.locale;
+    /// let ?dateTime : ?LocalDateTime.LocalDateTime = LocalDateTime.fromTextLocalized(dateTimeText, format, locale, defaultTimeZone) else return #error("Invalid date");
     /// ```
-    public func fromTextFormatted(
+    public func fromTextLocalized(
         text : Text,
         format : Text,
+        localTimeZone : TimeZone.TimeZone,
+        locale : Locale,
+    ) : ?LocalDateTime {
+        fromTextInternal(text, format, localTimeZone, ?locale);
+    };
+
+    public func fromTextInternal(
+        text : Text,
+        format : Text,
+        localTimeZone : TimeZone.TimeZone,
         locale : ?Locale,
-        timeZoneNameParser : (Text) -> ?TimeZone.TimeZone,
-        defaultTimeZone : TimeZone.TimeZone,
     ) : ?LocalDateTime {
         do ? {
-            let { components; timeZoneDescriptor } = Components.fromTextFormatted(text, format, locale)!;
+            let { components; timeZoneDescriptor } = Components.fromText(text, format, locale)!;
             let timeZone : TimeZone = switch (timeZoneDescriptor) {
                 case (#utc) TimeZone.utc();
                 case (#fixed(f)) #fixed(f);
-                case (#unspecified) defaultTimeZone;
-                case (#name(n)) {
-                    let ?tz = timeZoneNameParser(n) else return null;
-                    tz;
-                };
+                case (#unspecified) localTimeZone;
+                case (#name(n)) Debug.trap("Timezone abbreviation parsing is not supported");
             };
-            LocalDateTime(components, timeZone);
+            LocalDateTime(components, timeZone).withTimeZone(localTimeZone);
         };
     };
 

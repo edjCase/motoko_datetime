@@ -152,7 +152,7 @@ func assertText(expected : Text, actual : Text) {
 };
 
 test(
-    "fromTextFormatted",
+    "fromText",
     func() {
         let testCases = [
             {
@@ -172,10 +172,8 @@ test(
             },
         ];
         let format = "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ";
-        let locale = null;
-        let timeZoneNameParser = func(name : Text) : ?TimeZone.TimeZone = null;
         for (testCase in Iter.fromArray(testCases)) {
-            let fromTextResult = DateTime.fromTextFormatted(testCase.expectediso, format, locale, timeZoneNameParser);
+            let fromTextResult = DateTime.fromText(testCase.expectediso, format);
             switch (fromTextResult) {
                 case (null) {
                     Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectediso));

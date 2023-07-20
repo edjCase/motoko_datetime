@@ -153,15 +153,13 @@ func testCaseToText(testCase : TestCase) : Text {
 };
 
 let format = "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ";
-let locale = null;
-let timeZoneNameParser = func(name : Text) : ?TimeZone.TimeZone = null;
 for (testCase in Iter.fromArray(testCases)) {
   let expectedDateTime = DateTime.DateTime(testCase.nanoseconds);
 
   let testCaseText = testCaseToText(testCase);
 
   test(
-    "fromComponents (Components -> LocalDateTime): " # testCaseText,
+    "fromComponents (Components -> DateTime): " # testCaseText,
     func() {
       // From date components
       let dateTime = DateTime.fromComponents(testCase.dateTime);
@@ -170,7 +168,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toComponents (LocalDateTime -> Components): " # testCaseText,
+    "toComponents (DateTime -> Components): " # testCaseText,
     func() {
       // From nanoseconds
       assertComponents(expectedDateTime.toComponents(), testCase.dateTime);
@@ -178,7 +176,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTime (Time -> LocalDateTime): " # testCaseText,
+    "fromTime (Time -> DateTime): " # testCaseText,
     func() {
       // From nanoseconds
       let dateTime = DateTime.fromTime(testCase.nanoseconds);
@@ -187,7 +185,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTime (LocalDateTime -> Time): " # testCaseText,
+    "toTime (DateTime -> Time): " # testCaseText,
     func() {
       // From nanoseconds
       assertT(expectedDateTime.toTime(), testCase.nanoseconds, Int.equal, Int.toText);
@@ -195,7 +193,7 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "toTextFormatted iso (LocalDateTime -> Text): " # testCaseText,
+    "toTextFormatted iso (DateTime -> Text): " # testCaseText,
     func() {
       // To iso text
       let actualiso : Text = expectedDateTime.toTextFormatted(#iso);
@@ -205,10 +203,10 @@ for (testCase in Iter.fromArray(testCases)) {
   );
 
   test(
-    "fromTextFormatted iso (Text -> LocalDateTime): " # testCaseText,
+    "fromText iso (Text -> DateTime): " # testCaseText,
     func() {
       // From iso text
-      let ?actualisoDateTime = DateTime.fromTextFormatted(testCase.textIso, format, locale, timeZoneNameParser) else Debug.trap("Could not parse date time components to a datetime");
+      let ?actualisoDateTime = DateTime.fromText(testCase.textIso, format) else Debug.trap("Could not parse date time components to a datetime");
       assertDateTime(actualisoDateTime, expectedDateTime);
     },
   );

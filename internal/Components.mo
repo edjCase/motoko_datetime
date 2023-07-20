@@ -290,7 +290,7 @@ module Module {
         text;
     };
 
-    public func fromTextFormatted(text : Text, format : Text, locale : ?Locale) : ?FromTextResult {
+    public func fromText(text : Text, format : Text, locale : ?Locale) : ?FromTextResult {
         var remainingText = text;
         let tokenOrTextBuffer : Buffer.Buffer<TokenOrText> = parseFormatText(format);
         let extractedValueHelper = ExtractedValueHelper();

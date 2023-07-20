@@ -154,12 +154,14 @@ module {
     };
 
     public type LocalDateTime = DateTimeType<LocalDateTime> and {
-        toUtcDateTime : () -> DateTime;
+        toDateTime : () -> DateTime;
 
-        getTimeZone : () -> TimeZone;
+        timeZone : TimeZone;
 
         weekOfYear : (startOfYear : StartOfYear) -> Nat;
 
         weekYear : (startOfYear : StartOfYear) -> Int;
+
+        withTimeZone(timeZone : TimeZone) : LocalDateTime;
     };
 };

@@ -280,41 +280,69 @@ module D {
     /// let dateTime : DateTime.DateTime = DateTime.now();
     /// let dateTimeText : Text = DateTime.toTextFormatted(datetime, #iso);
     /// ```
-    public func toTextFormatted(dateTime : DateTime, format : TextFormat) : Text {
+    public func toTextAdvanced(dateTime : DateTime, format : TextFormat) : Text {
         dateTime.toTextFormatted(format);
     };
 
-    /// Parses the Text value as a `DateTime` using the given format.
+    /// Parses the Text value as a `DateTime` using the given format. Converts to UTC from parsed timezone offset.
     /// Returns null if the Text value is invalid.
     /// Treats the Text value as UTC if no timezone is specified.
     /// Format uses momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
-    /// Locale is only required for formats with locale specific tokens (e.g. month names).
     /// Will trap if locale is null and the format contains locale specific tokens.
+    /// Note: If you need to parse a localized date, use `DateTime.fromTextLocalized` instead.
     ///
     /// ```motoko include=import
     /// let date = "2020-01-01T00:00:00Z";
     /// let format = "YYYY-MM-DDTHH:mm:ssZ";
-    /// let locale = null; // TODO
-    /// let timeZoneNameParser = null; // TODO
-    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextFormatted(dateTimeText, format, locale, timeZoneParser) else return #error("Invalid date");
+    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromText(dateTimeText, format) else return #error("Invalid date");
     /// ```
-    public func fromTextFormatted(
+    public func fromText(
+        text : Text,
+        format : Text,
+    ) : ?DateTime {
+        fromTextInternal(text, format, null, #fixed(#seconds(0)));
+    };
+
+    /// Parses the Text value as a `DateTime` using the given format and locale. Converts to UTC from parsed timezone offset.
+    /// Returns null if the Text value is invalid.
+    /// Treats the Text value as local timezone if no timezone is specified..
+    /// Format uses momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
+    /// Locale is only required for formats with locale specific tokens (e.g. month names).
+    /// Will trap if locale is null and the format contains locale specific tokens.
+    /// Will trap if timezone abbreviation is used (e.g. PST), only use offset (e.g. -08:00)
+    ///
+    /// ```motoko include=import
+    /// import EN "../iana/locales/EN";
+    /// import AmericaTimeZones "../iana/timezones/America";
+    /// let date = "Sun, Mar 9, 2008";
+    /// let format = "ddd, MMM D, YYYY";
+    /// let localTimeZone = AmericaTimeZones.Los_Angeles.data;
+    /// let locale = EN.locale;
+    /// let ?dateTime : ?DateTime.DateTime = DateTime.fromTextLocalized(dateTimeText, format, locale, defaultTimeZone) else return #error("Invalid date");
+    /// ```
+    public func fromTextLocalized(
+        text : Text,
+        format : Text,
+        locale : Locale,
+        localTimeZone : TimeZone.TimeZone,
+    ) : ?DateTime {
+        fromTextInternal(text, format, ?locale, localTimeZone);
+    };
+
+    private func fromTextInternal(
         text : Text,
         format : Text,
         locale : ?Locale,
-        timeZoneNameParser : (Text) -> ?TimeZone.TimeZone,
+        localTimeZone : TimeZone.TimeZone,
     ) : ?DateTime {
 
         do ? {
-            let { components; timeZoneDescriptor } : Components.FromTextResult = Components.fromTextFormatted(text, format, locale)!;
+            let { components; timeZoneDescriptor } : Components.FromTextResult = Components.fromText(text, format, locale)!;
             let offset : ?Time.Time = switch (timeZoneDescriptor) {
                 case (#utc) null;
-                case (#unspecified) null;
+                case (#unspecified) ?TimeZone.toOffsetSeconds(localTimeZone, components);
                 case (#fixed(f)) ?TimeZone.toFixedOffsetSeconds(f);
-                case (#name(n)) {
-                    let ?tz = timeZoneNameParser(n) else return null;
-                    ?TimeZone.toOffsetSeconds(tz, components);
-                };
+                case (#name(n)) Debug.trap("Timezone abbreviation parsing is not supported");
             };
             switch (offset) {
                 case (null) {

@@ -581,7 +581,7 @@ test(
         ];
         let timeZoneNameParser = func(tzName : Text) : ?Types.TimeZone = null;
         for (testCase in Iter.fromArray(testCases)) {
-            let fromTextResult = LocalDateTime.fromTextFormatted(testCase.expectediso, "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ", null, timeZoneNameParser, #fixed(#seconds(0)));
+            let fromTextResult = LocalDateTime.fromText(testCase.expectediso, "YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ", #fixed(#seconds(0)));
             switch (fromTextResult) {
                 case (null) {
                     Debug.print("Failed to parse ISO 8601 datetime: " # debug_show (testCase.expectediso));

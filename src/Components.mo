@@ -167,12 +167,14 @@ module {
     /// Will throw an exception if locale is null and the format contains locale specific tokens.
     ///
     /// ```motoko include=import
+    /// import EN "../iana/locales/EN";
     /// let date = "2020-01-01T00:00:00Z";
     /// let format = "YYYY-MM-DDTHH:mm:ssZ";
-    /// let ?result : ?FromTextResult = Components.fromTextFormatted(date, format, null) else return #error("Invalid datetime text");
+    /// let locale = EN.locale; // Optional (only needed if contains locale specific tokens)
+    /// let ?result : ?FromTextResult = Components.fromText(date, format, ?locale) else return #error("Invalid datetime text");
     /// ```
-    public func fromTextFormatted(text : Text, format : Text, locale : ?Locale) : ?FromTextResult {
-        InternalComponents.fromTextFormatted(text, format, locale);
+    public func fromText(text : Text, format : Text, locale : ?Locale) : ?FromTextResult {
+        InternalComponents.fromText(text, format, locale);
     };
 
     /// Adds the specified nanoseconds to the components and returns the resulting components.
