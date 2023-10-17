@@ -153,6 +153,10 @@ module {
         #locale : LocaleStartOfYear;
     };
 
+    public type LocalDateTimeShared = Components and {
+        fixedTimeZone: FixedTimeZone;
+    };
+
     public type LocalDateTime = DateTimeType<LocalDateTime> and {
         toDateTime : () -> DateTime;
 
