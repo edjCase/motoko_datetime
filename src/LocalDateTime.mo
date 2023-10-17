@@ -34,6 +34,8 @@ module {
 
     public type LocalDateTime = InternalTypes.LocalDateTime;
 
+    public type LocalDateTimeShared = InternalTypes.LocalDateTimeShared;
+
     public type TextFormat = InternalTypes.TextFormat;
 
     public type Duration = InternalTypes.Duration;
