@@ -32,9 +32,9 @@ module {
 
     public type Components = InternalTypes.Components;
 
-    public type LocalDateTime = InternalTypes.LocalDateTime;
+    public type ComponentsWithOffset = InternalTypes.ComponentsWithOffset;
 
-    public type LocalDateTimeShared = InternalTypes.LocalDateTimeShared;
+    public type LocalDateTime = InternalTypes.LocalDateTime;
 
     public type TextFormat = InternalTypes.TextFormat;
 
@@ -204,6 +204,19 @@ module {
         /// ```
         public func toComponents() : Components.Components {
             components;
+        };
+
+        /// Creates a `Components` from a `LocalDateTime` value with the offset in seconds from UTC
+        /// Components will represent the local datetime, not UTC datetime
+        ///
+        /// ```motoko include=import
+        /// let timeZone : TimeZone.TimeZone = #fixed(#hours(3)); // UTC+3
+        /// let dateTime : LocalDateTime.LocalDateTime = LocalDateTime.now(timeZone);
+        /// let components : Components.ComponentsWithOffset = datetime.toComponentsWithOffset();
+        /// ```
+        public func toComponentsWithOffset() : ComponentsWithOffset {
+            let offset = TimeZone.toOffsetSeconds(timeZone, components);
+            { components with offsetSeconds = offset };
         };
 
         /// Checks if the `LocalDateTime` is in a leap year.
