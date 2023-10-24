@@ -273,9 +273,14 @@ module {
         /// let dayOfWeek : DateTime.DayOfWeek = ...;
         /// let newD : LocalDateTime = d.advanceToDayOfWeek(dayOfWeek);
         /// ```
-        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek) : LocalDateTime {
+        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek, keepSameTime : Bool) : LocalDateTime {
             let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek);
-            LocalDateTime({ components with newDateComponents }, timeZone);
+            let newComponents = if (keepSameTime) {
+                { components with newDateComponents };
+            } else {
+                { newDateComponents with hour = 0; minute = 0; nanosecond = 0 };
+            };
+            LocalDateTime(newComponents, timeZone);
         };
     };
 

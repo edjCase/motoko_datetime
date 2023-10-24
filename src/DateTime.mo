@@ -207,6 +207,7 @@ module D {
 
         /// Advances to the specified day of the week and and returns the resulting new `DateTime` value.
         /// If the `DateTime` value is already on the specified day of the week, the `DateTime` value is cloned and returned unchanged
+        /// If keepSameTime is true, the time of the `DateTime` value is preserved, otherwise the time is set to midnight.
         /// Will trap if the resulting components are invalid.
         ///
         /// ```motoko include=import
@@ -214,12 +215,22 @@ module D {
         /// let dayOfWeek : DateTime.DayOfWeek = ...;
         /// let newD : DateTime = d.advanceToDayOfWeek(dayOfWeek);
         /// ```
-        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek) : DateTime {
+        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek, keepSameTime : Bool) : DateTime {
             let components = toComponents();
             let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek);
-            fromComponents({
-                components with newDateComponents;
-            });
+            let newComponents = if (keepSameTime) {
+                {
+                    components with newDateComponents;
+                };
+            } else {
+                {
+                    newDateComponents with
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+            };
+            fromComponents(newComponents);
         };
     };
 

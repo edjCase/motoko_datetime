@@ -143,7 +143,7 @@ module {
 
         dayOfWeek : () -> DayOfWeek;
 
-        advanceToDayOfWeek(dayOfWeek : DayOfWeek) : T;
+        advanceToDayOfWeek(dayOfWeek : DayOfWeek, keepSameTime : Bool) : T;
     };
 
     public type DateTime = DateTimeType<DateTime> and {
