@@ -177,6 +177,17 @@ module {
         InternalComponents.fromText(text, format, locale);
     };
 
+    /// Adds a `Duration` to the specified components and returns the resulting new components value.
+    ///
+    /// ```motoko include=import
+    /// let c : Components = ...;
+    /// let duration : DateTime.Duration = ...;
+    /// let newC : Components = Components.add(c, duration);
+    /// ```
+    public func add(components : Components, duration : Duration) : Components {
+        InternalComponents.add(components, duration);
+    };
+
     /// Adds the specified nanoseconds to the components and returns the resulting components.
     /// Will trap if the resulting components are invalid.
     ///
