@@ -678,3 +678,80 @@ test(
         };
     },
 );
+
+test(
+    "advanceToDayOfWeek",
+    func() {
+        let testCases = [
+            {
+                // Thursday
+                components = {
+                    year = 1970;
+                    month = 1;
+                    day = 1;
+                };
+                dayOfWeek = #sunday;
+                // Sunday
+                expected = {
+                    year = 1970;
+                    month = 1;
+                    day = 4;
+                };
+            },
+            {
+                // Monday
+                components = {
+                    year = 1990;
+                    month = 11;
+                    day = 12;
+                };
+                dayOfWeek = #sunday;
+                // Sunday
+                expected = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+            },
+            {
+                // Sunday
+                components = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+                dayOfWeek = #sunday;
+                // Sunday
+                expected = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+            },
+            {
+                // Sunday
+                components = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+                dayOfWeek = #friday;
+                // Friday
+                expected = {
+                    year = 1990;
+                    month = 11;
+                    day = 23;
+                };
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual : Components.DateComponents = Components.advanceToDayOfWeek(testCase.components, testCase.dayOfWeek);
+            let matched = testCase.expected == actual;
+            if (not matched) {
+                Debug.print("Expected: " # debug_show (testCase.expected));
+                Debug.print("Actual:   " # debug_show (actual));
+                assert false;
+            };
+        };
+    },
+);

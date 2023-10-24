@@ -188,4 +188,17 @@ module {
     public func addTime(components : Components, nanoseconds : Time.Time) : Components {
         InternalComponents.addTime(components, nanoseconds);
     };
+
+    /// Advances to the specified day of the week and returns the resulting date components.
+    /// If the date components are already on the specified day of the week, the date components are cloned and returned unchanged
+    /// Will trap if the resulting components are invalid.
+    ///
+    /// ```motoko include=import
+    /// let c : DateComponents = ...;
+    /// let dayOfWeek : DateTime.DayOfWeek = ...;
+    /// let newC : DateComponents = Components.advanceToDayOfWeek(c, dayOfWeek);
+    /// ```
+    public func advanceToDayOfWeek(components : DateComponents, dayOfWeek : DayOfWeek) : DateComponents {
+        InternalComponents.advanceToDayOfWeek(components, dayOfWeek);
+    };
 };

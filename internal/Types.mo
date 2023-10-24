@@ -44,17 +44,22 @@ module {
         offsetSeconds : Int;
     };
 
-    public type Duration = {
-        #nanoseconds : Int;
-        #milliseconds : Int;
-        #seconds : Int;
-        #minutes : Int;
-        #hours : Int;
+    public type DateDuration = {
         #days : Int;
         #weeks : Int;
         #months : Int;
         #years : Int;
     };
+
+    public type TimeDuration = {
+        #nanoseconds : Int;
+        #milliseconds : Int;
+        #seconds : Int;
+        #minutes : Int;
+        #hours : Int;
+    };
+
+    public type Duration = DateDuration or TimeDuration;
 
     public type DateComponents = {
         year : Int;
@@ -62,11 +67,13 @@ module {
         day : Nat;
     };
 
-    public type Components = DateComponents and {
+    public type TimeComponents = {
         hour : Nat;
         minute : Nat;
         nanosecond : Nat;
     };
+
+    public type Components = DateComponents and TimeComponents;
 
     public type DayOfWeek = {
         #sunday;
@@ -135,6 +142,8 @@ module {
         dayOfYear : () -> Nat;
 
         dayOfWeek : () -> DayOfWeek;
+
+        advanceToDayOfWeek(dayOfWeek : DayOfWeek) : T;
     };
 
     public type DateTime = DateTimeType<DateTime> and {

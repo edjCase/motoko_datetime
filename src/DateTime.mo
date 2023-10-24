@@ -204,6 +204,23 @@ module D {
         public func equal(other : DateTime) : Bool {
             return time == other.toTime();
         };
+
+        /// Advances to the specified day of the week and and returns the resulting new `DateTime` value.
+        /// If the `DateTime` value is already on the specified day of the week, the `DateTime` value is cloned and returned unchanged
+        /// Will trap if the resulting components are invalid.
+        ///
+        /// ```motoko include=import
+        /// let d : DateTime = ...;
+        /// let dayOfWeek : DateTime.DayOfWeek = ...;
+        /// let newD : DateTime = d.advanceToDayOfWeek(dayOfWeek);
+        /// ```
+        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek) : DateTime {
+            let components = toComponents();
+            let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek);
+            fromComponents({
+                components with newDateComponents;
+            });
+        };
     };
 
     /// Checks the equality of two `DateTime` values.

@@ -263,6 +263,20 @@ module {
             let time = toTime();
             fromTime(time, timeZone);
         };
+
+        /// Advances to the specified day of the week and and returns the resulting new `LocalDateTime` value.
+        /// If the `LocalDateTime` value is already on the specified day of the week, the `LocalDateTime` value is cloned and returned unchanged
+        /// Will trap if the resulting components are invalid.
+        ///
+        /// ```motoko include=import
+        /// let d : LocalDateTime = ...;
+        /// let dayOfWeek : DateTime.DayOfWeek = ...;
+        /// let newD : LocalDateTime = d.advanceToDayOfWeek(dayOfWeek);
+        /// ```
+        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek) : LocalDateTime {
+            let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek);
+            LocalDateTime({ components with newDateComponents }, timeZone);
+        };
     };
 
     /// Checks the equality of two `LocalDateTime` values.
@@ -412,7 +426,7 @@ module {
         fromTextInternal(text, format, localTimeZone, ?locale);
     };
 
-    public func fromTextInternal(
+    private func fromTextInternal(
         text : Text,
         format : Text,
         localTimeZone : TimeZone.TimeZone,
