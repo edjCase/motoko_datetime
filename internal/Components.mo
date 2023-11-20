@@ -1010,7 +1010,11 @@ module Module {
         let yearWithoutCentury = year % 100;
         let century = year / 100;
         let h = day + 13 * (month + 1) / 5 + yearWithoutCentury + yearWithoutCentury / 4 + century / 4 + 5 * century;
-        Int.abs(h) % 7 - 1;
+        let position = Int.abs(h) % 7;
+        switch (position) {
+            case (0) 6; // Wrap around -1 (Saturday)
+            case (i) i - 1;
+        };
     };
 
     public func daysInYear(year : Int) : Nat {

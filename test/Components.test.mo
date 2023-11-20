@@ -638,6 +638,22 @@ test(
                     dayOfYear = 114;
                 };
             },
+            {
+                components = {
+                    year = 2_023;
+                    month = 11;
+                    day = 18;
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                expected = {
+                    weekOfYear = 47;
+                    weekYear = 2023;
+                    dayOfWeek = #saturday;
+                    dayOfYear = 322;
+                };
+            },
         ];
         for (testCase in Iter.fromArray(testCases)) {
             let actual : Components.DayOfWeek = Components.dayOfWeek(testCase.components);
