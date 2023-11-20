@@ -5,7 +5,7 @@
 /// import Components "mo:datetime/Components";
 /// ```
 
-import InternalTypes "../internal/Types";
+import Types "Types";
 import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
 import InternalTimeZone "../internal/TimeZone";
@@ -23,17 +23,17 @@ import Prelude "mo:base/Prelude";
 
 module {
 
-    public type Components = InternalTypes.Components;
-    public type DateComponents = InternalTypes.DateComponents;
-    public type DayOfWeek = InternalTypes.DayOfWeek;
-    public type DateTime = InternalTypes.DateTime;
-    public type LocalDateTime = InternalTypes.LocalDateTime;
-    public type TimeZone = InternalTypes.TimeZone;
-    public type Duration = InternalTypes.Duration;
-    public type TextFormat = InternalTypes.TextFormat;
-    public type FromTextResult = InternalTypes.FromTextResult;
-    public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
-    public type Locale = InternalTypes.Locale;
+    public type Components = Types.Components;
+    public type DateComponents = Types.DateComponents;
+    public type DayOfWeek = Types.DayOfWeek;
+    public type DateTime = Types.DateTime;
+    public type LocalDateTime = Types.LocalDateTime;
+    public type TimeZone = Types.TimeZone;
+    public type Duration = Types.Duration;
+    public type TextFormat = Types.TextFormat;
+    public type FromTextResult = Types.FromTextResult;
+    public type TimeZoneDescriptor = Types.TimeZoneDescriptor;
+    public type Locale = Types.Locale;
 
     /// Returns the the epoch (1970-01-01T00:00:00Z) in component form
     ///
@@ -156,7 +156,7 @@ module {
     public func toTextFormatted(
         components : Components,
         timeZone : TimeZone,
-        format : InternalTypes.TextFormat,
+        format : Types.TextFormat,
     ) : Text {
         InternalComponents.toTextFormatted(components, timeZone, format);
     };

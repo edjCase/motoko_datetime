@@ -1,11 +1,10 @@
 import Int "mo:base/Int";
-import Types "Types";
+import Types "../src/Types";
 
-module {   
+module {
     type Duration = Types.Duration;
     type DateTime = Types.DateTime;
     type Components = Types.Components;
-    
 
     public func wrapInt(value : Int, min : Nat, max : Nat) : Nat {
         if (value < min) {
@@ -18,4 +17,4 @@ module {
             return Int.abs(value);
         };
     };
-}
+};

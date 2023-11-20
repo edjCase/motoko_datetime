@@ -15,7 +15,7 @@ import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Prelude "mo:base/Prelude";
 import Order "mo:base/Order";
-import InternalTypes "../internal/Types";
+import Types "Types";
 import InternalTextUtil "../internal/TextUtil";
 import InternalComponents "../internal/Components";
 import InternalTimeZone "../internal/TimeZone";
@@ -23,12 +23,12 @@ import Components "Components";
 import TimeZone "TimeZone";
 
 module D {
-    public type Duration = InternalTypes.Duration;
-    public type TextFormat = InternalTypes.TextFormat;
-    public type DateTime = InternalTypes.DateTime;
-    type Components = InternalTypes.Components;
-    type DayOfWeek = InternalTypes.DayOfWeek;
-    type Locale = InternalTypes.Locale;
+    public type Duration = Types.Duration;
+    public type TextFormat = Types.TextFormat;
+    public type DateTime = Types.DateTime;
+    type Components = Types.Components;
+    type DayOfWeek = Types.DayOfWeek;
+    type Locale = Types.Locale;
 
     /// Creates an instance of the `DateTime` type from a `Time.Time` value.
     ///
