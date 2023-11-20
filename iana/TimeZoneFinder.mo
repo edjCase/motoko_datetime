@@ -2,7 +2,6 @@ import Types "Types";
 import Text "mo:base/Text";
 import Array "mo:base/Array";
 import TimeZoneList "TimeZoneList";
-import InternalTypes "../internal/Types";
 import TimeZone "../internal/TimeZone";
 import TextX "mo:xtended-text/TextX";
 

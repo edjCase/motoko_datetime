@@ -5,7 +5,7 @@ import Components "../src/Components";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
-import Types "../internal/Types";
+import Types "../src/Types";
 import Time "mo:base/Time";
 import TimeZone "../src/TimeZone";
 import EN "../iana/locales/EN";

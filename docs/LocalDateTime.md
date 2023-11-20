@@ -13,37 +13,37 @@ import Time "mo:base/Time";
 ## Type `DynamicTimeZone`
 
 ```motoko no-repl
-type DynamicTimeZone = InternalTypes.DynamicTimeZone
+type DynamicTimeZone = Types.DynamicTimeZone
 ```
 
 ## Type `TimeZone`
 
 ```motoko no-repl
-type TimeZone = InternalTypes.TimeZone
+type TimeZone = Types.TimeZone
 ```
 
 ## Type `Components`
 
 ```motoko no-repl
-type Components = InternalTypes.Components
+type Components = Types.Components
 ```
 
 ## Type `LocalDateTime`
 
 ```motoko no-repl
-type LocalDateTime = InternalTypes.LocalDateTime
+type LocalDateTime = Types.LocalDateTime
 ```
 
 ## Type `TextFormat`
 
 ```motoko no-repl
-type TextFormat = InternalTypes.TextFormat
+type TextFormat = Types.TextFormat
 ```
 
 ## Type `Duration`
 
 ```motoko no-repl
-type Duration = InternalTypes.Duration
+type Duration = Types.Duration
 ```
 
 ## Function `LocalDateTime`

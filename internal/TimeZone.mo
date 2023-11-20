@@ -1,4 +1,4 @@
-import InternalTypes "Types";
+import Types "../src/Types";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
@@ -7,10 +7,10 @@ import Int "mo:base/Int";
 import TextX "mo:xtended-text/TextX";
 
 module {
-    type Components = InternalTypes.Components;
-    type TimeZone = InternalTypes.TimeZone;
-    type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
-    type FixedTimeZone = InternalTypes.FixedTimeZone;
+    type Components = Types.Components;
+    type TimeZone = Types.TimeZone;
+    type TimeZoneDescriptor = Types.TimeZoneDescriptor;
+    type FixedTimeZone = Types.FixedTimeZone;
 
     public func parseDescriptor(descriptor : Text) : TimeZoneDescriptor {
         switch (parseDescriptorInternal(descriptor)) {

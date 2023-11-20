@@ -16,7 +16,7 @@ import Text "mo:base/Text";
 import Prelude "mo:base/Prelude";
 import Order "mo:base/Order";
 import DateTime "DateTime";
-import InternalTypes "../internal/Types";
+import Types "Types";
 import InternalTextUtil "../internal/TextUtil";
 import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
@@ -26,25 +26,25 @@ import TimeZone "TimeZone";
 
 module {
 
-    public type DynamicTimeZone = InternalTypes.DynamicTimeZone;
+    public type DynamicTimeZone = Types.DynamicTimeZone;
 
-    public type TimeZone = InternalTypes.TimeZone;
+    public type TimeZone = Types.TimeZone;
 
-    public type Components = InternalTypes.Components;
+    public type Components = Types.Components;
 
-    public type LocalDateTime = InternalTypes.LocalDateTime;
+    public type LocalDateTime = Types.LocalDateTime;
 
-    public type TextFormat = InternalTypes.TextFormat;
+    public type TextFormat = Types.TextFormat;
 
-    public type Duration = InternalTypes.Duration;
+    public type Duration = Types.Duration;
 
-    type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
+    type TimeZoneDescriptor = Types.TimeZoneDescriptor;
 
-    type DayOfWeek = InternalTypes.DayOfWeek;
+    type DayOfWeek = Types.DayOfWeek;
 
-    type StartOfYear = InternalTypes.StartOfYear;
+    type StartOfYear = Types.StartOfYear;
 
-    type Locale = InternalTypes.Locale;
+    type Locale = Types.Locale;
 
     /// Creates an instance of the `LocalDateTime` type from a `Components` and a timezone.
     /// The timezone will not change the components value, so the components will reprsent the local time rather than the UTC time.

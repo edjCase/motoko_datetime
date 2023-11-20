@@ -1,7 +1,9 @@
 # DateTime
+
 This module provides a set of functions for working with DateTime values.
 
 Import from the base library to use this module.
+
 ```motoko name=import
 import DateTime "mo:datetime/DateTime";
 import Components "mo:datetime/Components";
@@ -9,25 +11,26 @@ import Time "mo:base/Time";
 ```
 
 ## Type `Duration`
-``` motoko no-repl
-type Duration = InternalTypes.Duration
-```
 
+```motoko no-repl
+type Duration = Types.Duration
+```
 
 ## Type `TextFormat`
-``` motoko no-repl
-type TextFormat = InternalTypes.TextFormat
-```
 
+```motoko no-repl
+type TextFormat = Types.TextFormat
+```
 
 ## Type `DateTime`
-``` motoko no-repl
-type DateTime = InternalTypes.DateTime
+
+```motoko no-repl
+type DateTime = Types.DateTime
 ```
 
-
 ## Function `DateTime`
-``` motoko no-repl
+
+```motoko no-repl
 func DateTime(time : Time.Time) : DateTime
 ```
 
@@ -39,7 +42,8 @@ let nowDateTime : DateTime.DateTime = DateTime(time);
 ```
 
 ## Function `equal`
-``` motoko no-repl
+
+```motoko no-repl
 func equal(a : DateTime, b : DateTime) : Bool
 ```
 
@@ -52,7 +56,8 @@ let equal : Bool = DateTime.equal(a, b);
 ```
 
 ## Function `compare`
-``` motoko no-repl
+
+```motoko no-repl
 func compare(a : DateTime, b : DateTime) : Order.Order
 ```
 
@@ -65,7 +70,8 @@ let order : Order.Order = DateTime.compare(a, b);
 ```
 
 ## Function `now`
-``` motoko no-repl
+
+```motoko no-repl
 func now() : DateTime
 ```
 
@@ -76,7 +82,8 @@ let now : DateTime.DateTime = DateTime.now();
 ```
 
 ## Function `fromTime`
-``` motoko no-repl
+
+```motoko no-repl
 func fromTime(nanoseconds : Time.Time) : DateTime
 ```
 
@@ -89,7 +96,8 @@ let dateTime : DateTime.DateTime = DateTime.fromTime(nanoseconds);
 ```
 
 ## Function `fromComponents`
-``` motoko no-repl
+
+```motoko no-repl
 func fromComponents(components : Components) : DateTime
 ```
 
@@ -102,7 +110,8 @@ let ?dateTime : ?DateTime.DateTime = DateTime.fromComponents(components) else re
 ```
 
 ## Function `toText`
-``` motoko no-repl
+
+```motoko no-repl
 func toText(dateTime : DateTime) : Text
 ```
 
@@ -114,13 +123,15 @@ let dateTimeText : Text = DateTime.toText(dateTime);
 ```
 
 ## Function `toTextAdvanced`
-``` motoko no-repl
+
+```motoko no-repl
 func toTextAdvanced(dateTime : DateTime, format : TextFormat) : Text
 ```
 
 Formats the `DateTime` as Text value using the given format.
 
 Formats:
+
 - `#iso` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
 - `#custom` - Custom format using momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
 
@@ -130,7 +141,8 @@ let dateTimeText : Text = DateTime.toTextFormatted(datetime, #iso);
 ```
 
 ## Function `fromText`
-``` motoko no-repl
+
+```motoko no-repl
 func fromText(text : Text, format : Text) : ?DateTime
 ```
 
@@ -148,7 +160,8 @@ let ?dateTime : ?DateTime.DateTime = DateTime.fromText(dateTimeText, format) els
 ```
 
 ## Function `fromTextLocalized`
-``` motoko no-repl
+
+```motoko no-repl
 func fromTextLocalized(text : Text, format : Text, locale : Locale, localTimeZone : TimeZone.TimeZone) : ?DateTime
 ```
 

@@ -1,12 +1,12 @@
 import IanaTimeZone "../src/IanaTimeZone";
 import { test } "mo:test";
-import InternalTypes "../internal/Types";
+import Types "../src/Types";
 import Debug "mo:base/Debug";
 import Iter "mo:base/Iter";
 import America "../iana/timezones/America";
 import Africa "../iana/timezones/Africa";
 
-type DynamicTimeZone = InternalTypes.DynamicTimeZone;
+type DynamicTimeZone = Types.DynamicTimeZone;
 
 let testCases = [
     {

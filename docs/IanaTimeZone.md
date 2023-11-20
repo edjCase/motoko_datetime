@@ -2,20 +2,18 @@
 
 ## Class `IanaTimeZone`
 
-``` motoko no-repl
+```motoko no-repl
 class IanaTimeZone(data : TimeZoneData)
 ```
 
-
 ### Function `getAbbr`
-``` motoko no-repl
-func getAbbr(dateTime : InternalTypes.Components) : Text
+
+```motoko no-repl
+func getAbbr(dateTime : Types.Components) : Text
 ```
-
-
 
 ### Function `toOffsetSeconds`
-``` motoko no-repl
-func toOffsetSeconds(dateTime : InternalTypes.Components) : Int
-```
 
+```motoko no-repl
+func toOffsetSeconds(dateTime : Types.Components) : Int
+```

@@ -1,4 +1,4 @@
-import InternalTypes "Types";
+import Types "../src/Types";
 import NumberUtil "NumberUtil";
 import TextUtil "TextUtil";
 import Debug "mo:base/Debug";
@@ -20,16 +20,16 @@ import Option "mo:base/Option";
 
 module Module {
 
-    type Components = InternalTypes.Components;
-    type DateComponents = InternalTypes.DateComponents;
-    type DayOfWeek = InternalTypes.DayOfWeek;
-    type Duration = InternalTypes.Duration;
-    type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
-    type TimeZone = InternalTypes.TimeZone;
-    type Locale = InternalTypes.Locale;
-    type Era = InternalTypes.Era;
-    type TextFormat = InternalTypes.TextFormat;
-    type FromTextResult = InternalTypes.FromTextResult;
+    type Components = Types.Components;
+    type DateComponents = Types.DateComponents;
+    type DayOfWeek = Types.DayOfWeek;
+    type Duration = Types.Duration;
+    type TimeZoneDescriptor = Types.TimeZoneDescriptor;
+    type TimeZone = Types.TimeZone;
+    type Locale = Types.Locale;
+    type Era = Types.Era;
+    type TextFormat = Types.TextFormat;
+    type FromTextResult = Types.FromTextResult;
 
     public type CalculatedDuration = {
         #relative : (Components) -> Components;

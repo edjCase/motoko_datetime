@@ -6,7 +6,7 @@
 /// import Components "mo:datetime/Components";
 /// ```
 
-import InternalTypes "../internal/Types";
+import Types "Types";
 import InternalTimeZone "../internal/TimeZone";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
@@ -15,11 +15,11 @@ import Debug "mo:base/Debug";
 import Components "../internal/Components";
 module {
 
-    public type TimeZone = InternalTypes.TimeZone;
-    public type FixedTimeZone = InternalTypes.FixedTimeZone;
-    public type Offset = InternalTypes.FixedTimeZone;
-    public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
-    type Components = InternalTypes.Components;
+    public type TimeZone = Types.TimeZone;
+    public type FixedTimeZone = Types.FixedTimeZone;
+    public type Offset = Types.FixedTimeZone;
+    public type TimeZoneDescriptor = Types.TimeZoneDescriptor;
+    type Components = Types.Components;
 
     /// Helper function to create a UTC timezone (fixed at UTC+0)
     ///
