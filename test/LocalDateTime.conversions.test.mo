@@ -10,7 +10,7 @@ import TimeZone "../src/TimeZone";
 
 type TestCase = {
   timeZone : LocalDateTime.TimeZone;
-  dateTime : Components.Components;
+  dateTime : Components.ComponentsWithOffset;
   nanoseconds : Int;
   textIso : Text;
 };
@@ -25,6 +25,7 @@ let testCases : [TestCase] = [
       hour = 0;
       minute = 0;
       nanosecond = 0;
+      offsetSeconds = -25_200;
     };
     nanoseconds = -631_126_800_000_000_000;
     textIso = "1950-01-01T00:00:00.000000000-07:00";
@@ -38,6 +39,7 @@ let testCases : [TestCase] = [
       hour = 4;
       minute = 33;
       nanosecond = 0;
+      offsetSeconds = -18_000;
     };
     nanoseconds = -603_901_620_000_000_000;
     textIso = "1950-11-12T04:33:00.000000000-05:00";
@@ -51,6 +53,7 @@ let testCases : [TestCase] = [
       hour = 0;
       minute = 0;
       nanosecond = 0;
+      offsetSeconds = 32_400;
     };
     nanoseconds = -32_400_000_000_000;
     textIso = "1970-01-01T00:00:00.000000000+09:00";
@@ -64,6 +67,7 @@ let testCases : [TestCase] = [
       hour = 0;
       minute = 1;
       nanosecond = 0;
+      offsetSeconds = 46_800;
     };
     nanoseconds = -46_740_000_000_000;
     textIso = "1970-01-01T00:01:00.000000000+13:00";
@@ -77,6 +81,7 @@ let testCases : [TestCase] = [
       hour = 0;
       minute = 0;
       nanosecond = 0;
+      offsetSeconds = -3_600;
     };
     nanoseconds = 90_000_000_000_000;
     textIso = "1970-01-02T00:00:00.000000000-01:00";
@@ -90,6 +95,7 @@ let testCases : [TestCase] = [
       hour = 7;
       minute = 34;
       nanosecond = 0;
+      offsetSeconds = 27_240;
     };
     nanoseconds = 68_169_600_000_000_000;
     textIso = "1972-02-29T07:34:00.000000000+07:34";
@@ -103,6 +109,7 @@ let testCases : [TestCase] = [
       hour = 0;
       minute = 0;
       nanosecond = 0;
+      offsetSeconds = -25_320;
     };
     nanoseconds = 946_710_120_000_000_000;
     textIso = "2000-01-01T00:00:00.000000000-07:02";
@@ -116,6 +123,7 @@ let testCases : [TestCase] = [
       hour = 23;
       minute = 59;
       nanosecond = 59_000_000_000;
+      offsetSeconds = 120;
     };
     nanoseconds = 978_307_079_000_000_000;
     textIso = "2000-12-31T23:59:59.000000000+00:02";
@@ -129,6 +137,7 @@ let testCases : [TestCase] = [
       hour = 15;
       minute = 30;
       nanosecond = 0;
+      offsetSeconds = 14_580;
     };
     nanoseconds = 1_589_974_020_000_000_000;
     textIso = "2020-05-20T15:30:00.000000000+04:03";
@@ -183,8 +192,16 @@ for (testCase in Iter.fromArray(testCases)) {
   test(
     "toComponents (LocalDateTime -> Components): " # testCaseText,
     func() {
-      // From nanoseconds
       assertComponents(expectedDateTime.toComponents(), testCase.dateTime);
+    },
+  );
+
+  test(
+    "toComponentsWithOffset (LocalDateTime -> Components): " # testCaseText,
+    func() {
+      let componentsWithOffset = expectedDateTime.toComponentsWithOffset();
+      assertComponents(componentsWithOffset, testCase.dateTime);
+      assert (componentsWithOffset.offsetSeconds == testCase.dateTime.offsetSeconds);
     },
   );
 

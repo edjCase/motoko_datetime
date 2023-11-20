@@ -24,6 +24,7 @@ import Prelude "mo:base/Prelude";
 module {
 
     public type Components = InternalTypes.Components;
+    public type ComponentsWithOffset = InternalTypes.ComponentsWithOffset;
     public type DateComponents = InternalTypes.DateComponents;
     public type DayOfWeek = InternalTypes.DayOfWeek;
     public type DateTime = InternalTypes.DateTime;
