@@ -5,7 +5,7 @@ import Components "../src/Components";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
-import Types "../internal/Types";
+import Types "../src/Types";
 
 test(
     "compare, equal, timeBetween",

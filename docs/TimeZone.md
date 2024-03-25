@@ -1,38 +1,41 @@
 # TimeZone
+
 This module provides a set of functions for working with TimeZone values.
 
 Import from the base library to use this module.
+
 ```motoko name=import
 import TimeZone "mo:datetime/TimeZone";
 import Components "mo:datetime/Components";
 ```
 
 ## Type `TimeZone`
-``` motoko no-repl
-type TimeZone = InternalTypes.TimeZone
-```
 
+```motoko no-repl
+type TimeZone = Types.TimeZone
+```
 
 ## Type `FixedTimeZone`
-``` motoko no-repl
-type FixedTimeZone = InternalTypes.FixedTimeZone
-```
 
+```motoko no-repl
+type FixedTimeZone = Types.FixedTimeZone
+```
 
 ## Type `Offset`
-``` motoko no-repl
-type Offset = InternalTypes.FixedTimeZone
-```
 
+```motoko no-repl
+type Offset = Types.FixedTimeZone
+```
 
 ## Type `TimeZoneDescriptor`
-``` motoko no-repl
-type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor
+
+```motoko no-repl
+type TimeZoneDescriptor = Types.TimeZoneDescriptor
 ```
 
-
 ## Function `utc`
-``` motoko no-repl
+
+```motoko no-repl
 func utc() : TimeZone
 ```
 
@@ -43,7 +46,8 @@ let timeZone : TimeZone.TimeZone = TimeZone.utc();
 ```
 
 ## Function `withFixedOffset`
-``` motoko no-repl
+
+```motoko no-repl
 func withFixedOffset(offset : Offset) : TimeZone
 ```
 
@@ -54,7 +58,8 @@ let timeZone : TimeZone.TimeZone = TimeZone.withFixedOffset(#hours(3)); // UTC+3
 ```
 
 ## Function `toOffsetSeconds`
-``` motoko no-repl
+
+```motoko no-repl
 func toOffsetSeconds(timeZone : TimeZone, components : Components) : Int
 ```
 
@@ -69,7 +74,8 @@ let offsetSeconds : Int = TimeZone.getOffsetSeconds(timeZone, c);
 ```
 
 ## Function `toFixedOffsetSeconds`
-``` motoko no-repl
+
+```motoko no-repl
 func toFixedOffsetSeconds(fixedTimeZone : FixedTimeZone) : Int
 ```
 

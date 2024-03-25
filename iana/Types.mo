@@ -7,13 +7,13 @@ import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import InternalTimeZone "../internal/TimeZone";
 import Components "../src/Components";
-import InternalTypes "../internal/Types";
+import Types "../src/Types";
 
 module {
 
-    public type TimeZoneData = InternalTypes.TimeZoneData;
+    public type TimeZoneData = Types.TimeZoneData;
 
-    public type Locale = InternalTypes.Locale;
+    public type Locale = Types.Locale;
 
     type Seconds = Int;
     type Year = Int;

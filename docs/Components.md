@@ -1,79 +1,82 @@
 # Components
+
 This module provides a set of functions for working with datetime component values.
 
 Import from the base library to use this module.
+
 ```motoko name=import
 import Components "mo:datetime/Components";
 ```
 
 ## Type `Components`
-``` motoko no-repl
-type Components = InternalTypes.Components
-```
 
+```motoko no-repl
+type Components = Types.Components
+```
 
 ## Type `DateComponents`
-``` motoko no-repl
-type DateComponents = InternalTypes.DateComponents
-```
 
+```motoko no-repl
+type DateComponents = Types.DateComponents
+```
 
 ## Type `DayOfWeek`
-``` motoko no-repl
-type DayOfWeek = InternalTypes.DayOfWeek
-```
 
+```motoko no-repl
+type DayOfWeek = Types.DayOfWeek
+```
 
 ## Type `DateTime`
-``` motoko no-repl
-type DateTime = InternalTypes.DateTime
-```
 
+```motoko no-repl
+type DateTime = Types.DateTime
+```
 
 ## Type `LocalDateTime`
-``` motoko no-repl
-type LocalDateTime = InternalTypes.LocalDateTime
-```
 
+```motoko no-repl
+type LocalDateTime = Types.LocalDateTime
+```
 
 ## Type `TimeZone`
-``` motoko no-repl
-type TimeZone = InternalTypes.TimeZone
-```
 
+```motoko no-repl
+type TimeZone = Types.TimeZone
+```
 
 ## Type `Duration`
-``` motoko no-repl
-type Duration = InternalTypes.Duration
-```
 
+```motoko no-repl
+type Duration = Types.Duration
+```
 
 ## Type `TextFormat`
-``` motoko no-repl
-type TextFormat = InternalTypes.TextFormat
-```
 
+```motoko no-repl
+type TextFormat = Types.TextFormat
+```
 
 ## Type `FromTextResult`
-``` motoko no-repl
-type FromTextResult = InternalTypes.FromTextResult
-```
 
+```motoko no-repl
+type FromTextResult = Types.FromTextResult
+```
 
 ## Type `TimeZoneDescriptor`
-``` motoko no-repl
-type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor
-```
 
+```motoko no-repl
+type TimeZoneDescriptor = Types.TimeZoneDescriptor
+```
 
 ## Type `Locale`
-``` motoko no-repl
-type Locale = InternalTypes.Locale
+
+```motoko no-repl
+type Locale = Types.Locale
 ```
 
-
 ## Value `epoch`
-``` motoko no-repl
+
+```motoko no-repl
 let epoch : Components
 ```
 
@@ -84,7 +87,8 @@ let epoch : Components.Components = Components.epoch;
 ```
 
 ## Function `compare`
-``` motoko no-repl
+
+```motoko no-repl
 func compare(c1 : Components, c2 : Components) : Order.Order
 ```
 
@@ -98,7 +102,8 @@ let ?order : ?Order.Order = Components.compare(c1, c2) else return #error("One o
 ```
 
 ## Function `toTime`
-``` motoko no-repl
+
+```motoko no-repl
 func toTime(components : Components) : Time.Time
 ```
 
@@ -111,7 +116,8 @@ let ?order : ?Time.Time = Components.toTime(c) else return #error("Components ar
 ```
 
 ## Function `fromTime`
-``` motoko no-repl
+
+```motoko no-repl
 func fromTime(nanoseconds : Int) : Components
 ```
 
@@ -122,7 +128,8 @@ let components : Components.Components = Components.fromTime(123467890);
 ```
 
 ## Function `weekYear`
-``` motoko no-repl
+
+```motoko no-repl
 func weekYear(components : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Int
 ```
 
@@ -136,7 +143,8 @@ let weekYear : Int = Components.weekYear(c, #monday, 4);
 ```
 
 ## Function `weekOfYear`
-``` motoko no-repl
+
+```motoko no-repl
 func weekOfYear(components : DateComponents, firstDayOfWeek : DayOfWeek, firstDayOfYear : Nat) : Nat
 ```
 
@@ -149,7 +157,8 @@ let weekOfYear : Nat = Components.weekOfYear(c, #monday, 4);
 ```
 
 ## Function `dayOfWeek`
-``` motoko no-repl
+
+```motoko no-repl
 func dayOfWeek(components : DateComponents) : DayOfWeek
 ```
 
@@ -162,7 +171,8 @@ let dayOfWeek : Components.DayOfWeek = Components.dayOfWeek(c);
 ```
 
 ## Function `dayOfYear`
-``` motoko no-repl
+
+```motoko no-repl
 func dayOfYear(components : DateComponents) : Nat
 ```
 
@@ -175,7 +185,8 @@ let dayOfYear : Nat = Components.dayOfYear(c);
 ```
 
 ## Function `isValid`
-``` motoko no-repl
+
+```motoko no-repl
 func isValid(components : Components) : Bool
 ```
 
@@ -189,7 +200,8 @@ let isValid : Bool = Components.isValid(c);
 ```
 
 ## Function `toText`
-``` motoko no-repl
+
+```motoko no-repl
 func toText(components : Components, timeZone : TimeZone) : Text
 ```
 
@@ -201,13 +213,15 @@ let text : Text = Components.toText(c, TimeZone.utc());
 ```
 
 ## Function `toTextFormatted`
-``` motoko no-repl
-func toTextFormatted(components : Components, timeZone : TimeZone, format : InternalTypes.TextFormat) : Text
+
+```motoko no-repl
+func toTextFormatted(components : Components, timeZone : TimeZone, format : Types.TextFormat) : Text
 ```
 
 Converts datetime components to the specified text format.
 
 Formats:
+
 - `#iso` - ISO 8601 format (e.g. `2021-01-01T00:00:00.000000000Z`)
 - `#custom` - Custom format using momentjs format (e.g. `YYYY-MM-DDTHH:mm:ssZ`)
 
@@ -217,7 +231,8 @@ let text : Text = Components.toTextFormatted(c, #iso, TimeZone.utc());
 ```
 
 ## Function `fromText`
-``` motoko no-repl
+
+```motoko no-repl
 func fromText(text : Text, format : Text, locale : ?Locale) : ?FromTextResult
 ```
 
@@ -235,7 +250,8 @@ let ?result : ?FromTextResult = Components.fromText(date, format, ?locale) else 
 ```
 
 ## Function `addTime`
-``` motoko no-repl
+
+```motoko no-repl
 func addTime(components : Components, nanoseconds : Time.Time) : Components
 ```
 

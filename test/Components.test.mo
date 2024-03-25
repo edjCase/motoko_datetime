@@ -4,6 +4,7 @@ import Components "../src/Components";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Text "mo:base/Text";
+import Types "../src/Types";
 import Time "mo:base/Time";
 import TimeZone "../src/TimeZone";
 import EN "../iana/locales/EN";
@@ -640,6 +641,22 @@ test(
                     year = 2_023;
                     month = 11;
                     day = 18; // 18 + 7 too, 18 - 7 too
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                expected = {
+                    weekOfYear = 47;
+                    weekYear = 2023;
+                    dayOfWeek = #saturday;
+                    dayOfYear = 322;
+                };
+            },
+            {
+                components = {
+                    year = 2_023;
+                    month = 11;
+                    day = 18;
                     hour = 0;
                     minute = 0;
                     nanosecond = 0;

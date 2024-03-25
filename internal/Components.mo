@@ -1,4 +1,4 @@
-import InternalTypes "Types";
+import Types "../src/Types";
 import TextUtil "TextUtil";
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
@@ -18,19 +18,19 @@ import Nat8 "mo:base/Nat8";
 
 module Module {
 
-    type Components = InternalTypes.Components;
-    type DateComponents = InternalTypes.DateComponents;
+    type Components = Types.Components;
+    type DateComponents = Types.DateComponents;
     type TimeComponents = InternalTypes.TimeComponents;
-    type DayOfWeek = InternalTypes.DayOfWeek;
-    type Duration = InternalTypes.Duration;
+    type DayOfWeek = Types.DayOfWeek;
+    type Duration = Types.Duration;
     type DateDuration = InternalTypes.DateDuration;
     type TimeDuration = InternalTypes.TimeDuration;
-    type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
-    type TimeZone = InternalTypes.TimeZone;
-    type Locale = InternalTypes.Locale;
-    type Era = InternalTypes.Era;
-    type TextFormat = InternalTypes.TextFormat;
-    type FromTextResult = InternalTypes.FromTextResult;
+    type TimeZoneDescriptor = Types.TimeZoneDescriptor;
+    type TimeZone = Types.TimeZone;
+    type Locale = Types.Locale;
+    type Era = Types.Era;
+    type TextFormat = Types.TextFormat;
+    type FromTextResult = Types.FromTextResult;
     type AdvanceDayOfWeekOptions = InternalTypes.AdvanceDayOfWeekOptions;
     type AdvanceDayOfWeekOptionsWithTime = InternalTypes.AdvanceDayOfWeekOptionsWithTime;
 
