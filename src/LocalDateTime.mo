@@ -11,16 +11,11 @@ import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 import Int "mo:base/Int";
-import Iter "mo:base/Iter";
 import Text "mo:base/Text";
-import Prelude "mo:base/Prelude";
 import Order "mo:base/Order";
 import DateTime "DateTime";
 import Types "Types";
-import InternalTextUtil "../internal/TextUtil";
-import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
-import InternalTimeZone "../internal/TimeZone";
 import Components "Components";
 import TimeZone "TimeZone";
 
@@ -37,6 +32,8 @@ module {
     public type TextFormat = Types.TextFormat;
 
     public type Duration = Types.Duration;
+
+    public type AdvanceDayOfWeekOptions = Types.AdvanceDayOfWeekOptionsWithTime;
 
     type TimeZoneDescriptor = Types.TimeZoneDescriptor;
 
@@ -123,8 +120,8 @@ module {
 
         private func getStartOfYear(startOfYear : StartOfYear) : (DayOfWeek, Nat) {
             switch (startOfYear) {
-                case (#iso)(#monday, 4);
-                case (#locale(l))(l.firstDayOfWeek, l.firstDayOfYear);
+                case (#iso) (#monday, 4);
+                case (#locale(l)) (l.firstDayOfWeek, l.firstDayOfYear);
             };
         };
 
@@ -262,6 +259,34 @@ module {
         public func withTimeZone(timeZone : TimeZone) : LocalDateTime {
             let time = toTime();
             fromTime(time, timeZone);
+        };
+
+        /// Advances to the specified day of the week and and returns the resulting new `LocalDateTime` value.
+        /// If the `LocalDateTime` value is already on the specified day of the week, the `LocalDateTime` value is cloned and returned unchanged
+        /// Will trap if the resulting components are invalid.
+        ///
+        /// ```motoko include=import
+        /// let d : LocalDateTime = ...;
+        /// let dayOfWeek : LocalDateTime.DayOfWeek = ...;
+        /// let options : LocalDateTime.AdvanceDayOfWeekOptions = {
+        ///     addWeekOnMatchingDay = true; // Add a week if the day of the week is the same
+        ///     resetToStartOfDay = true; // Set the time value to midnight of the specified day of week
+        /// };
+        /// let newD : LocalDateTime = d.advanceToDayOfWeek(dayOfWeek);
+        /// ```
+        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptions) : LocalDateTime {
+            let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek, options);
+            let newComponents = if (not options.resetToStartOfDay) {
+                {
+                    newDateComponents with
+                    hour = components.hour;
+                    minute = components.minute;
+                    nanosecond = components.nanosecond;
+                };
+            } else {
+                { newDateComponents with hour = 0; minute = 0; nanosecond = 0 };
+            };
+            LocalDateTime(newComponents, timeZone);
         };
     };
 
@@ -412,7 +437,7 @@ module {
         fromTextInternal(text, format, localTimeZone, ?locale);
     };
 
-    public func fromTextInternal(
+    private func fromTextInternal(
         text : Text,
         format : Text,
         localTimeZone : TimeZone.TimeZone,

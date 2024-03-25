@@ -1,6 +1,5 @@
 import Iter "mo:base/Iter";
 import { test } "mo:test";
-import DateTime "../src/DateTime";
 import Components "../src/Components";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
@@ -9,7 +8,6 @@ import Types "../src/Types";
 import Time "mo:base/Time";
 import TimeZone "../src/TimeZone";
 import EN "../iana/locales/EN";
-import JA "../iana/locales/JA";
 
 test(
     "epoch",
@@ -468,7 +466,7 @@ test(
                                     case (#utc) {
                                         offset1 == 0;
                                     };
-                                    case (#name(d2)) {
+                                    case (#name(_)) {
                                         false;
                                     };
                                     case (#unspecified) {
@@ -642,6 +640,22 @@ test(
                 components = {
                     year = 2_023;
                     month = 11;
+                    day = 18; // 18 + 7 too, 18 - 7 too
+                    hour = 0;
+                    minute = 0;
+                    nanosecond = 0;
+                };
+                expected = {
+                    weekOfYear = 47;
+                    weekYear = 2023;
+                    dayOfWeek = #saturday;
+                    dayOfYear = 322;
+                };
+            },
+            {
+                components = {
+                    year = 2_023;
+                    month = 11;
                     day = 18;
                     hour = 0;
                     minute = 0;
@@ -689,6 +703,113 @@ test(
                 Debug.print("Components: " # debug_show (testCase.components));
                 Debug.print("Expected: " # debug_show (testCase.expected.dayOfYear));
                 Debug.print("Actual:   " # debug_show (actualDayOfYear));
+                assert false;
+            };
+        };
+    },
+);
+
+test(
+    "advanceToDayOfWeek",
+    func() {
+        let testCases = [
+            {
+                // Thursday
+                components = {
+                    year = 1970;
+                    month = 1;
+                    day = 1;
+                };
+                dayOfWeek = #sunday;
+                options : Components.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                };
+                // Sunday
+                expected = {
+                    year = 1970;
+                    month = 1;
+                    day = 4;
+                };
+            },
+            {
+                // Monday
+                components = {
+                    year = 1990;
+                    month = 11;
+                    day = 12;
+                };
+                dayOfWeek = #sunday;
+                options : Components.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                };
+                // Sunday
+                expected = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+            },
+            {
+                // Sunday
+                components = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+                dayOfWeek = #sunday;
+                options : Components.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = false;
+                };
+                // Sunday
+                expected = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+            },
+            {
+                // Sunday
+                components = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+                dayOfWeek = #sunday;
+                options : Components.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                };
+                // Sunday
+                expected = {
+                    year = 1990;
+                    month = 11;
+                    day = 25;
+                };
+            },
+            {
+                // Sunday
+                components = {
+                    year = 1990;
+                    month = 11;
+                    day = 18;
+                };
+                dayOfWeek = #friday;
+                options : Components.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                };
+                // Friday
+                expected = {
+                    year = 1990;
+                    month = 11;
+                    day = 23;
+                };
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual : Components.DateComponents = Components.advanceToDayOfWeek(testCase.components, testCase.dayOfWeek, testCase.options);
+            let matched = testCase.expected == actual;
+            if (not matched) {
+                Debug.print("Expected: " # debug_show (testCase.expected));
+                Debug.print("Actual:   " # debug_show (actual));
                 assert false;
             };
         };

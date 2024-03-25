@@ -1,11 +1,9 @@
 import Types "../src/Types";
-import NumberUtil "NumberUtil";
 import TextUtil "TextUtil";
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 import Time "mo:base/Time";
 import Int "mo:base/Int";
-import InternalTimeZone "TimeZone";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Prelude "mo:base/Prelude";
@@ -15,21 +13,26 @@ import Buffer "mo:base/Buffer";
 import TimeZone "TimeZone";
 import Bool "mo:base/Bool";
 import Char "mo:base/Char";
-import Nat32 "mo:base/Nat32";
 import Option "mo:base/Option";
+import Nat8 "mo:base/Nat8";
 
 module Module {
 
     type Components = Types.Components;
     type DateComponents = Types.DateComponents;
+    type TimeComponents = Types.TimeComponents;
     type DayOfWeek = Types.DayOfWeek;
     type Duration = Types.Duration;
+    type DateDuration = Types.DateDuration;
+    type TimeDuration = Types.TimeDuration;
     type TimeZoneDescriptor = Types.TimeZoneDescriptor;
     type TimeZone = Types.TimeZone;
     type Locale = Types.Locale;
     type Era = Types.Era;
     type TextFormat = Types.TextFormat;
     type FromTextResult = Types.FromTextResult;
+    type AdvanceDayOfWeekOptions = Types.AdvanceDayOfWeekOptions;
+    type AdvanceDayOfWeekOptionsWithTime = Types.AdvanceDayOfWeekOptionsWithTime;
 
     public type CalculatedDuration = {
         #relative : (Components) -> Components;
@@ -81,6 +84,24 @@ module Module {
         hour = 0;
         minute = 0;
         nanosecond = 0;
+    };
+
+    public func advanceToDayOfWeek(components : DateComponents, newDayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptions) : DateComponents {
+        let currentDayOfWeek = dayOfWeek(components);
+        if (currentDayOfWeek == newDayOfWeek) {
+            if (options.addWeekOnMatchingDay) {
+                return addDays(components, 7);
+            };
+            return components;
+        };
+        let currentDayOfWeekIndex = indexFromDayOfWeek(currentDayOfWeek);
+        let newDayOfWeekIndex = indexFromDayOfWeek(newDayOfWeek);
+        let dayDelta : Nat = if (currentDayOfWeekIndex < newDayOfWeekIndex) {
+            newDayOfWeekIndex - currentDayOfWeekIndex;
+        } else {
+            7 - (currentDayOfWeekIndex - newDayOfWeekIndex);
+        };
+        addDays(components, dayDelta);
     };
 
     public func resolveDuration(duration : Duration) : CalculatedDuration {
@@ -389,15 +410,15 @@ module Module {
                 case (#year(y)) {
                     { state with year = ?y };
                 };
-                case (#yearWithoutCentury(y)) {
+                case (#yearWithoutCentury(_)) {
                     // Skip, not enough information
                     state;
                 };
-                case (#eraYear(y)) {
+                case (#eraYear(_)) {
                     // Skip, not enough information
                     state;
                 };
-                case (#quarter(q)) {
+                case (#quarter(_)) {
                     // Skip, not enough information
                     state;
                 };
@@ -448,7 +469,7 @@ module Module {
                 case (#dayOfMonth(d)) {
                     { state with day = ?d };
                 };
-                case (#dayOfWeek(d)) {
+                case (#dayOfWeek(_)) {
                     // Skip, not enough information
                     state;
                 };
@@ -464,22 +485,22 @@ module Module {
                         nanosecond = ?components.nanosecond;
                     };
                 };
-                case (#weekOfYear(w)) {
+                case (#weekOfYear(_)) {
                     // Skip, not enough information
                     state;
                 };
                 case (#timeZoneDescriptor(tzd)) {
                     { state with tz = ?tzd };
                 };
-                case (#era(e)) {
+                case (#era(_)) {
                     // Skip, not enough information
                     state;
                 };
-                case (#weekYear(wy)) {
+                case (#weekYear(_)) {
                     // Skip, not enough information
                     state;
                 };
-                case (#weekYearWithoutCentury(wy)) {
+                case (#weekYearWithoutCentury(_)) {
                     // Skip, not enough information
                     state;
                 };
@@ -493,6 +514,18 @@ module Module {
 
     public func fromTime(nanoseconds : Int) : Components {
         addTime(epoch, nanoseconds);
+    };
+
+    public func add(components : Components, duration : Duration) : Components {
+        let calculatedDuration = resolveDuration(duration);
+        switch (calculatedDuration) {
+            case (#relative(relativeFunc)) {
+                relativeFunc(components);
+            };
+            case (#absoluteTime(absoluteTime)) {
+                addTime(components, absoluteTime);
+            };
+        };
     };
 
     public func addTime(components : Components, nanoseconds : Time.Time) : Components {
@@ -517,7 +550,7 @@ module Module {
 
         var remainingDays : Nat = remainingNanoseconds / nanosecondsInADay;
 
-        let date = subtractDays(components, remainingDays);
+        let date = addDays(components, -remainingDays);
         var newComponents = {
             components with
             year = date.year;
@@ -661,25 +694,35 @@ module Module {
         };
     };
 
-    private func subtractDays(components : DateComponents, days : Nat) : DateComponents {
+    private func addDays(components : DateComponents, days : Int) : DateComponents {
         if (days == 0) {
             return components;
         };
-        var remainingDays : Nat = days;
+        let add = days > 0;
+        var remainingDays : Nat = Int.abs(days);
         var year : Int = components.year;
         var month : Nat = components.month;
         var day : Nat = components.day;
 
         let beforeLeapDay = month < 2 or (month == 2 and day < 29);
 
-        // Subtract years from total days
-        label l loop {
-            let newYear = year - 1;
-            let daysInYearValue = if (beforeLeapDay) {
-                daysInYear(newYear);
-            } else {
-                daysInYear(newYear + 1);
+        // Add/Subtract years from total days
+        let getNewYear = if (add) {
+            func(year : Int) : (Int, Int) {
+                let newYear : Int = year + 1;
+                let yearToCheck = if (beforeLeapDay) year else newYear;
+                (newYear, yearToCheck);
             };
+        } else {
+            func(year : Int) : (Int, Int) {
+                let newYear : Int = year - 1;
+                let yearToCheck = if (beforeLeapDay) newYear else year;
+                (newYear, yearToCheck);
+            };
+        };
+        label l loop {
+            let (newYear, yearToCheck) = getNewYear(year);
+            let daysInYearValue = daysInYear(yearToCheck);
             if (remainingDays < daysInYearValue) {
                 break l;
             };
@@ -687,14 +730,25 @@ module Module {
             year := newYear;
         };
 
-        // Subtract months from total days
-        label l loop {
-            var newYear : Int = year;
-            var newMonth : Nat = month - 1;
-            if (newMonth == 0) {
-                newMonth := 12;
-                newYear := newYear - 1;
+        // Add/Subtract months from total days
+        let getNewMonth = if (add) {
+            func(year : Int, month : Nat) : (Int, Nat) {
+                if (month == 12) {
+                    return (year + 1, 1);
+                };
+                (year, month + 1);
             };
+        } else {
+            func(year : Int, month : Nat) : (Int, Nat) {
+                if (month == 1) {
+                    return (year - 1, 12);
+                };
+                (year, month - 1);
+            };
+        };
+
+        label l loop {
+            let (newYear, newMonth) = getNewMonth(year, month);
             let isLeapYearValue = isLeapYear(newYear);
             let daysInMonthValue = daysInMonth(newMonth, isLeapYearValue);
             if (remainingDays < daysInMonthValue) {
@@ -705,24 +759,35 @@ module Module {
             year := newYear;
         };
 
-        // Subtract days from total days
-        while (remainingDays > 0) {
-            var newYear : Int = year;
-            var newMonth : Nat = month;
-            var newDay : Nat = day;
-
-            if (newDay == 1) {
-                if (newMonth == 1) {
-                    newMonth := 12;
-                    newYear := newYear - 1;
-                } else {
-                    newMonth := newMonth - 1;
-                };
-                let isLeapYearValue = isLeapYear(newYear);
-                newDay := daysInMonth(newMonth, isLeapYearValue);
-            } else {
-                newDay := newDay - 1;
+        // Add/Subtract days from total days
+        let getDay = if (add) {
+            func(year : Int, month : Nat, day : Nat) : (Int, Nat, Nat) {
+                let daysInMonthValue = daysInMonth(month, isLeapYear(year));
+                if (day == daysInMonthValue) {
+                    let (newYear, newMonth) = if (month == 12) {
+                        (year + 1, 1);
+                    } else {
+                        (year, month + 1);
+                    };
+                    (newYear, newMonth, 1);
+                } else { (year, month, day + 1) };
             };
+        } else {
+            func(year : Int, month : Nat, day : Nat) : (Int, Nat, Nat) {
+                if (day == 1) {
+                    let (newYear, newMonth) = if (month == 1) {
+                        (year - 1, 12);
+                    } else {
+                        let newMonth : Nat = month - 1;
+                        (year, newMonth);
+                    };
+                    let daysInMonthValue = daysInMonth(newMonth, isLeapYear(newYear));
+                    (newYear, newMonth, daysInMonthValue);
+                } else { (year, month, day - 1) };
+            };
+        };
+        while (remainingDays > 0) {
+            let (newYear, newMonth, newDay) = getDay(year, month, day);
             remainingDays -= 1;
             year := newYear;
             month := newMonth;
@@ -984,9 +1049,6 @@ module Module {
         };
     };
 
-    // array with leading number of days values
-    private let monthLeadingValues = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
-
     public func indexFromDayOfWeek(dayOfWeek : DayOfWeek) : Nat {
         switch (dayOfWeek) {
             case (#sunday) 0;
@@ -1002,9 +1064,9 @@ module Module {
     public func dayOfWeekIndex(components : DateComponents) : Nat {
         // The following uses the Zeller’s Congruence algorithm
         let (month, year) = switch (components.month) {
-            case (1)(13, components.year - 1);
-            case (2)(14, components.year - 1);
-            case (m)(m, components.year);
+            case (1) (13, components.year - 1);
+            case (2) (14, components.year - 1);
+            case (m) (m, components.year);
         };
         let day = components.day;
         let yearWithoutCentury = year % 100;
@@ -1143,9 +1205,9 @@ module Module {
     private func extractInt(text : Text, maxDigits : Nat, strict : Bool) : ?(Int, Text) {
         let textIter = text.chars();
         let (isNegative, textWithoutSign) = switch (textIter.next()) {
-            case (?'-')(true, Text.fromIter(textIter));
-            case (?'+')(false, Text.fromIter(textIter));
-            case (_)(false, text);
+            case (?'-') (true, Text.fromIter(textIter));
+            case (?'+') (false, Text.fromIter(textIter));
+            case (_) (false, text);
         };
         let ?(natValue, remainingText) = extractNat(textWithoutSign, maxDigits, strict) else return null;
         let intValue : Int = if (isNegative) -natValue else natValue;
@@ -2379,10 +2441,10 @@ module Module {
         },
     ];
 
-    private func getFractionalSecond(components : Components, digits : Int) : Text {
-        let seconds = Float.fromInt(components.nanosecond) / 1_000_000_000.0;
+    private func getFractionalSecond(components : Components, digits : Nat8) : Text {
+        let seconds = Float.fromInt(components.nanosecond) / Float.fromInt(Nat.pow(10, Nat8.toNat(digits)));
         let fractionalSecond = seconds - Float.fromInt(Float.toInt(seconds)); // Remove integer part
-        let formattedFloat = Float.format(#fix(9), fractionalSecond);
+        let formattedFloat = Float.format(#fix(digits), fractionalSecond);
         Text.replace(formattedFloat, #text("0."), ""); // Remove 0. from the beginning
     };
 };

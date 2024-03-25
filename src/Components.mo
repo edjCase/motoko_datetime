@@ -6,20 +6,13 @@
 /// ```
 
 import Types "Types";
-import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
-import InternalTimeZone "../internal/TimeZone";
 import Time "mo:base/Time";
-import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
-import NumberUtil "../internal/NumberUtil";
-import InternalTextUtil "../internal/TextUtil";
-import Debug "mo:base/Debug";
 import Components "../internal/Components";
 import Order "mo:base/Order";
-import Prelude "mo:base/Prelude";
 
 module {
 
@@ -34,6 +27,7 @@ module {
     public type FromTextResult = Types.FromTextResult;
     public type TimeZoneDescriptor = Types.TimeZoneDescriptor;
     public type Locale = Types.Locale;
+    public type AdvanceDayOfWeekOptions = Types.AdvanceDayOfWeekOptions;
 
     /// Returns the the epoch (1970-01-01T00:00:00Z) in component form
     ///
@@ -177,6 +171,17 @@ module {
         InternalComponents.fromText(text, format, locale);
     };
 
+    /// Adds a `Duration` to the specified components and returns the resulting new components value.
+    ///
+    /// ```motoko include=import
+    /// let c : Components = ...;
+    /// let duration : DateTime.Duration = ...;
+    /// let newC : Components = Components.add(c, duration);
+    /// ```
+    public func add(components : Components, duration : Duration) : Components {
+        InternalComponents.add(components, duration);
+    };
+
     /// Adds the specified nanoseconds to the components and returns the resulting components.
     /// Will trap if the resulting components are invalid.
     ///
@@ -187,5 +192,21 @@ module {
     /// ```
     public func addTime(components : Components, nanoseconds : Time.Time) : Components {
         InternalComponents.addTime(components, nanoseconds);
+    };
+
+    /// Advances to the specified day of the week and returns the resulting date components.
+    /// If the date components are already on the specified day of the week, the date components are cloned and returned unchanged
+    /// Will trap if the resulting components are invalid.
+    ///
+    /// ```motoko include=import
+    /// let c : DateComponents = ...;
+    /// let dayOfWeek : DateTime.DayOfWeek = ...;
+    /// let options : DateTime.AdvanceDayOfWeekOptions = {
+    ///     addWeekOnMatchingDay = true; // Add a week if the day of the week is the same
+    /// };
+    /// let newC : DateComponents = Components.advanceToDayOfWeek(c, dayOfWeek, options);
+    /// ```
+    public func advanceToDayOfWeek(components : DateComponents, dayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptions) : DateComponents {
+        InternalComponents.advanceToDayOfWeek(components, dayOfWeek, options);
     };
 };

@@ -313,3 +313,76 @@ test(
         };
     },
 );
+
+test(
+    "advanceToDayOfWeek",
+    func() {
+        let testCases = [
+            {
+                // Thursday
+                dateTime = DateTime.DateTime(0);
+                options : DateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = true;
+                };
+                dayOfWeek = #sunday;
+                // Sunday
+                expected = DateTime.DateTime(+259_200_000_000_000);
+            },
+            {
+                // Thursday
+                dateTime = DateTime.DateTime(5);
+                options : DateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = true;
+                };
+                dayOfWeek = #sunday;
+                // Sunday
+                expected = DateTime.DateTime(+259_200_000_000_000);
+            },
+            {
+                // Thursday
+                dateTime = DateTime.DateTime(5);
+                options : DateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = false;
+                };
+                dayOfWeek = #sunday;
+                // Sunday
+                expected = DateTime.DateTime(+259_200_000_000_005);
+            },
+            {
+                // Monday
+                dateTime = DateTime.DateTime(658_368_000_000_000);
+                options : DateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = false;
+                };
+                dayOfWeek = #sunday;
+                // Sunday
+                expected = DateTime.DateTime(917_568_000_000_000);
+            },
+            {
+                // Sunday
+                dateTime = DateTime.DateTime(981_244_800_000_000);
+                options : DateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = true;
+                };
+                dayOfWeek = #wednesday;
+                // Wednesday
+                expected = DateTime.DateTime(+1_123_200_000_000_000);
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual : DateTime.DateTime = testCase.dateTime.advanceToDayOfWeek(testCase.dayOfWeek, testCase.options);
+            if (actual.compare(testCase.expected) != #equal) {
+                Debug.print("Date: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Day Of Week: " # debug_show (testCase.dayOfWeek));
+                Debug.print("Expected: " # debug_show (testCase.expected.toTime()));
+                Debug.print("Actual:   " # debug_show (actual.toTime()));
+                assert false;
+            };
+        };
+    },
+);

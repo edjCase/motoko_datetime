@@ -601,3 +601,137 @@ test(
         };
     },
 );
+
+test(
+    "advanceToDayOfWeek",
+    func() {
+        let testCases = [
+            {
+                dateTime = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 1;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 0;
+                    },
+                    #fixed(#seconds(0)),
+                );
+                options : LocalDateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = true;
+                };
+                dayOfWeek = #sunday;
+                expected = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 4;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 0;
+                    },
+                    #fixed(#seconds(0)),
+                );
+            },
+            {
+                dateTime = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 1;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 5;
+                    },
+                    #fixed(#seconds(0)),
+                );
+                options : LocalDateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = true;
+                };
+                dayOfWeek = #sunday;
+                expected = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 4;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 0;
+                    },
+                    #fixed(#seconds(0)),
+                );
+            },
+            {
+                dateTime = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 1;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 5;
+                    },
+                    #fixed(#seconds(0)),
+                );
+                options : LocalDateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = false;
+                };
+                dayOfWeek = #sunday;
+                expected = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 4;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 5;
+                    },
+                    #fixed(#seconds(0)),
+                );
+            },
+            {
+                dateTime = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 5;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 0;
+                    },
+                    #fixed(#seconds(0)),
+                );
+                options : LocalDateTime.AdvanceDayOfWeekOptions = {
+                    addWeekOnMatchingDay = true;
+                    resetToStartOfDay = false;
+                };
+                dayOfWeek = #sunday;
+                expected = LocalDateTime.LocalDateTime(
+                    {
+                        year = 1970;
+                        month = 1;
+                        day = 11;
+                        hour = 0;
+                        minute = 0;
+                        nanosecond = 0;
+                    },
+                    #fixed(#seconds(0)),
+                );
+            },
+        ];
+        for (testCase in Iter.fromArray(testCases)) {
+            let actual : LocalDateTime.LocalDateTime = testCase.dateTime.advanceToDayOfWeek(testCase.dayOfWeek, testCase.options);
+            if (actual.compare(testCase.expected) != #equal) {
+                Debug.print("Date: " # debug_show (testCase.dateTime.toText()));
+                Debug.print("Day Of Week: " # debug_show (testCase.dayOfWeek));
+                Debug.print("Expected: " # debug_show (testCase.expected.toTime()));
+                Debug.print("Actual:   " # debug_show (actual.toTime()));
+                assert false;
+            };
+        };
+    },
+);
