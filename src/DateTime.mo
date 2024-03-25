@@ -11,14 +11,10 @@ import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 import Int "mo:base/Int";
-import Iter "mo:base/Iter";
 import Text "mo:base/Text";
-import Prelude "mo:base/Prelude";
 import Order "mo:base/Order";
 import InternalTypes "../internal/Types";
-import InternalTextUtil "../internal/TextUtil";
 import InternalComponents "../internal/Components";
-import InternalTimeZone "../internal/TimeZone";
 import Components "Components";
 import TimeZone "TimeZone";
 
@@ -29,6 +25,7 @@ module D {
     type Components = InternalTypes.Components;
     type DayOfWeek = InternalTypes.DayOfWeek;
     type Locale = InternalTypes.Locale;
+    public type AdvanceDayOfWeekOptions = InternalTypes.AdvanceDayOfWeekOptionsWithTime;
 
     /// Creates an instance of the `DateTime` type from a `Time.Time` value.
     ///
@@ -213,12 +210,16 @@ module D {
         /// ```motoko include=import
         /// let d : DateTime = ...;
         /// let dayOfWeek : DateTime.DayOfWeek = ...;
+        /// let options : DateTime.AdvanceDayOfWeekOptions = {
+        ///     addWeekOnMatchingDay = true; // Add a week if the day of the week is the same
+        ///     resetToStartOfDay = true; // Set the time value to midnight of the specified day of week
+        /// };
         /// let newD : DateTime = d.advanceToDayOfWeek(dayOfWeek);
         /// ```
-        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek, keepSameTime : Bool) : DateTime {
+        public func advanceToDayOfWeek(dayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptions) : DateTime {
             let components = toComponents();
-            let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek);
-            let newComponents = if (keepSameTime) {
+            let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek, options);
+            let newComponents = if (not options.resetToStartOfDay) {
                 {
                     components with newDateComponents;
                 };

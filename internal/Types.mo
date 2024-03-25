@@ -85,6 +85,14 @@ module {
         #saturday;
     };
 
+    public type AdvanceDayOfWeekOptions = {
+        addWeekOnMatchingDay : Bool;
+    };
+
+    public type AdvanceDayOfWeekOptionsWithTime = AdvanceDayOfWeekOptions and {
+        resetToStartOfDay : Bool;
+    };
+
     public type TextFormat = {
         #iso;
         #custom : {
@@ -143,7 +151,7 @@ module {
 
         dayOfWeek : () -> DayOfWeek;
 
-        advanceToDayOfWeek(dayOfWeek : DayOfWeek, keepSameTime : Bool) : T;
+        advanceToDayOfWeek(dayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptionsWithTime) : T;
     };
 
     public type DateTime = DateTimeType<DateTime> and {

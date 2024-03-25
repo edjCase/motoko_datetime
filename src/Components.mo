@@ -6,20 +6,13 @@
 /// ```
 
 import InternalTypes "../internal/Types";
-import InternalNumberUtil "../internal/NumberUtil";
 import InternalComponents "../internal/Components";
-import InternalTimeZone "../internal/TimeZone";
 import Time "mo:base/Time";
-import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
-import NumberUtil "../internal/NumberUtil";
-import InternalTextUtil "../internal/TextUtil";
-import Debug "mo:base/Debug";
 import Components "../internal/Components";
 import Order "mo:base/Order";
-import Prelude "mo:base/Prelude";
 
 module {
 
@@ -34,6 +27,7 @@ module {
     public type FromTextResult = InternalTypes.FromTextResult;
     public type TimeZoneDescriptor = InternalTypes.TimeZoneDescriptor;
     public type Locale = InternalTypes.Locale;
+    public type AdvanceDayOfWeekOptions = InternalTypes.AdvanceDayOfWeekOptions;
 
     /// Returns the the epoch (1970-01-01T00:00:00Z) in component form
     ///
@@ -207,9 +201,12 @@ module {
     /// ```motoko include=import
     /// let c : DateComponents = ...;
     /// let dayOfWeek : DateTime.DayOfWeek = ...;
-    /// let newC : DateComponents = Components.advanceToDayOfWeek(c, dayOfWeek);
+    /// let options : DateTime.AdvanceDayOfWeekOptions = {
+    ///     addWeekOnMatchingDay = true; // Add a week if the day of the week is the same
+    /// };
+    /// let newC : DateComponents = Components.advanceToDayOfWeek(c, dayOfWeek, options);
     /// ```
-    public func advanceToDayOfWeek(components : DateComponents, dayOfWeek : DayOfWeek) : DateComponents {
-        InternalComponents.advanceToDayOfWeek(components, dayOfWeek);
+    public func advanceToDayOfWeek(components : DateComponents, dayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptions) : DateComponents {
+        InternalComponents.advanceToDayOfWeek(components, dayOfWeek, options);
     };
 };
