@@ -277,7 +277,12 @@ module {
         public func advanceToDayOfWeek(dayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptions) : LocalDateTime {
             let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek, options);
             let newComponents = if (not options.resetToStartOfDay) {
-                { components with newDateComponents };
+                {
+                    newDateComponents with
+                    hour = components.hour;
+                    minute = components.minute;
+                    nanosecond = components.nanosecond;
+                };
             } else {
                 { newDateComponents with hour = 0; minute = 0; nanosecond = 0 };
             };

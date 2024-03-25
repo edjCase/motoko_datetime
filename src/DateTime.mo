@@ -221,7 +221,10 @@ module D {
             let newDateComponents = InternalComponents.advanceToDayOfWeek(components, dayOfWeek, options);
             let newComponents = if (not options.resetToStartOfDay) {
                 {
-                    components with newDateComponents;
+                    newDateComponents with
+                    hour = components.hour;
+                    minute = components.minute;
+                    nanosecond = components.nanosecond;
                 };
             } else {
                 {
