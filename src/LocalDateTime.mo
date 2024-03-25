@@ -33,7 +33,7 @@ module {
 
     public type Duration = Types.Duration;
 
-    public type AdvanceDayOfWeekOptions = InternalTypes.AdvanceDayOfWeekOptionsWithTime;
+    public type AdvanceDayOfWeekOptions = Types.AdvanceDayOfWeekOptionsWithTime;
 
     type TimeZoneDescriptor = Types.TimeZoneDescriptor;
 

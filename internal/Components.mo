@@ -20,19 +20,19 @@ module Module {
 
     type Components = Types.Components;
     type DateComponents = Types.DateComponents;
-    type TimeComponents = InternalTypes.TimeComponents;
+    type TimeComponents = Types.TimeComponents;
     type DayOfWeek = Types.DayOfWeek;
     type Duration = Types.Duration;
-    type DateDuration = InternalTypes.DateDuration;
-    type TimeDuration = InternalTypes.TimeDuration;
+    type DateDuration = Types.DateDuration;
+    type TimeDuration = Types.TimeDuration;
     type TimeZoneDescriptor = Types.TimeZoneDescriptor;
     type TimeZone = Types.TimeZone;
     type Locale = Types.Locale;
     type Era = Types.Era;
     type TextFormat = Types.TextFormat;
     type FromTextResult = Types.FromTextResult;
-    type AdvanceDayOfWeekOptions = InternalTypes.AdvanceDayOfWeekOptions;
-    type AdvanceDayOfWeekOptionsWithTime = InternalTypes.AdvanceDayOfWeekOptionsWithTime;
+    type AdvanceDayOfWeekOptions = Types.AdvanceDayOfWeekOptions;
+    type AdvanceDayOfWeekOptionsWithTime = Types.AdvanceDayOfWeekOptionsWithTime;
 
     public type CalculatedDuration = {
         #relative : (Components) -> Components;

@@ -27,7 +27,7 @@ module {
     public type FromTextResult = Types.FromTextResult;
     public type TimeZoneDescriptor = Types.TimeZoneDescriptor;
     public type Locale = Types.Locale;
-    public type AdvanceDayOfWeekOptions = InternalTypes.AdvanceDayOfWeekOptions;
+    public type AdvanceDayOfWeekOptions = Types.AdvanceDayOfWeekOptions;
 
     /// Returns the the epoch (1970-01-01T00:00:00Z) in component form
     ///

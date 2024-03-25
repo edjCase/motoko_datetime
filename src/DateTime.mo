@@ -25,7 +25,7 @@ module D {
     type Components = Types.Components;
     type DayOfWeek = Types.DayOfWeek;
     type Locale = Types.Locale;
-    public type AdvanceDayOfWeekOptions = InternalTypes.AdvanceDayOfWeekOptionsWithTime;
+    public type AdvanceDayOfWeekOptions = Types.AdvanceDayOfWeekOptionsWithTime;
 
     /// Creates an instance of the `DateTime` type from a `Time.Time` value.
     ///
