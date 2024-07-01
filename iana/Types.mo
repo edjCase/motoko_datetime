@@ -347,7 +347,7 @@ module {
 
                         switch (parts.next()) {
                             case (?dayText) {
-                                let ?d = Nat.fromText(dayText) else Debug.trap("Invalid 'Day' value: " # dayText);
+                                let ?_ = Nat.fromText(dayText) else Debug.trap("Invalid 'Day' value: " # dayText);
                                 day := day;
 
                                 switch (parts.next()) {
@@ -390,34 +390,6 @@ module {
             rules = if (rules == "-") null else ?rules;
             format = format;
             until = until;
-        };
-    };
-
-    func parseFile(file : Text) : {
-        rules : [Rule];
-        zones : [Zone];
-    } {
-        let lines = Text.split(file, #char('\n'));
-        let rules = Buffer.Buffer<Rule>(100);
-        let zones = Buffer.Buffer<Zone>(100);
-        label l loop {
-            let ?line = lines.next() else break l;
-            switch (parseLine(line)) {
-                case (? #rule(r)) {
-                    rules.add(r);
-                };
-                case (? #zone(z)) {
-                    zones.add(z);
-                };
-                case (null) {
-                    // Skip
-                };
-            };
-        };
-
-        {
-            rules = Buffer.toArray(rules);
-            zones = Buffer.toArray(zones);
         };
     };
 };

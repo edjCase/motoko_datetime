@@ -1,13 +1,13 @@
 [dependencies]
 base = "0.11.1"
-xtended-text = "0.2.5"
+xtended-text = "0.3.0"
 
 [package]
 name = "datetime"
-version = "0.2.0"
+version = "0.3.0"
 description = "A library for DateTime values and manipulation in Motoko"
 repository = "https://github.com/edjcase/motoko_datetime"
-keywords = [ "random", "pseudo" ]
+keywords = [ "datetime", "time", "date", "timezone" ]
 license = "MIT"
 
 [dev-dependencies]

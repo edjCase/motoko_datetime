@@ -406,7 +406,7 @@ module {
     public func fromText(
         text : Text,
         format : Text,
-        localTimeZone : TimeZone.TimeZone,
+        _ : TimeZone.TimeZone,
     ) : ?LocalDateTime {
         fromTextInternal(text, format, #fixed(#seconds(0)), null);
     };
