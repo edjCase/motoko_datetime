@@ -3,32 +3,32 @@ import moment from "moment/min/moment-with-locales.min.js";
 import { MotokoWriter } from "./generate-common.js"
 import fs from "fs";
 
-function getRegexStringValue(v) {
-    if (!v) {
-        return [null, null];
-    }
-    let options = [];
-    let unescaped = unescapeRegex(v);
-    if (unescaped.includes('(')) {
+// function getRegexStringValue(v) {
+//     if (!v) {
+//         return [null, null];
+//     }
+//     let options = [];
+//     let unescaped = unescapeRegex(v);
+//     if (unescaped.includes('(')) {
 
-        // Extract the part within parentheses and split it into an array
-        options = unescaped.match(/\(([^)]+)\)/)[1].split('|');
+//         // Extract the part within parentheses and split it into an array
+//         options = unescaped.match(/\(([^)]+)\)/)[1].split('|');
 
-        // Replace the part within parentheses with "%o"
-        unescaped = unescaped.replace(/\(([^)]+)\)/, "%o");
-    };
-    return [unescaped, options]
-};
+//         // Replace the part within parentheses with "%o"
+//         unescaped = unescaped.replace(/\(([^)]+)\)/, "%o");
+//     };
+//     return [unescaped, options]
+// };
 
-function unescapeRegex(regexSource) {
-    return unescapeUnicode(regexSource).replace(/\\(.)/g, "$1");
-}
+// function unescapeRegex(regexSource) {
+//     return unescapeUnicode(regexSource).replace(/\\(.)/g, "$1");
+// }
 
-function unescapeUnicode(str) {
-    return str.replace(/\\u([a-fA-F0-9]{4})/g, function (_, hex) {
-        return String.fromCharCode(parseInt(hex, 16));
-    });
-}
+// function unescapeUnicode(str) {
+//     return str.replace(/\\u([a-fA-F0-9]{4})/g, function (_, hex) {
+//         return String.fromCharCode(parseInt(hex, 16));
+//     });
+// }
 
 function toDayOfWeek(day) {
     switch (day) {
@@ -136,7 +136,7 @@ function writeLocale(writer, localName, locale) {
     writer.writeLine(`} {`);
     writer.depth += 1;
     writer.writeLine(`let mederiem = TextX.slice(text, 0, 2);`);
-    writer.writeLine(`switch (TextX.toLower(mederiem)) {`);
+    writer.writeLine(`switch (Text.toLower(mederiem)) {`);
     writer.depth += 1;
     writer.writeLine(`case ("pm") {`);
     writer.depth += 1;
@@ -364,12 +364,12 @@ for (let localeId of moment.locales()) {
     localeNames.push(localName);
     let writer = new MotokoWriter();
     writer.writeLine(`import Types "../Types";`);
-    writer.writeLine(`import Prelude "mo:base/Prelude";`);
-    writer.writeLine(`import Text "mo:base/Text";`);
-    writer.writeLine(`import Nat "mo:base/Nat";`);
-    writer.writeLine(`import Int "mo:base/Int";`);
+    writer.writeLine(`import Runtime "mo:core/Runtime";`);
+    writer.writeLine(`import Text "mo:core/Text";`);
+    writer.writeLine(`import Nat "mo:core/Nat";`);
+    writer.writeLine(`import Int "mo:core/Int";`);
     writer.writeLine(`import TextX "mo:xtended-text/TextX";`);
-    writer.writeLine(`import Char "mo:base/Char";`);
+    writer.writeLine(`import Char "mo:core/Char";`);
     
     writeLocale(writer, localName, locale);
     let fileName = `locales/${localName}.mo`;

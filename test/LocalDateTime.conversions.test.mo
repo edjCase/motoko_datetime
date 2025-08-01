@@ -1,12 +1,11 @@
-import Iter "mo:base/Iter";
+import Iter "mo:core/Iter";
 import { test } "mo:test";
 import LocalDateTime "../src/LocalDateTime";
-import Debug "mo:base/Debug";
-import Int "mo:base/Int";
-import Text "mo:base/Text";
-import DateTime "../src/DateTime";
+import Debug "mo:core/Debug";
+import Int "mo:core/Int";
+import Text "mo:core/Text";
 import Components "../src/Components";
-import TimeZone "../src/TimeZone";
+import Runtime "mo:core/Runtime";
 
 type TestCase = {
   timeZone : LocalDateTime.TimeZone;
@@ -175,7 +174,7 @@ for (testCase in Iter.fromArray(testCases)) {
     "fromComponents (Components -> LocalDateTime): " # testCaseText,
     func() {
       // From date components
-      let ?dateTime = LocalDateTime.fromComponents(testCase.dateTime, testCase.timeZone) else Debug.trap("Could not parse date time components to a datetime");
+      let ?dateTime = LocalDateTime.fromComponents(testCase.dateTime, testCase.timeZone) else Runtime.trap("Could not parse date time components to a datetime");
       assertDateTime(dateTime, expectedDateTime);
     },
   );
@@ -219,7 +218,7 @@ for (testCase in Iter.fromArray(testCases)) {
     "fromTextFormatted iso (Text -> LocalDateTime): " # testCaseText,
     func() {
       // From iso text
-      let ?actualisoDateTime = LocalDateTime.fromText(testCase.textIso, format, localTimeZone) else Debug.trap("Could not parse date time components to a datetime");
+      let ?actualisoDateTime = LocalDateTime.fromText(testCase.textIso, format, localTimeZone) else Runtime.trap("Could not parse date time components to a datetime");
       assertDateTime(actualisoDateTime, expectedDateTime);
     },
   );

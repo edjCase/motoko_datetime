@@ -1,11 +1,11 @@
-import Iter "mo:base/Iter";
+import Iter "mo:core/Iter";
 import { test } "mo:test";
 import DateTime "../src/DateTime";
 import Components "../src/Components";
-import Debug "mo:base/Debug";
-import Int "mo:base/Int";
-import Text "mo:base/Text";
-import TimeZone "../src/TimeZone";
+import Debug "mo:core/Debug";
+import Int "mo:core/Int";
+import Text "mo:core/Text";
+import Runtime "mo:core/Runtime";
 
 type TestCase = {
   dateTime : Components.Components;
@@ -206,7 +206,7 @@ for (testCase in Iter.fromArray(testCases)) {
     "fromText iso (Text -> DateTime): " # testCaseText,
     func() {
       // From iso text
-      let ?actualisoDateTime = DateTime.fromText(testCase.textIso, format) else Debug.trap("Could not parse date time components to a datetime");
+      let ?actualisoDateTime = DateTime.fromText(testCase.textIso, format) else Runtime.trap("Could not parse date time components to a datetime");
       assertDateTime(actualisoDateTime, expectedDateTime);
     },
   );
