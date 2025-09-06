@@ -7,12 +7,12 @@
 
 import Types "Types";
 import InternalComponents "../internal/Components";
-import Time "mo:core/Time";
-import Text "mo:core/Text";
-import Int "mo:core/Int";
-import Nat "mo:core/Nat";
+import Time "mo:core@1/Time";
+import Text "mo:core@1/Text";
+import Int "mo:core@1/Int";
+import Nat "mo:core@1/Nat";
 import Components "../internal/Components";
-import Order "mo:core/Order";
+import Order "mo:core@1/Order";
 
 module {
 

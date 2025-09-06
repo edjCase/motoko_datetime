@@ -1,10 +1,10 @@
 import Types "../src/Types";
-import Text "mo:core/Text";
-import Nat "mo:core/Nat";
-import Debug "mo:core/Debug";
+import Text "mo:core@1/Text";
+import Nat "mo:core@1/Nat";
+import Debug "mo:core@1/Debug";
 import TextUtil "TextUtil";
-import Int "mo:core/Int";
-import TextX "mo:xtended-text/TextX";
+import Int "mo:core@1/Int";
+import TextX "mo:xtended-text@2/TextX";
 
 module {
   type Components = Types.Components;

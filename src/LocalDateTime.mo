@@ -4,20 +4,20 @@
 /// ```motoko name=import
 /// import LocalDateTime "mo:datetime/LocalDateTime";
 /// import Components "mo:datetime/Components";
-/// import Time "mo:core/Time";
+/// import Time "mo:core@1/Time";
 /// ```
 
-import Time "mo:core/Time";
-import Nat "mo:core/Nat";
-import Int "mo:core/Int";
-import Text "mo:core/Text";
-import Order "mo:core/Order";
+import Time "mo:core@1/Time";
+import Nat "mo:core@1/Nat";
+import Int "mo:core@1/Int";
+import Text "mo:core@1/Text";
+import Order "mo:core@1/Order";
 import DateTime "DateTime";
 import Types "Types";
 import InternalComponents "../internal/Components";
 import Components "Components";
 import TimeZone "TimeZone";
-import Runtime "mo:core/Runtime";
+import Runtime "mo:core@1/Runtime";
 
 module {
 

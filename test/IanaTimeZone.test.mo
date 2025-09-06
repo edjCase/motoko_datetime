@@ -1,8 +1,8 @@
 import IanaTimeZone "../src/IanaTimeZone";
 import { test } "mo:test";
 import Types "../src/Types";
-import Debug "mo:core/Debug";
-import Iter "mo:core/Iter";
+import Debug "mo:core@1/Debug";
+import Iter "mo:core@1/Iter";
 import America "../iana/timezones/America";
 import Africa "../iana/timezones/Africa";
 

@@ -1,6 +1,6 @@
 import Types "Types";
-import Text "mo:core/Text";
-import Array "mo:core/Array";
+import Text "mo:core@1/Text";
+import Array "mo:core@1/Array";
 import LocaleList "LocaleList";
 
 module {

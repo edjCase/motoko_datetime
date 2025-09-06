@@ -1,10 +1,10 @@
 import Types "../Types";
-import Runtime "mo:core/Runtime";
-import Text "mo:core/Text";
-import Nat "mo:core/Nat";
-import Int "mo:core/Int";
-import TextX "mo:xtended-text/TextX";
-import Char "mo:core/Char";
+import Runtime "mo:core@1/Runtime";
+import Text "mo:core@1/Text";
+import Nat "mo:core@1/Nat";
+import Int "mo:core@1/Int";
+import TextX "mo:xtended-text@2/TextX";
+import Char "mo:core@1/Char";
 module AR_LY {
   public let locale : Types.Locale = {
     id = "ar-ly";
@@ -66,9 +66,9 @@ module AR_LY {
     firstDayOfWeek = #saturday;
     firstDayOfYear = 12;
     timeFormat = "HH:mm";
-    dateFormat = "D/‏M/‏YYYY";
-    dateTimeFormat = "HH:mm D/‏M/‏YYYY";
-    longDateFormat = "D/‏M/‏YYYY";
+    dateFormat = "D/M/YYYY";
+    dateTimeFormat = "HH:mm D/M/YYYY";
+    longDateFormat = "D/M/YYYY";
     eras = [
       {
         start = ?-62135568422000000;
@@ -87,14 +87,14 @@ module AR_LY {
         abbreviatedName = "BC";
       },
     ];
-    getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {
+    getMeridiem = func(hour : Nat, minute : Nat, isLower : Bool) : Text {
       if (hour < 12) {
         if (isLower) "am" else "AM";
       } else {
         if (isLower) "pm" else "PM";
       };
     };
-    parseMeridiemAsIsPM = func (text : Text) : ?{
+    parseMeridiemAsIsPM = func(text : Text) : ?{
       remainingText : Text;
       value : Bool;
     } {
@@ -117,7 +117,7 @@ module AR_LY {
         };
       };
     };
-    getOrdinal = func (num : Int) : Text {
+    getOrdinal = func(num : Int) : Text {
       let suffix = if (num % 100 >= 11 and num % 100 <= 13) {
         "th";
       } else switch (num % 10) {

@@ -8,10 +8,10 @@
 
 import Types "Types";
 import InternalTimeZone "../internal/TimeZone";
-import Int "mo:core/Int";
-import Text "mo:core/Text";
-import Nat "mo:core/Nat";
-import Debug "mo:core/Debug";
+import Int "mo:core@1/Int";
+import Text "mo:core@1/Text";
+import Nat "mo:core@1/Nat";
+import Debug "mo:core@1/Debug";
 import Components "../internal/Components";
 module {
 

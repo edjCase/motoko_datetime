@@ -1,4 +1,4 @@
-import Int "mo:core/Int";
+import Int "mo:core@1/Int";
 import Types "../src/Types";
 
 module {

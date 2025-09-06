@@ -1,8 +1,8 @@
 import Types "Types";
-import Text "mo:core/Text";
+import Text "mo:core@1/Text";
 import Components "Components";
-import Iter "mo:core/Iter";
-import Runtime "mo:core/Runtime";
+import Iter "mo:core@1/Iter";
+import Runtime "mo:core@1/Runtime";
 
 module {
   type TimeZoneData = Types.TimeZoneData;

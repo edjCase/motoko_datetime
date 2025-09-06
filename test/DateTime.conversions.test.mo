@@ -1,11 +1,11 @@
-import Iter "mo:core/Iter";
+import Iter "mo:core@1/Iter";
 import { test } "mo:test";
 import DateTime "../src/DateTime";
 import Components "../src/Components";
-import Debug "mo:core/Debug";
-import Int "mo:core/Int";
-import Text "mo:core/Text";
-import Runtime "mo:core/Runtime";
+import Debug "mo:core@1/Debug";
+import Int "mo:core@1/Int";
+import Text "mo:core@1/Text";
+import Runtime "mo:core@1/Runtime";
 
 type TestCase = {
   dateTime : Components.Components;

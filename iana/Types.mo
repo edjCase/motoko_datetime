@@ -1,6 +1,6 @@
-import Text "mo:core/Text";
-import Int "mo:core/Int";
-import Nat "mo:core/Nat";
+import Text "mo:core@1/Text";
+import Int "mo:core@1/Int";
+import Nat "mo:core@1/Nat";
 import Components "../src/Components";
 import Types "../src/Types";
 

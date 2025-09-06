@@ -1,10 +1,10 @@
-import Iter "mo:core/Iter";
+import Iter "mo:core@1/Iter";
 import { test } "mo:test";
 import LocalDateTime "../src/LocalDateTime";
 import Components "../src/Components";
-import Debug "mo:core/Debug";
-import Int "mo:core/Int";
-import Text "mo:core/Text";
+import Debug "mo:core@1/Debug";
+import Int "mo:core@1/Int";
+import Text "mo:core@1/Text";
 import Types "../src/Types";
 
 test(

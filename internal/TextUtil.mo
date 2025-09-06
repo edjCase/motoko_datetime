@@ -1,7 +1,7 @@
-import Iter "mo:core/Iter";
-import Int "mo:core/Int";
-import Nat "mo:core/Nat";
-import Text "mo:core/Text";
+import Iter "mo:core@1/Iter";
+import Int "mo:core@1/Int";
+import Nat "mo:core@1/Nat";
+import Text "mo:core@1/Text";
 module {
 
   public func toTextPaddedSign(value : Int, length : Nat, includePositiveSign : Bool) : Text {

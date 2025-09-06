@@ -114,8 +114,8 @@ function writeLocale(writer, localName, locale) {
     writer.writeLine(`getMeridiem = func (hour : Nat, minute : Nat, isLower : Bool) : Text {`);
     writer.depth += 1;
     // TODO MERIDIEM this is placeholder code    
-    
-    
+
+
     writer.writeLine(`if (hour < 12) {`)
     writer.depth += 1;
     writer.writeLine(`if (isLower) "am" else "AM";`);
@@ -127,7 +127,7 @@ function writeLocale(writer, localName, locale) {
     writer.writeLine(`};`);
     writer.depth -= 1;
     writer.writeLine(`};`);
-    
+
     writer.writeLine(`parseMeridiemAsIsPM = func (text : Text) : ?{`);
     writer.depth += 1;
     writer.writeLine(`remainingText : Text;`);
@@ -164,10 +164,10 @@ function writeLocale(writer, localName, locale) {
     writer.depth -= 1;
     writer.writeLine(`};`);
     writer.depth -= 1;
-    writer.writeLine(`};`); 
+    writer.writeLine(`};`);
 
-    
-    
+
+
     // writer.writeLine(`let (lower, upper) : (Text, Text) = switch ((hour, minute)) {`);
     // writer.depth += 1;
 
@@ -364,13 +364,13 @@ for (let localeId of moment.locales()) {
     localeNames.push(localName);
     let writer = new MotokoWriter();
     writer.writeLine(`import Types "../Types";`);
-    writer.writeLine(`import Runtime "mo:core/Runtime";`);
-    writer.writeLine(`import Text "mo:core/Text";`);
-    writer.writeLine(`import Nat "mo:core/Nat";`);
-    writer.writeLine(`import Int "mo:core/Int";`);
-    writer.writeLine(`import TextX "mo:xtended-text/TextX";`);
-    writer.writeLine(`import Char "mo:core/Char";`);
-    
+    writer.writeLine(`import Runtime "mo:core@1/Runtime";`);
+    writer.writeLine(`import Text "mo:core@1/Text";`);
+    writer.writeLine(`import Nat "mo:core@1/Nat";`);
+    writer.writeLine(`import Int "mo:core@1/Int";`);
+    writer.writeLine(`import TextX "mo:xtended-text@2/TextX";`);
+    writer.writeLine(`import Char "mo:core@1/Char";`);
+
     writeLocale(writer, localName, locale);
     let fileName = `locales/${localName}.mo`;
     fs.writeFile(fileName, writer.motoko, (err) => { });

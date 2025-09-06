@@ -1,11 +1,11 @@
-import Iter "mo:core/Iter";
+import Iter "mo:core@1/Iter";
 import { test } "mo:test";
 import Components "../src/Components";
-import Debug "mo:core/Debug";
-import Int "mo:core/Int";
-import Text "mo:core/Text";
+import Debug "mo:core@1/Debug";
+import Int "mo:core@1/Int";
+import Text "mo:core@1/Text";
 import Types "../src/Types";
-import Time "mo:core/Time";
+import Time "mo:core@1/Time";
 import TimeZone "../src/TimeZone";
 import EN "../iana/locales/EN";
 

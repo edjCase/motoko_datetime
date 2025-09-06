@@ -1,5 +1,5 @@
-import Time "mo:core/Time";
-import Order "mo:core/Order";
+import Time "mo:core@1/Time";
+import Order "mo:core@1/Order";
 module {
   public type Locale = {
     id : Text;

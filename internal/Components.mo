@@ -1,19 +1,19 @@
 import Types "../src/Types";
 import TextUtil "TextUtil";
-import Nat "mo:core/Nat";
-import Time "mo:core/Time";
-import Int "mo:core/Int";
-import Text "mo:core/Text";
-import Iter "mo:core/Iter";
-import Array "mo:core/Array";
-import Float "mo:core/Float";
-import List "mo:core/List";
+import Nat "mo:core@1/Nat";
+import Time "mo:core@1/Time";
+import Int "mo:core@1/Int";
+import Text "mo:core@1/Text";
+import Iter "mo:core@1/Iter";
+import Array "mo:core@1/Array";
+import Float "mo:core@1/Float";
+import List "mo:core@1/List";
 import TimeZone "TimeZone";
-import Bool "mo:core/Bool";
-import Char "mo:core/Char";
-import Option "mo:core/Option";
-import Nat8 "mo:core/Nat8";
-import Runtime "mo:core/Runtime";
+import Bool "mo:core@1/Bool";
+import Char "mo:core@1/Char";
+import Option "mo:core@1/Option";
+import Nat8 "mo:core@1/Nat8";
+import Runtime "mo:core@1/Runtime";
 
 module Module {
 
