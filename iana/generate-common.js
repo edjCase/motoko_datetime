@@ -8,7 +8,7 @@ export class MotokoWriter {
 
 
     getPadding() {
-        return "\t".repeat(this.depth);
+        return "  ".repeat(this.depth);
     };
 
     write(t, pad = true) {

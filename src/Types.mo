@@ -1,167 +1,184 @@
-import Time "mo:base/Time";
-import Order "mo:base/Order";
+import Time "mo:core@1/Time";
+import Order "mo:core@1/Order";
 module {
-    public type Locale = {
-        id : Text;
-        weekdays : [Text];
-        weekdaysShort : [Text];
-        weekdaysMin : [Text];
-        months : [Text];
-        monthsShort : [Text];
-        firstDayOfWeek : DayOfWeek;
-        firstDayOfYear : Nat;
-        timeFormat : Text;
-        dateFormat : Text;
-        dateTimeFormat : Text;
-        longDateFormat : Text;
-        eras : [Era];
-        getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
-        parseMeridiemAsIsPM : (text : Text) -> ?{
-            remainingText : Text;
-            value : Bool;
-        };
-        getOrdinal : (num : Int) -> Text;
-        parseOrdinal : (text : Text) -> ?{ remainingText : Text; value : Nat };
+  public type Locale = {
+    id : Text;
+    weekdays : [Text];
+    weekdaysShort : [Text];
+    weekdaysMin : [Text];
+    months : [Text];
+    monthsShort : [Text];
+    firstDayOfWeek : DayOfWeek;
+    firstDayOfYear : Nat;
+    timeFormat : Text;
+    dateFormat : Text;
+    dateTimeFormat : Text;
+    longDateFormat : Text;
+    eras : [Era];
+    getMeridiem : (hour : Nat, minute : Nat, isLower : Bool) -> Text;
+    parseMeridiemAsIsPM : (text : Text) -> ?{
+      remainingText : Text;
+      value : Bool;
     };
+    getOrdinal : (num : Int) -> Text;
+    parseOrdinal : (text : Text) -> ?{ remainingText : Text; value : Nat };
+  };
 
-    public type Era = {
-        start : ?Time.Time;
-        end : ?Time.Time;
-        offset : Int;
-        fullName : Text;
-        narrowName : Text;
-        abbreviatedName : Text;
+  public type Era = {
+    start : ?Time.Time;
+    end : ?Time.Time;
+    offset : Int;
+    fullName : Text;
+    narrowName : Text;
+    abbreviatedName : Text;
+  };
+
+  public type TimeZoneData = {
+    id : Text;
+    rules : [TimeZoneRule];
+  };
+
+  public type TimeZoneRule = {
+    abbreviation : Text;
+    expiration : ?Int;
+    offsetSeconds : Int;
+  };
+
+  public type DateDuration = {
+    #days : Int;
+    #weeks : Int;
+    #months : Int;
+    #years : Int;
+  };
+
+  public type TimeDuration = {
+    #nanoseconds : Int;
+    #milliseconds : Int;
+    #seconds : Int;
+    #minutes : Int;
+    #hours : Int;
+  };
+
+  public type Duration = DateDuration or TimeDuration;
+
+  public type DateComponents = {
+    year : Int;
+    month : Nat;
+    day : Nat;
+  };
+
+  public type TimeComponents = {
+    hour : Nat;
+    minute : Nat;
+    nanosecond : Nat;
+  };
+
+  public type Components = DateComponents and TimeComponents;
+
+  public type DayOfWeek = {
+    #sunday;
+    #monday;
+    #tuesday;
+    #wednesday;
+    #thursday;
+    #friday;
+    #saturday;
+  };
+
+  public type AdvanceDayOfWeekOptions = {
+    addWeekOnMatchingDay : Bool;
+  };
+
+  public type AdvanceDayOfWeekOptionsWithTime = AdvanceDayOfWeekOptions and {
+    resetToStartOfDay : Bool;
+  };
+
+  public type TextFormat = {
+    #iso;
+    #custom : {
+      format : Text;
+      locale : ?Locale;
     };
+  };
 
-    public type TimeZoneData = {
-        id : Text;
-        rules : [TimeZoneRule];
-    };
+  public type FromTextResult = {
+    components : Components;
+    timeZoneDescriptor : TimeZoneDescriptor;
+  };
 
-    public type TimeZoneRule = {
-        abbreviation : Text;
-        expiration : ?Int;
-        offsetSeconds : Int;
-    };
+  public type TimeZoneDescriptor = {
+    #unspecified;
+    #utc;
+    #fixed : FixedTimeZone;
+    #name : Text;
+  };
 
-    public type Duration = {
-        #nanoseconds : Int;
-        #milliseconds : Int;
-        #seconds : Int;
-        #minutes : Int;
-        #hours : Int;
-        #days : Int;
-        #weeks : Int;
-        #months : Int;
-        #years : Int;
-    };
+  public type TimeZone = {
+    #fixed : FixedTimeZone;
+    #dynamic : DynamicTimeZone;
+  };
 
-    public type DateComponents = {
-        year : Int;
-        month : Nat;
-        day : Nat;
-    };
+  public type DynamicTimeZone = {
+    getAbbr : (components : Components) -> Text;
+    toOffsetSeconds : (components : Components) -> Int;
+  };
 
-    public type Components = DateComponents and {
-        hour : Nat;
-        minute : Nat;
-        nanosecond : Nat;
-    };
+  public type FixedTimeZone = {
+    #hours : Int;
+    #seconds : Int;
+  };
 
-    public type DayOfWeek = {
-        #sunday;
-        #monday;
-        #tuesday;
-        #wednesday;
-        #thursday;
-        #friday;
-        #saturday;
-    };
+  type DateTimeType<T> = {
+    equal : (other : T) -> Bool;
 
-    public type TextFormat = {
-        #iso;
-        #custom : {
-            format : Text;
-            locale : ?Locale;
-        };
-    };
+    add : (duration : Duration) -> T;
 
-    public type FromTextResult = {
-        components : Components;
-        timeZoneDescriptor : TimeZoneDescriptor;
-    };
+    timeBetween : (other : T) -> Time.Time;
 
-    public type TimeZoneDescriptor = {
-        #unspecified;
-        #utc;
-        #fixed : FixedTimeZone;
-        #name : Text;
-    };
+    toTime : () -> Time.Time;
 
-    public type TimeZone = {
-        #fixed : FixedTimeZone;
-        #dynamic : DynamicTimeZone;
-    };
+    toText : () -> Text;
 
-    public type DynamicTimeZone = {
-        getAbbr : (components : Components) -> Text;
-        toOffsetSeconds : (components : Components) -> Int;
-    };
+    toTextFormatted : (format : TextFormat) -> Text;
 
-    public type FixedTimeZone = {
-        #hours : Int;
-        #seconds : Int;
-    };
+    toComponents : () -> Components;
 
-    type DateTimeType<T> = {
-        equal : (other : T) -> Bool;
+    isInLeapYear : () -> Bool;
 
-        add : (duration : Duration) -> T;
+    compare : (other : T) -> Order.Order;
 
-        timeBetween : (other : T) -> Time.Time;
+    dayOfYear : () -> Nat;
 
-        toTime : () -> Time.Time;
+    dayOfWeek : () -> DayOfWeek;
 
-        toText : () -> Text;
+    advanceToDayOfWeek(dayOfWeek : DayOfWeek, options : AdvanceDayOfWeekOptionsWithTime) : T;
+  };
 
-        toTextFormatted : (format : TextFormat) -> Text;
+  public type DateTime = DateTimeType<DateTime> and {
+    weekOfYear : () -> Nat;
 
-        toComponents : () -> Components;
+    weekYear : () -> Int;
+  };
 
-        isInLeapYear : () -> Bool;
+  public type LocaleStartOfYear = {
+    firstDayOfWeek : DayOfWeek;
+    firstDayOfYear : Nat;
+  };
 
-        compare : (other : T) -> Order.Order;
+  public type StartOfYear = {
+    #iso;
+    #locale : LocaleStartOfYear;
+  };
 
-        dayOfYear : () -> Nat;
+  public type LocalDateTime = DateTimeType<LocalDateTime> and {
+    toDateTime : () -> DateTime;
 
-        dayOfWeek : () -> DayOfWeek;
-    };
+    timeZone : TimeZone;
 
-    public type DateTime = DateTimeType<DateTime> and {
-        weekOfYear : () -> Nat;
+    weekOfYear : (startOfYear : StartOfYear) -> Nat;
 
-        weekYear : () -> Int;
-    };
+    weekYear : (startOfYear : StartOfYear) -> Int;
 
-    public type LocaleStartOfYear = {
-        firstDayOfWeek : DayOfWeek;
-        firstDayOfYear : Nat;
-    };
-
-    public type StartOfYear = {
-        #iso;
-        #locale : LocaleStartOfYear;
-    };
-
-    public type LocalDateTime = DateTimeType<LocalDateTime> and {
-        toDateTime : () -> DateTime;
-
-        timeZone : TimeZone;
-
-        weekOfYear : (startOfYear : StartOfYear) -> Nat;
-
-        weekYear : (startOfYear : StartOfYear) -> Int;
-
-        withTimeZone(timeZone : TimeZone) : LocalDateTime;
-    };
+    withTimeZone(timeZone : TimeZone) : LocalDateTime;
+  };
 };
